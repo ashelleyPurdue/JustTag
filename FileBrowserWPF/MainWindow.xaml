@@ -4,10 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileBrowserWPF"
+        xmlns:paz1="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" Background="#FFF0F0F0">
     <Grid>
-        <ListBox x:Name="folderContentsBox" Margin="10,38,10,10" MouseDoubleClick="folderContentsBox_MouseDoubleClick"/>
+        <ListBox x:Name="folderContentsBox" Margin="10,38,240,10" MouseDoubleClick="folderContentsBox_MouseDoubleClick"/>
+        <paz1:ZoomBorder Name="zoomBorder" Stretch="None" ZoomSpeed="1.2" 
+                        ClipToBounds="True" Focusable="True"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="282,38,10,10">
+            <Image x:Name="imagePreviewer"/>
+        </paz1:ZoomBorder>
+
         <TextBox x:Name="currentPathBox" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="currentPathBox_KeyUp" TextChanged="currentPathBox_TextChanged" Margin="88,10,10,0"/>
 
         <Grid Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="73" Height="23">
