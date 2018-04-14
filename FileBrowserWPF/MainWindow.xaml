@@ -8,14 +8,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" Background="#FFF0F0F0">
     <Grid>
-        <ListBox x:Name="folderContentsBox" Margin="10,38,240,10" MouseDoubleClick="folderContentsBox_MouseDoubleClick"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230*"/>
+            <ColumnDefinition Width="287*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="folderContentsBox" MouseDoubleClick="folderContentsBox_MouseDoubleClick" SelectionChanged="folderContentsBox_SelectionChanged" Grid.Column="0" Margin="10,38,5,10"/>
         <paz1:ZoomBorder Name="zoomBorder" Stretch="None" ZoomSpeed="1.2" 
                         ClipToBounds="True" Focusable="True"
-                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="282,38,10,10">
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,38,10,10" Grid.Column="1">
             <Image x:Name="imagePreviewer"/>
         </paz1:ZoomBorder>
 
-        <TextBox x:Name="currentPathBox" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="currentPathBox_KeyUp" TextChanged="currentPathBox_TextChanged" Margin="88,10,10,0"/>
+        <TextBox x:Name="currentPathBox" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="currentPathBox_KeyUp" TextChanged="currentPathBox_TextChanged" Margin="88,10,10,0" Grid.ColumnSpan="2"/>
 
         <Grid Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="73" Height="23">
             <Grid.ColumnDefinitions>
@@ -27,6 +31,7 @@
             <Button Grid.Column="1" x:Name="upButton" Content="^" Click="upButton_Click"/>
             <Button Grid.Column="2" x:Name="forwardButton" Content="-&gt;" Click="forwardButton_Click"/>
         </Grid>
+        <GridSplitter HorizontalAlignment="Left" Width="5" Grid.Column="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="0,38,0,10"/>
 
     </Grid>
 </Window>
