@@ -107,12 +107,23 @@ namespace FileBrowserWPF
 
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            Object selectedItem = folderContentsBox.SelectedItem;
+
             // If the selected item is a folder, move to that folder.
-            DirectoryInfo dir = folderContentsBox.SelectedItem as DirectoryInfo;
+            DirectoryInfo dir = selectedItem as DirectoryInfo;
             if (dir != null)
             {
                 pathHistory.Push(dir.FullName);
                 UpdateCurrentDirectory();
+
+                return;
+            }
+
+            // If the selected item is a file, open that file.
+            FileInfo file = selectedItem as FileInfo;
+            if (file != null)
+            {
+                System.Diagnostics.Process.Start(file.FullName);
             }
         }
 
