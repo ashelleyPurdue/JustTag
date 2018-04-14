@@ -44,9 +44,11 @@ namespace FileBrowserWPF
             // Set the textbox to the working directory
             currentPathBox.Text = pathHistory.Current;
 
-            // Update the forward/back buttons
+            // Update the forward/back/up buttons
             forwardButton.IsEnabled = pathHistory.HasNext;
             backButton.IsEnabled = pathHistory.HasPrev;
+
+            upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
             // Populate the list box
             folderContentsBox.Items.Clear();
@@ -89,6 +91,14 @@ namespace FileBrowserWPF
             UpdateCurrentDirectory();
         }
 
+        private void upButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Move to the parent directory
+            string parent = Directory.GetParent(pathHistory.Current).FullName;
+            pathHistory.Push(parent);
+            UpdateCurrentDirectory();
+        }
+
         private void forwardButton_Click(object sender, RoutedEventArgs e)
         {
             pathHistory.MoveForward();
@@ -105,5 +115,6 @@ namespace FileBrowserWPF
                 UpdateCurrentDirectory();
             }
         }
+
     }
 }
