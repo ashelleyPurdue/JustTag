@@ -53,11 +53,11 @@ namespace FileBrowserWPF
             
             var subdirs = currentDir.EnumerateDirectories();
             foreach (DirectoryInfo dir in subdirs)
-                folderContentsBox.Items.Add(dir.Name);
+                folderContentsBox.Items.Add(dir);
 
             var files = currentDir.EnumerateFiles();
             foreach (FileInfo file in files)
-                folderContentsBox.Items.Add(file.Name);
+                folderContentsBox.Items.Add(file);
         }
 
 
@@ -93,6 +93,17 @@ namespace FileBrowserWPF
         {
             pathHistory.MoveForward();
             UpdateCurrentDirectory();
+        }
+
+        private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // If the selected item is a folder, move to that folder.
+            DirectoryInfo dir = folderContentsBox.SelectedItem as DirectoryInfo;
+            if (dir != null)
+            {
+                pathHistory.Push(dir.FullName);
+                UpdateCurrentDirectory();
+            }
         }
     }
 }
