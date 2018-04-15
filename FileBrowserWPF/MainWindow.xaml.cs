@@ -32,10 +32,19 @@ namespace FileBrowserWPF
         private DispatcherTimer sliderDragDelayer;  // When the user drags the timer, we don't want to skip immediately because
                                                     // that'd cause thousands of micro-jumps as they're dragging.  We use this object
                                                     // to put it on a delay.
+        private bool ignoreSliderChanged = false;
+
+        private DispatcherTimer sliderUpdateTimer;  // Updates the slider position as the video is playing
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Hook up the slider update timer
+            sliderUpdateTimer = new DispatcherTimer();
+            sliderUpdateTimer.Interval = TimeSpan.FromMilliseconds(30);
+            sliderUpdateTimer.Tick += SliderUpdateTimer_Tick;
+            sliderUpdateTimer.Start();
 
             pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
             UpdateCurrentDirectory();
@@ -43,7 +52,7 @@ namespace FileBrowserWPF
             // Hook the listbox up to the list of known tags
             allTagsListbox.ItemsSource = allKnownTags;
         }
-        
+
 
         // Misc methods
         private void PlayOrPause(bool play)
@@ -351,6 +360,8 @@ namespace FileBrowserWPF
 
         private void videoTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (ignoreSliderChanged) return;
+
             // Cancel the current jump action
             sliderDragDelayer?.Stop();
 
@@ -373,6 +384,19 @@ namespace FileBrowserWPF
             sliderDragDelayer.Start();
         }
 
+        private void SliderUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            // Don't do anything if the open file is not a video
+            if (!videoPlayer.NaturalDuration.HasTimeSpan)
+                return;
+
+            // Update the slider to match the video time
+            double percent = videoPlayer.Position.TotalSeconds / videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+
+            ignoreSliderChanged = true;
+            videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
+            ignoreSliderChanged = false;
+        }
 
     }
 }
