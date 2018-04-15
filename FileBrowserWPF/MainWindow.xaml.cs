@@ -51,16 +51,22 @@ namespace FileBrowserWPF
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
-            // Populate the list box
+            // Add all subdirectories to the listbox
             folderContentsBox.Items.Clear();
             
             var subdirs = currentDir.EnumerateDirectories();
             foreach (DirectoryInfo dir in subdirs)
                 folderContentsBox.Items.Add(dir);
 
+            // Add all files to the listbox that match the filter
             var files = currentDir.EnumerateFiles();
             foreach (FileInfo file in files)
+            {
+                if (!MatchesTagFilter(file.Name))
+                    continue;
+
                 folderContentsBox.Items.Add(file);
+            }
         }
 
         private void ShowFilePreview()
@@ -79,6 +85,11 @@ namespace FileBrowserWPF
             {
                 // Nothing to see here.
             }
+        }
+
+        private bool MatchesTagFilter(string fileName)
+        {
+            return GetFileTags(fileName).Contains("pinup");
         }
 
         private string[] GetFileTags(string fileName)
