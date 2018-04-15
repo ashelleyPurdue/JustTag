@@ -62,6 +62,28 @@ namespace FileBrowserWPF
                 folderContentsBox.Items.Add(file);
         }
 
+        private void ShowFilePreview()
+        {
+            // If it's an image file, show it in the zoombox
+            FileInfo selectedFile = folderContentsBox.SelectedItem as FileInfo;
+
+            if (selectedFile == null)
+                return;
+
+            try
+            {
+                imagePreviewer.Source = new BitmapImage(new Uri(selectedFile.FullName));
+            }
+            catch (NotSupportedException)
+            {
+                // Nothing to see here.
+            }
+        }
+
+        private string[] GetFileTags(string fileName)
+        {
+            return new string[] { "dummy", "tags" };
+        }
 
         // Event handlers
 
@@ -129,20 +151,15 @@ namespace FileBrowserWPF
 
         private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // If it's an image file, show it in the zoombox
-            FileInfo selectedFile = folderContentsBox.SelectedItem as FileInfo;
+            ShowFilePreview();
 
-            if (selectedFile == null)
-                return;
+            // Update the tag box with this file's tags
+            string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
+            string[] tags = GetFileTags(name);
 
-            try
-            {
-                imagePreviewer.Source = new BitmapImage(new Uri(selectedFile.FullName));
-            }
-            catch(NotSupportedException)
-            {
-                // Nothing to see here.
-            }
+            tagsBox.Items.Clear();
+            foreach (string t in tags)
+                tagsBox.Items.Add(t);
         }
     }
 }
