@@ -32,7 +32,6 @@ namespace FileBrowserWPF
         private DispatcherTimer sliderDragDelayer;  // When the user drags the timer, we don't want to skip immediately because
                                                     // that'd cause thousands of micro-jumps as they're dragging.  We use this object
                                                     // to put it on a delay.
-        private bool ignoreSliderChanged = false;
 
         private DispatcherTimer sliderUpdateTimer;  // Updates the slider position as the video is playing
 
@@ -360,13 +359,8 @@ namespace FileBrowserWPF
 
         private void videoTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (ignoreSliderChanged) return;
-
             // Cancel the current jump action
             sliderDragDelayer?.Stop();
-
-            // Stop the slider from moving on its own while the user is dragging
-            sliderUpdateTimer.Stop();
 
             // Start a new one
             sliderDragDelayer = new DispatcherTimer();
@@ -382,9 +376,6 @@ namespace FileBrowserWPF
 
                 // Don't run again
                 sliderDragDelayer.Stop();
-
-                // Let the slider start moving again
-                sliderUpdateTimer.Start();
             };
 
             sliderDragDelayer.Start();
@@ -399,9 +390,7 @@ namespace FileBrowserWPF
             // Update the slider to match the video time
             double percent = videoPlayer.Position.TotalSeconds / videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
 
-            ignoreSliderChanged = true;
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
-            ignoreSliderChanged = false;
         }
 
     }
