@@ -58,10 +58,15 @@ namespace FileBrowserWPF
         {
             // Play/pause the video
             if (play)
+            {
                 videoPlayer.Play();
+                sliderUpdateTimer.Start();
+            }
             else
+            {
                 videoPlayer.Pause();
-
+                sliderUpdateTimer.Stop();
+            }
             // Remember the playing state, because MediaElement is stupid.
             videoPlaying = play;
 
@@ -357,7 +362,7 @@ namespace FileBrowserWPF
             PlayOrPause(!videoPlaying);
         }
 
-        private void videoTimeSlider_ValueChanged(object sender, MouseEventArgs e)
+        private void videoTimeSlider_MouseMoved(object sender, MouseEventArgs e)
         {
             // Don't do anything if the user isn't holding a button
             if (e.LeftButton != MouseButtonState.Pressed)
@@ -388,13 +393,7 @@ namespace FileBrowserWPF
         private void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
         {
             // Don't let the slider move on its own while the user is dragging it
-            sliderUpdateTimer.Stop();
-        }
-
-        private void videoTimeSlider_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            // Let the slider move on its own again
-            sliderUpdateTimer.Start();
+            PlayOrPause(false);
         }
 
         private void SliderUpdateTimer_Tick(object sender, EventArgs e)
