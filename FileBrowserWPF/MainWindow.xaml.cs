@@ -55,6 +55,20 @@ namespace FileBrowserWPF
         
 
         // Misc methods
+        private void PlayOrPause(bool play)
+        {
+            // Play/pause the video
+            if (play)
+                videoPlayer.Play();
+            else
+                videoPlayer.Pause();
+
+            // Remember the playing state, because MediaElement is stupid.
+            videoPlaying = play;
+
+            // Update the play button's text
+            playButton.Content = play ? "Pause" : "Play";
+        }
 
         private void UpdateCurrentDirectory()
         {
@@ -199,8 +213,7 @@ namespace FileBrowserWPF
             // Put it in the media element and start playing.
             // We're going to pause it immediately during the MediaOpened event
             videoPlayer.Source = new Uri(selectedFile.FullName);
-            videoPlayer.Play();
-            videoPlaying = true;
+            PlayOrPause(true);
         }
 
 
@@ -210,8 +223,7 @@ namespace FileBrowserWPF
         {
             // It's rude to suddenly start playing a video without asking,
             // so pause it after we've seen the first frame.
-            videoPlayer.Pause();
-            videoPlaying = false;
+            PlayOrPause(false);
 
             // If it's a video, enable the playback controls
             videoControls.IsEnabled = videoPlayer.NaturalDuration.HasTimeSpan;
@@ -342,17 +354,8 @@ namespace FileBrowserWPF
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            // Pause the video if it's playing, else resume it
-            if (videoPlaying)
-            {
-                videoPlaying = false;
-                videoPlayer.Pause();
-            }
-            else
-            {
-                videoPlaying = true;
-                videoPlayer.Play();
-            }
+            // Play/pause the video
+            PlayOrPause(!videoPlaying);
         }
 
         private void videoTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
