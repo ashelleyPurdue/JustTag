@@ -325,5 +325,15 @@ namespace FileBrowserWPF
                 videoPlayer.Play();
             }
         }
+
+        private void videoTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // Find the time to skip to
+            double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
+            double time = videoPlayer.NaturalDuration.TimeSpan.TotalSeconds * percent;
+
+            // Jump to the time
+            videoPlayer.Position = TimeSpan.FromSeconds(time);
+        }
     }
 }

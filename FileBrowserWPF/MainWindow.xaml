@@ -65,7 +65,7 @@
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
                     VerticalAlignment="Center"
-                    Margin="5,5,5,5"
+                    Margin="5,5,5,5" ValueChanged="videoTimeSlider_ValueChanged"
              />
         </Grid>
 
