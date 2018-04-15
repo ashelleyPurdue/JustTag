@@ -36,8 +36,6 @@ namespace FileBrowserWPF
 
         private void UpdateCurrentDirectory()
         {
-            Console.WriteLine(pathHistory.ToString());
-
             // Move to the directory
             Directory.SetCurrentDirectory(pathHistory.Current);
             DirectoryInfo currentDir = new DirectoryInfo(pathHistory.Current);
@@ -51,16 +49,24 @@ namespace FileBrowserWPF
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
-            // Populate the list box
+            // Add all subdirectories to the listbox.
+            // We want the subdirectories listed first so
+            // the user can navigate easier
             folderContentsBox.Items.Clear();
             
             var subdirs = currentDir.EnumerateDirectories();
             foreach (DirectoryInfo dir in subdirs)
                 folderContentsBox.Items.Add(dir);
 
+            // Add all files to the listbox that match the filter
             var files = currentDir.EnumerateFiles();
             foreach (FileInfo file in files)
+            {
+                if (!MatchesTagFilter(file.Name))
+                    continue;
+
                 folderContentsBox.Items.Add(file);
+            }
         }
 
         private void ShowFilePreview()
@@ -81,15 +87,55 @@ namespace FileBrowserWPF
             }
         }
 
+        private bool MatchesTagFilter(string fileName)
+        {
+            // Get all the tags from the filename
+            string[] tags = GetFileTags(fileName);
+
+            // Parse the filter
+            // TODO: Move this part somewhere else so we only have to parse the filter once.
+            List<string> forbiddenTags = new List<string>();
+            List<string> requiredTags = new List<string>();
+
+            string[] filterWords = tagFilterTextbox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string word in filterWords)
+            {
+                // Sort each word into either forbidden or required tags
+                // Anything with a '-' at the start means it's a forbidden tag.
+                if (word[0] == '-')
+                {
+                    forbiddenTags.Add(word.Substring(1));
+                    continue;
+                }
+
+                requiredTags.Add(word);
+            }
+
+            // Return false if any of the required tags are missing
+            foreach (string t in requiredTags)
+                if (!tags.Contains(t))
+                    return false;
+
+            // Return false if any of the forbidden tags are present
+            foreach (string t in forbiddenTags)
+                if (tags.Contains(t))
+                    return false;
+
+            // It passed the filter
+            return true;
+        }
+
         private string[] GetFileTags(string fileName)
         {
             string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
             return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+
         // Event handlers
 
-        private void currentPathBox_KeyUp(object sender, KeyEventArgs e)
+        private void textbox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;     // Don't go on if it's not the enter key
 
