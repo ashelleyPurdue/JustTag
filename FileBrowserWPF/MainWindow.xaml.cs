@@ -193,8 +193,11 @@ namespace FileBrowserWPF
             if (selectedFile == null)
                 return;
 
+            // Disable the navigation controls
+            videoControls.IsEnabled = false;
+
             // Put it in the media element and start playing.
-            // We're going to pause it immediately after the load event
+            // We're going to pause it immediately during the MediaOpened event
             videoPlayer.Source = new Uri(selectedFile.FullName);
             videoPlayer.Play();
             videoPlaying = true;
@@ -205,17 +208,13 @@ namespace FileBrowserWPF
 
         private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
-            // Enable the playback controls
-            playButton.IsEnabled = true;
-            videoTimeSlider.IsEnabled = true;
+            // It's rude to suddenly start playing a video without asking,
+            // so pause it after we've seen the first frame.
+            videoPlayer.Pause();
+            videoPlaying = false;
 
-            // It's rude to suddenly start playing a video without asking, so
-            // pause it immediately if it's a video
-            if (videoPlayer.NaturalDuration.HasTimeSpan)
-            {
-                videoPlayer.Pause();
-                videoPlaying = false;
-            }
+            // If it's a video, enable the playback controls
+            videoControls.IsEnabled = videoPlayer.NaturalDuration.HasTimeSpan;
         }
 
         private void textbox_KeyUp(object sender, KeyEventArgs e)

@@ -40,8 +40,8 @@
             HorizontalAlignment="Stretch"
         >
             <MediaElement Name="videoPlayer"
-                          LoadedBehavior="Manual"
-                          MediaOpened="videoPlayer_MediaOpened"
+                LoadedBehavior="Manual"
+                MediaOpened="videoPlayer_MediaOpened"
              />
         </paz1:ZoomBorder>
 
@@ -52,6 +52,7 @@
             VerticalAlignment="Bottom"
             HorizontalAlignment="Stretch"
             Height="50"
+            IsEnabled="False"
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
@@ -68,7 +69,8 @@
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
                     VerticalAlignment="Center"
-                    Margin="5,5,5,5" ValueChanged="videoTimeSlider_ValueChanged"
+                    Margin="5,5,5,5"
+                    ValueChanged="videoTimeSlider_ValueChanged"
              />
         </Grid>
 
