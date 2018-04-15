@@ -368,8 +368,9 @@ namespace FileBrowserWPF
             if (e.LeftButton != MouseButtonState.Pressed)
                 return;
 
-            // Cancel the current jump action
-            sliderDragDelayer?.Stop();
+            // Don't go on if there's already a jump action queued up
+            if (sliderDragDelayer != null)
+                return;
 
             // Start a new one
             sliderDragDelayer = new DispatcherTimer();
@@ -385,6 +386,12 @@ namespace FileBrowserWPF
 
                 // Don't run again
                 sliderDragDelayer.Stop();
+                sliderDragDelayer = null;
+
+                // Show one frame
+                videoPlayer.Play();
+                System.Threading.Thread.Sleep(2);
+                videoPlayer.Pause();
             };
 
             sliderDragDelayer.Start();
