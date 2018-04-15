@@ -112,9 +112,10 @@ namespace FileBrowserWPF
             return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+
         // Event handlers
 
-        private void currentPathBox_KeyUp(object sender, KeyEventArgs e)
+        private void textbox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;     // Don't go on if it's not the enter key
 

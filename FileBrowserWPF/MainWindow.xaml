@@ -47,7 +47,7 @@
             Height="23"
             TextWrapping="Wrap"
             VerticalAlignment="Top"
-            KeyUp="currentPathBox_KeyUp"
+            KeyUp="textbox_KeyUp"
             TextChanged="currentPathBox_TextChanged"
             Margin="88,10,10,0"
          />
@@ -114,6 +114,7 @@
             VerticalAlignment="Bottom"
             Height="24"
             Margin="10,0,10,10"
+            KeyUp="textbox_KeyUp"
          />
     </Grid>
 
