@@ -92,17 +92,37 @@ namespace FileBrowserWPF
             // Get all the tags from the filename
             string[] tags = GetFileTags(fileName);
 
-            // Parse all the required tags from the filter
+            // Parse the filter
             // TODO: Move this part somewhere else so we only have to parse the filter once.
-            string[] requiredTags = tagFilterTextbox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> forbiddenTags = new List<string>();
+            List<string> requiredTags = new List<string>();
+
+            string[] filterWords = tagFilterTextbox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string word in filterWords)
+            {
+                // Sort each word into either forbidden or required tags
+                // Anything with a '-' at the start means it's a forbidden tag.
+                if (word[0] == '-')
+                {
+                    forbiddenTags.Add(word.Substring(1));
+                    continue;
+                }
+
+                requiredTags.Add(word);
+            }
 
             // Return false if any of the required tags are missing
-            // TODO: Allow for the exclusion of tags
             foreach (string t in requiredTags)
                 if (!tags.Contains(t))
                     return false;
 
-            // It has all the tags, so return true
+            // Return false if any of the forbidden tags are present
+            foreach (string t in forbiddenTags)
+                if (tags.Contains(t))
+                    return false;
+
+            // It passed the filter
             return true;
         }
 
