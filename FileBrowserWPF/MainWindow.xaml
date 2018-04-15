@@ -137,6 +137,13 @@
             Margin="10,0,10,10"
             KeyUp="textbox_KeyUp"
          />
+
+        <GroupBox Header="All Known Tags"
+            Grid.Column="0"
+            Grid.RowSpan="2"
+        >
+            <ListBox x:Name="allTagsListbox" Margin="10,10,10,10"/>
+        </GroupBox>
     </Grid>
 
 </Window>
