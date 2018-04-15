@@ -32,6 +32,7 @@ namespace FileBrowserWPF
             UpdateCurrentDirectory();
         }
         
+
         // Misc methods
 
         private void UpdateCurrentDirectory()
@@ -130,6 +131,36 @@ namespace FileBrowserWPF
         {
             string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
             return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// Renames the given file so it has the given tags
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="newTags"></param>
+        private string ChangeFileTags(string fileName, string[] newTags)
+        {
+            // Get the stuff before and after the tags
+            string beforeTags = fileName.Split('[')[0];
+            string afterTags = fileName.Split(']')[1];
+
+            // Make a new tag string from the array
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append("[");
+            for (int i = 0; i < newTags.Length; i++)
+            {
+                // Add a space if this isn't the first
+                if (i != 0)
+                    builder.Append(" ");
+
+                // Add the tag
+                builder.Append(newTags[i]);
+            }
+            builder.Append("]");
+
+            // Jam them together to make the new filename
+            return beforeTags + builder.ToString() + afterTags;
         }
 
 
