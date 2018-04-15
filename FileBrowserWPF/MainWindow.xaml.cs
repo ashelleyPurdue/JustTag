@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
 
 namespace FileBrowserWPF
 {
@@ -27,6 +28,10 @@ namespace FileBrowserWPF
 
         private bool videoPlaying = false;  // MediaElement doesn't have an IsPlaying property, so we need to
                                             // track it ourselves.  What a hassle!
+
+        private DispatcherTimer sliderDragDelayer;  // When the user drags the timer, we don't want to skip immediately because
+                                                    // that'd cause thousands of micro-jumps as they're dragging.  We use this object
+                                                    // to put it on a delay.
 
         public MainWindow()
         {
@@ -328,12 +333,26 @@ namespace FileBrowserWPF
 
         private void videoTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // Find the time to skip to
-            double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
-            double time = videoPlayer.NaturalDuration.TimeSpan.TotalSeconds * percent;
+            // Cancel the current jump action
+            sliderDragDelayer?.Stop();
 
-            // Jump to the time
-            videoPlayer.Position = TimeSpan.FromSeconds(time);
+            // Start a new one
+            sliderDragDelayer = new DispatcherTimer();
+            sliderDragDelayer.Interval = TimeSpan.FromMilliseconds(30);
+            sliderDragDelayer.Tick += (object foo, EventArgs bar) =>
+            {
+                // Find the time to skip to
+                double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
+                double time = videoPlayer.NaturalDuration.TimeSpan.TotalSeconds * percent;
+
+                // Jump to the time
+                videoPlayer.Position = TimeSpan.FromSeconds(time);
+
+                // Don't run again
+                sliderDragDelayer.Stop();
+            };
+
+            sliderDragDelayer.Start();
         }
     }
 }
