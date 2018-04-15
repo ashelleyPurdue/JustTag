@@ -32,6 +32,7 @@ namespace FileBrowserWPF
             UpdateCurrentDirectory();
         }
         
+
         // Misc methods
 
         private void UpdateCurrentDirectory()
@@ -79,7 +80,15 @@ namespace FileBrowserWPF
 
             try
             {
-                imagePreviewer.Source = new BitmapImage(new Uri(selectedFile.FullName));
+                // Set the image source
+                // We're doing it this crazy way so the file doesn't remain open
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = new Uri(selectedFile.FullName);
+                image.EndInit();
+
+                imagePreviewer.Source = image;
             }
             catch (NotSupportedException)
             {
@@ -130,6 +139,41 @@ namespace FileBrowserWPF
         {
             string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
             return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// Renames the given file so it has the given tags
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="newTags"></param>
+        private string ChangeFileTags(string fileName, string[] newTags)
+        {
+            // Get the stuff before and after the tags
+            string beforeTags = fileName.Split('[', '.')[0];
+            string extension = System.IO.Path.GetExtension(fileName);
+
+            // If the new tags list is empty, don't even bother
+            // with the brackets.
+            if (newTags.Length == 0)
+                return beforeTags + extension;
+
+            // Make a new tag string from the array
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append("[");
+            for (int i = 0; i < newTags.Length; i++)
+            {
+                // Add a space if this isn't the first
+                if (i != 0)
+                    builder.Append(" ");
+
+                // Add the tag
+                builder.Append(newTags[i]);
+            }
+            builder.Append("]");
+
+            // Jam them together to make the new filename
+            return beforeTags + builder.ToString() + extension;
         }
 
 
@@ -209,9 +253,45 @@ namespace FileBrowserWPF
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
             string[] tags = GetFileTags(name);
 
-            tagsBox.Items.Clear();
+            StringBuilder builder = new StringBuilder();
             foreach (string t in tags)
-                tagsBox.Items.Add(t);
+                builder.AppendLine(t);
+
+            tagsBox.Text = builder.ToString();
+
+            // Hide the save button
+            tagSaveButton.Visibility = Visibility.Hidden;
+        }
+
+        private void tagsBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // TODO: Make the background red if any of the tags are invalid
+
+            // Show the save button
+            tagSaveButton.Visibility = Visibility.Visible;
+        }
+
+        private void tagSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Update the selected file's tags
+            FileInfo file = folderContentsBox.SelectedItem as FileInfo;
+
+            if (file == null)
+                return;
+
+            // Parse the tags into a list
+            string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Get the new file path
+            string newFileName = ChangeFileTags(file.Name, tags);
+            string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
+
+            // Rename the file
+            file.MoveTo(newFilePath);
+            UpdateCurrentDirectory();
+
+            // Hide the save button
+            tagSaveButton.Visibility = Visibility.Hidden;
         }
     }
 }
