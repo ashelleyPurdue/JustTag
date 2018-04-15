@@ -304,9 +304,17 @@ namespace FileBrowserWPF
             string newFileName = ChangeFileTags(file.Name, tags);
             string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
 
+            // Remember the selected index so we can scroll back to it
+            // after saving
+            int selectedIndex = folderContentsBox.SelectedIndex;
+
             // Rename the file
             file.MoveTo(newFilePath);
             UpdateCurrentDirectory();
+
+            // Scroll back to the same selected index
+            folderContentsBox.SelectedIndex = selectedIndex;
+            folderContentsBox.ScrollIntoView(folderContentsBox.SelectedItem);
 
             // Hide the save button
             tagSaveButton.Visibility = Visibility.Hidden;
