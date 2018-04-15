@@ -39,10 +39,22 @@
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
         >
-            <MediaElement Name="videoPlayer"/>
+            <MediaElement Name="videoPlayer" LoadedBehavior="Manual"/>
         </paz1:ZoomBorder>
 
-        
+        <UniformGrid x:Name="videoControls"
+            Grid.ColumnSpan="2"
+            Grid.Column="1"
+            Grid.Row="0"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Stretch"
+            Height="50"
+        >
+            <Button x:Name="playButton"
+                    Width="50"
+                    Content="Play"
+                    Click="playButton_Click"/>
+        </UniformGrid>
 
         <TextBox x:Name="currentPathBox"
             Grid.Row="1"

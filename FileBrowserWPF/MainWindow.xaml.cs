@@ -25,6 +25,9 @@ namespace FileBrowserWPF
         private NavigationStack<string> pathHistory;
         private HashSet<string> allKnownTags = new HashSet<string>();
 
+        private bool videoPlaying = false;  // MediaElement doesn't have an IsPlaying property, so we need to
+                                            // track it ourselves.  What a hassle!
+
         public MainWindow()
         {
             InitializeComponent();
@@ -98,6 +101,8 @@ namespace FileBrowserWPF
 
             // Put it in the media element
             videoPlayer.Source = new Uri(selectedFile.FullName);
+            videoPlayer.Pause();    // It's rude to suddenly start playing videos without asking, so start it paused
+            videoPlaying = false;
         }
 
         private bool MatchesTagFilter(string fileName)
@@ -304,6 +309,21 @@ namespace FileBrowserWPF
 
             // Hide the save button
             tagSaveButton.Visibility = Visibility.Hidden;
+        }
+
+        private void playButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Pause the video if it's playing, else resume it
+            if (videoPlaying)
+            {
+                videoPlaying = false;
+                videoPlayer.Pause();
+            }
+            else
+            {
+                videoPlaying = true;
+                videoPlayer.Play();
+            }
         }
     }
 }
