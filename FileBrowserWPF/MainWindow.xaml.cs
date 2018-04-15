@@ -23,6 +23,16 @@ namespace FileBrowserWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly HashSet<string> imageFormats = new HashSet<string>(new string[]
+        {
+            ".jpeg",
+            ".jpg",
+            ".png",
+            ".gif",
+            ".bmp",
+            ".tiff"
+        });
+
         private NavigationStack<string> pathHistory;
         private HashSet<string> allKnownTags = new HashSet<string>();
 
@@ -108,6 +118,14 @@ namespace FileBrowserWPF
             videoPlayer.Source = new Uri(selectedFile.FullName);
             videoPlayer.Pause();    // It's rude to suddenly start playing videos without asking, so start it paused
             videoPlaying = false;
+
+            // If it's an image, "play" it so it doesn't show up as a black screen
+            string extension = selectedFile.Extension.ToLower();
+            if (imageFormats.Contains(extension))
+            {
+                videoPlayer.Play();
+                videoPlaying = true;
+            }
         }
 
         private bool MatchesTagFilter(string fileName)
