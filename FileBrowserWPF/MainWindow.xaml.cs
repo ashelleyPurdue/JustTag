@@ -357,8 +357,12 @@ namespace FileBrowserWPF
             PlayOrPause(!videoPlaying);
         }
 
-        private void videoTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void videoTimeSlider_ValueChanged(object sender, MouseEventArgs e)
         {
+            // Don't do anything if the user isn't holding a button
+            if (e.LeftButton != MouseButtonState.Pressed)
+                return;
+
             // Cancel the current jump action
             sliderDragDelayer?.Stop();
 
@@ -381,6 +385,18 @@ namespace FileBrowserWPF
             sliderDragDelayer.Start();
         }
 
+        private void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Don't let the slider move on its own while the user is dragging it
+            sliderUpdateTimer.Stop();
+        }
+
+        private void videoTimeSlider_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // Let the slider move on its own again
+            sliderUpdateTimer.Start();
+        }
+
         private void SliderUpdateTimer_Tick(object sender, EventArgs e)
         {
             // Don't do anything if the open file is not a video
@@ -392,6 +408,5 @@ namespace FileBrowserWPF
 
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
         }
-
     }
 }
