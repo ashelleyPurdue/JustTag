@@ -107,11 +107,18 @@ namespace FileBrowserWPF
                 image.EndInit();
 
                 imagePreviewer.Source = image;
+
+                zoomBorder.Visibility = Visibility.Visible;
             }
             catch (NotSupportedException)
             {
-                // Nothing to see here.
+                // It's not an image, so hide the zoom box
+                zoomBorder.Visibility = Visibility.Hidden;
             }
+
+            // Okay, it wasn't an image.  Maybe it's a video?
+            videoPlayer.Visibility = Visibility.Visible;
+            videoPlayer.Source = new Uri(selectedFile.FullName);
         }
 
         private bool MatchesTagFilter(string fileName)

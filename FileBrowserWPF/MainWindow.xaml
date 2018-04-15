@@ -42,6 +42,15 @@
             <Image x:Name="imagePreviewer"/>
         </paz1:ZoomBorder>
 
+        <MediaElement Name="videoPlayer"
+            Grid.ColumnSpan="2"
+            Grid.Column="1"
+            Grid.Row="0"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            Visibility="Hidden"
+        />
+
         <TextBox x:Name="currentPathBox"
             Grid.Row="1"
             Grid.Column="1"
