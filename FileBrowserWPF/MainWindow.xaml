@@ -39,7 +39,10 @@
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
         >
-            <MediaElement Name="videoPlayer" LoadedBehavior="Manual"/>
+            <MediaElement Name="videoPlayer"
+                          LoadedBehavior="Manual"
+                          MediaOpened="videoPlayer_MediaOpened"
+             />
         </paz1:ZoomBorder>
 
         <Grid x:Name="videoControls"

@@ -28,7 +28,6 @@ namespace FileBrowserWPF
             ".jpeg",
             ".jpg",
             ".png",
-            ".gif",
             ".bmp",
             ".tiff"
         });
@@ -104,28 +103,6 @@ namespace FileBrowserWPF
             List<string> knownTagsList = allKnownTags.ToList();
             knownTagsList.Sort();
             allTagsListbox.ItemsSource = knownTagsList;
-        }
-
-        private void ShowFilePreview()
-        {
-            // If it's an image file, show it in the zoombox
-            FileInfo selectedFile = folderContentsBox.SelectedItem as FileInfo;
-
-            if (selectedFile == null)
-                return;
-
-            // Put it in the media element
-            videoPlayer.Source = new Uri(selectedFile.FullName);
-            videoPlayer.Pause();    // It's rude to suddenly start playing videos without asking, so start it paused
-            videoPlaying = false;
-
-            // If it's an image, "play" it so it doesn't show up as a black screen
-            string extension = selectedFile.Extension.ToLower();
-            if (imageFormats.Contains(extension))
-            {
-                videoPlayer.Play();
-                videoPlaying = true;
-            }
         }
 
         private bool MatchesTagFilter(string fileName)
@@ -208,8 +185,38 @@ namespace FileBrowserWPF
             return beforeTags + builder.ToString() + extension;
         }
 
+        private void ShowFilePreview()
+        {
+            // Don't do anything if it's a folder instead of a file
+            FileInfo selectedFile = folderContentsBox.SelectedItem as FileInfo;
+
+            if (selectedFile == null)
+                return;
+
+            // Put it in the media element and start playing.
+            // We're going to pause it immediately after the load event
+            videoPlayer.Source = new Uri(selectedFile.FullName);
+            videoPlayer.Play();
+            videoPlaying = true;
+        }
+
 
         // Event handlers
+
+        private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            // Enable the playback controls
+            playButton.IsEnabled = true;
+            videoTimeSlider.IsEnabled = true;
+
+            // It's rude to suddenly start playing a video without asking, so
+            // pause it immediately if it's a video
+            if (videoPlayer.NaturalDuration.HasTimeSpan)
+            {
+                videoPlayer.Pause();
+                videoPlaying = false;
+            }
+        }
 
         private void textbox_KeyUp(object sender, KeyEventArgs e)
         {
@@ -372,5 +379,7 @@ namespace FileBrowserWPF
 
             sliderDragDelayer.Start();
         }
+
+
     }
 }
