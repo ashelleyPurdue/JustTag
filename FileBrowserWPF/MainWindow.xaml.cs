@@ -149,8 +149,13 @@ namespace FileBrowserWPF
         private string ChangeFileTags(string fileName, string[] newTags)
         {
             // Get the stuff before and after the tags
-            string beforeTags = fileName.Split('[')[0];
-            string afterTags = fileName.Split(']')[1];
+            string beforeTags = fileName.Split('[', '.')[0];
+            string extension = System.IO.Path.GetExtension(fileName);
+
+            // If the new tags list is empty, don't even bother
+            // with the brackets.
+            if (newTags.Length == 0)
+                return beforeTags + extension;
 
             // Make a new tag string from the array
             StringBuilder builder = new StringBuilder();
@@ -168,7 +173,7 @@ namespace FileBrowserWPF
             builder.Append("]");
 
             // Jam them together to make the new filename
-            return beforeTags + builder.ToString() + afterTags;
+            return beforeTags + builder.ToString() + extension;
         }
 
 
