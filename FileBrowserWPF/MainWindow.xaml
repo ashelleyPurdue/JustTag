@@ -97,14 +97,14 @@
             Margin="10,5,10,62"
          >
             <Grid>
-                <TextBox x:Name="tagsBox"/>
+                <TextBox x:Name="tagsBox" TextChanged="tagsBox_TextChanged"/>
                 <Button x:Name="tagSaveButton"
                     Content="Save"
                     Visibility="Hidden"
                     HorizontalAlignment ="Right"
                     VerticalAlignment="Bottom"
                     Width="45"
-                    Margin="0,0,10,10"
+                    Margin="0,0,10,10" Click="tagSaveButton_Click"
                 />
             </Grid>
         </GroupBox>

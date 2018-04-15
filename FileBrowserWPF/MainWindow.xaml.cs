@@ -245,6 +245,39 @@ namespace FileBrowserWPF
                 builder.AppendLine(t);
 
             tagsBox.Text = builder.ToString();
+
+            // Hide the save button
+            tagSaveButton.Visibility = Visibility.Hidden;
+        }
+
+        private void tagsBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // TODO: Make the background red if any of the tags are invalid
+
+            // Show the save button
+            tagSaveButton.Visibility = Visibility.Visible;
+        }
+
+        private void tagSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Update the selected file's tags
+            FileInfo file = folderContentsBox.SelectedItem as FileInfo;
+
+            if (file == null)
+                return;
+
+            // Parse the tags into a list
+            string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Get the new file path
+            string newFileName = ChangeFileTags(file.Name, tags);
+            string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
+
+            // DEBUG: Print the file name instead of renaming
+            MessageBox.Show(newFilePath);
+
+            // Hide the save button
+            tagSaveButton.Visibility = Visibility.Hidden;
         }
     }
 }
