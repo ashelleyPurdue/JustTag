@@ -96,28 +96,7 @@ namespace FileBrowserWPF
             if (selectedFile == null)
                 return;
 
-            try
-            {
-                // Set the image source
-                // We're doing it this crazy way so the file doesn't remain open
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = new Uri(selectedFile.FullName);
-                image.EndInit();
-
-                imagePreviewer.Source = image;
-
-                zoomBorder.Visibility = Visibility.Visible;
-            }
-            catch (NotSupportedException)
-            {
-                // It's not an image, so hide the zoom box
-                zoomBorder.Visibility = Visibility.Hidden;
-            }
-
-            // Okay, it wasn't an image.  Maybe it's a video?
-            videoPlayer.Visibility = Visibility.Visible;
+            // Put it in the media element
             videoPlayer.Source = new Uri(selectedFile.FullName);
         }
 
