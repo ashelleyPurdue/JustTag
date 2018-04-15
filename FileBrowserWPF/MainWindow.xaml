@@ -15,20 +15,22 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="317*"/>
-            <ColumnDefinition Width="378*"/>
+            <ColumnDefinition Width="179*"/>
+            <ColumnDefinition Width="305*"/>
+            <ColumnDefinition Width="211*"/>
         </Grid.ColumnDefinitions>
 
         <ListBox x:Name="folderContentsBox"
-            Grid.Column="0"
+            Grid.Column="1"
             Grid.Row="1"
-            Margin="10,38,5,10"
+            Margin="5,38,5,10"
             MouseDoubleClick="folderContentsBox_MouseDoubleClick"
             SelectionChanged="folderContentsBox_SelectionChanged"
          />
 
         <paz1:ZoomBorder Name="zoomBorder"
             Grid.ColumnSpan="2"
+            Grid.Column="1"
             Grid.Row="0"
             Stretch="None"
             ZoomSpeed="1.2" 
@@ -36,28 +38,27 @@
             Focusable="True"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
-            Margin="10,10,10,10"
         >
             <Image x:Name="imagePreviewer"/>
         </paz1:ZoomBorder>
 
         <TextBox x:Name="currentPathBox"
             Grid.Row="1"
-            Grid.Column="0"
+            Grid.Column="1"
             Height="23"
             TextWrapping="Wrap"
             VerticalAlignment="Top"
             KeyUp="textbox_KeyUp"
             TextChanged="currentPathBox_TextChanged"
-            Margin="88,10,10,0"
+            Margin="83,10,5,0"
          />
 
         <Grid 
             Grid.Row="1"
-            Grid.Column="0"
+            Grid.Column="1"
             HorizontalAlignment="Left" 
             VerticalAlignment="Top"
-            Margin="10,10,0,0"
+            Margin="5,10,0,0"
             Width="73"
             Height="23"
         >
@@ -74,6 +75,15 @@
         <GridSplitter
             HorizontalAlignment="Left"
             Grid.Row="1"
+            Grid.Column="2"
+            Width="5"
+            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            Margin="0,0,0,10"
+         />
+
+        <GridSplitter
+            HorizontalAlignment="Left"
+            Grid.RowSpan="2"
             Grid.Column="1"
             Width="5"
             Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
@@ -82,6 +92,7 @@
 
         <GridSplitter
             Grid.Row="0"
+            Grid.Column="1"
             Grid.ColumnSpan="2"
             ResizeDirection="Rows"
             VerticalAlignment="Bottom"
@@ -93,7 +104,7 @@
 
         <GroupBox Header="Tags"
             Grid.Row="1"
-            Grid.Column="1"
+            Grid.Column="2"
             Margin="10,5,10,62"
          >
             <Grid>
@@ -110,7 +121,7 @@
         </GroupBox>
 
         <Label Content="Filter:"
-               Grid.Column="1"
+               Grid.Column="2"
                Grid.Row="1"
                HorizontalAlignment="Left"
                VerticalAlignment="Bottom"
@@ -118,7 +129,7 @@
          />
 
         <TextBox x:Name="tagFilterTextbox" 
-            Grid.Column="1" 
+            Grid.Column="2" 
             Grid.Row="1"
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Bottom"
@@ -126,6 +137,13 @@
             Margin="10,0,10,10"
             KeyUp="textbox_KeyUp"
          />
+
+        <GroupBox Header="All Known Tags"
+            Grid.Column="0"
+            Grid.RowSpan="2"
+        >
+            <ListBox x:Name="allTagsListbox" Margin="10,10,10,10"/>
+        </GroupBox>
     </Grid>
 
 </Window>

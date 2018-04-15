@@ -23,6 +23,7 @@ namespace FileBrowserWPF
     public partial class MainWindow : Window
     {
         private NavigationStack<string> pathHistory;
+        private HashSet<string> allKnownTags = new HashSet<string>();
 
         public MainWindow()
         {
@@ -30,6 +31,9 @@ namespace FileBrowserWPF
 
             pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
             UpdateCurrentDirectory();
+
+            // Hook the listbox up to the list of known tags
+            allTagsListbox.ItemsSource = allKnownTags;
         }
         
 
@@ -63,6 +67,12 @@ namespace FileBrowserWPF
             var files = currentDir.EnumerateFiles();
             foreach (FileInfo file in files)
             {
+                // Add all this file's tags to the list of known tags
+                string[] tags = GetFileTags(file.Name);
+                foreach (string t in tags)
+                    allKnownTags.Add(t);
+
+                // Don't add this file to the listbox if it doesn't match the filter
                 if (!MatchesTagFilter(file.Name))
                     continue;
 
@@ -70,6 +80,12 @@ namespace FileBrowserWPF
             }
 
             folderContentsBox.ItemsSource = fileSource;
+
+            // Update the known tags listbox
+            // Sort it in alphabetical order first
+            List<string> knownTagsList = allKnownTags.ToList();
+            knownTagsList.Sort();
+            allTagsListbox.ItemsSource = knownTagsList;
         }
 
         private void ShowFilePreview()
