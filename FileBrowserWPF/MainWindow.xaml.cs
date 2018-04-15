@@ -29,9 +29,9 @@ namespace FileBrowserWPF
         private bool videoPlaying = false;  // MediaElement doesn't have an IsPlaying property, so we need to
                                             // track it ourselves.  What a hassle!
 
-        private DispatcherTimer sliderDragDelayer;  // When the user drags the timer, we don't want to skip immediately because
-                                                    // that'd cause thousands of micro-jumps as they're dragging.  We use this object
-                                                    // to put it on a delay.
+        private bool dragCooldown = false;  // When the user drags the timer, we don't want to skip immediately because
+                                            // that'd cause thousands of micro-jumps as they're dragging.  We use this object
+                                            // to put it on a delay.
 
         private DispatcherTimer sliderUpdateTimer;  // Updates the slider position as the video is playing
 
@@ -368,33 +368,31 @@ namespace FileBrowserWPF
             if (e.LeftButton != MouseButtonState.Pressed)
                 return;
 
-            // Don't go on if there's already a jump action queued up
-            if (sliderDragDelayer != null)
+            // Don't go on if we're still cooling down
+            if (dragCooldown)
                 return;
 
-            // Start a new one
-            sliderDragDelayer = new DispatcherTimer();
-            sliderDragDelayer.Interval = TimeSpan.FromMilliseconds(30);
-            sliderDragDelayer.Tick += (object foo, EventArgs bar) =>
+            // Find the time to skip to
+            double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
+            double time = videoPlayer.NaturalDuration.TimeSpan.TotalSeconds * percent;
+
+            // Jump to the time
+            videoPlayer.Position = TimeSpan.FromSeconds(time);
+
+            // Show one frame
+            videoPlayer.Play();
+            System.Threading.Thread.Sleep(2);
+            videoPlayer.Pause();
+
+            // Don't call this again until a cooldown has passed
+            dragCooldown = true;
+            new System.Threading.Thread(() =>
             {
-                // Find the time to skip to
-                double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
-                double time = videoPlayer.NaturalDuration.TimeSpan.TotalSeconds * percent;
+                // Finish the cooldown after sleeping
+                System.Threading.Thread.Sleep(30);
+                dragCooldown = false;
+            }).Start();
 
-                // Jump to the time
-                videoPlayer.Position = TimeSpan.FromSeconds(time);
-
-                // Don't run again
-                sliderDragDelayer.Stop();
-                sliderDragDelayer = null;
-
-                // Show one frame
-                videoPlayer.Play();
-                System.Threading.Thread.Sleep(2);
-                videoPlayer.Pause();
-            };
-
-            sliderDragDelayer.Start();
         }
 
         private void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
