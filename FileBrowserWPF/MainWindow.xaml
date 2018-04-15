@@ -6,29 +6,29 @@
         xmlns:local="clr-namespace:FileBrowserWPF"
         xmlns:paz1="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" Background="#FFF0F0F0">
+        Title="MainWindow" Height="419" Width="525" Background="#FFF0F0F0">
     <Grid>
-        
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="208*"/>
-            <RowDefinition Height="111*"/>
+            <RowDefinition Height="173*"/>
+            <RowDefinition Height="146*"/>
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230*"/>
-            <ColumnDefinition Width="287*"/>
+            <ColumnDefinition Width="284*"/>
+            <ColumnDefinition Width="233*"/>
         </Grid.ColumnDefinitions>
-        
+
         <ListBox x:Name="folderContentsBox"
             Grid.Column="0"
-            Grid.RowSpan="2"
+            Grid.Row="1"
             Margin="10,38,5,10"
             MouseDoubleClick="folderContentsBox_MouseDoubleClick"
             SelectionChanged="folderContentsBox_SelectionChanged"
          />
-        
+
         <paz1:ZoomBorder Name="zoomBorder"
-            Grid.Column="1"
+            Grid.ColumnSpan="2"
             Grid.Row="0"
             Stretch="None"
             ZoomSpeed="1.2" 
@@ -36,22 +36,31 @@
             Focusable="True"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
-            Margin="10,38,10,10"
+            Margin="10,10,10,10"
         >
             <Image x:Name="imagePreviewer"/>
         </paz1:ZoomBorder>
 
         <TextBox x:Name="currentPathBox"
+            Grid.Row="1"
+            Grid.Column="0"
             Height="23"
             TextWrapping="Wrap"
             VerticalAlignment="Top"
             KeyUp="currentPathBox_KeyUp"
             TextChanged="currentPathBox_TextChanged"
             Margin="88,10,10,0"
-            Grid.ColumnSpan="2"
          />
 
-        <Grid Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="73" Height="23">
+        <Grid 
+            Grid.Row="1"
+            Grid.Column="0"
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top"
+            Margin="10,10,0,0"
+            Width="73"
+            Height="23"
+        >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -61,19 +70,19 @@
             <Button Grid.Column="1" x:Name="upButton" Content="^" Click="upButton_Click"/>
             <Button Grid.Column="2" x:Name="forwardButton" Content="-&gt;" Click="forwardButton_Click"/>
         </Grid>
-        
+
         <GridSplitter
             HorizontalAlignment="Left"
-            Grid.RowSpan="2"
+            Grid.Row="1"
             Grid.Column="1"
             Width="5"
             Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-            Margin="0,38,0,10"
+            Margin="0,0,0,10"
          />
 
         <GridSplitter
             Grid.Row="0"
-            Grid.Column="1"
+            Grid.ColumnSpan="2"
             ResizeDirection="Rows"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Stretch"
@@ -85,7 +94,7 @@
         <GroupBox Header="Tags"
             Grid.Row="1"
             Grid.Column="1"
-            Margin="10,0,10,10"
+            Margin="10,5"
          >
             <ListBox x:Name="tagsBox"/>
         </GroupBox>
