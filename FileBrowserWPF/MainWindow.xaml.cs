@@ -127,5 +127,22 @@ namespace FileBrowserWPF
             }
         }
 
+        private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // If it's an image file, show it in the zoombox
+            FileInfo selectedFile = folderContentsBox.SelectedItem as FileInfo;
+
+            if (selectedFile == null)
+                return;
+
+            try
+            {
+                imagePreviewer.Source = new BitmapImage(new Uri(selectedFile.FullName));
+            }
+            catch(NotSupportedException)
+            {
+                // Nothing to see here.
+            }
+        }
     }
 }
