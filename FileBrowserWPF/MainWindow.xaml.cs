@@ -80,7 +80,15 @@ namespace FileBrowserWPF
 
             try
             {
-                imagePreviewer.Source = new BitmapImage(new Uri(selectedFile.FullName));
+                // Set the image source
+                // We're doing it this crazy way so the file doesn't remain open
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = new Uri(selectedFile.FullName);
+                image.EndInit();
+
+                imagePreviewer.Source = image;
             }
             catch (NotSupportedException)
             {
@@ -273,8 +281,9 @@ namespace FileBrowserWPF
             string newFileName = ChangeFileTags(file.Name, tags);
             string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
 
-            // DEBUG: Print the file name instead of renaming
-            MessageBox.Show(newFilePath);
+            // Rename the file
+            file.MoveTo(newFilePath);
+            UpdateCurrentDirectory();
 
             // Hide the save button
             tagSaveButton.Visibility = Visibility.Hidden;
