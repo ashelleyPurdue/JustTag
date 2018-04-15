@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FileBrowserWPF
 {
@@ -62,6 +63,29 @@ namespace FileBrowserWPF
                 folderContentsBox.Items.Add(file);
         }
 
+        private void ShowFilePreview()
+        {
+            // If it's an image file, show it in the zoombox
+            FileInfo selectedFile = folderContentsBox.SelectedItem as FileInfo;
+
+            if (selectedFile == null)
+                return;
+
+            try
+            {
+                imagePreviewer.Source = new BitmapImage(new Uri(selectedFile.FullName));
+            }
+            catch (NotSupportedException)
+            {
+                // Nothing to see here.
+            }
+        }
+
+        private string[] GetFileTags(string fileName)
+        {
+            string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
+            return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
 
         // Event handlers
 
@@ -129,20 +153,19 @@ namespace FileBrowserWPF
 
         private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // If it's an image file, show it in the zoombox
-            FileInfo selectedFile = folderContentsBox.SelectedItem as FileInfo;
-
-            if (selectedFile == null)
+            // Don't do anything if selection is null
+            if (folderContentsBox.SelectedItem == null)
                 return;
 
-            try
-            {
-                imagePreviewer.Source = new BitmapImage(new Uri(selectedFile.FullName));
-            }
-            catch(NotSupportedException)
-            {
-                // Nothing to see here.
-            }
+            ShowFilePreview();
+
+            // Update the tag box with this file's tags
+            string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
+            string[] tags = GetFileTags(name);
+
+            tagsBox.Items.Clear();
+            foreach (string t in tags)
+                tagsBox.Items.Add(t);
         }
     }
 }

@@ -8,18 +8,48 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" Background="#FFF0F0F0">
     <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="208*"/>
+            <RowDefinition Height="111*"/>
+        </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="230*"/>
             <ColumnDefinition Width="287*"/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="folderContentsBox" MouseDoubleClick="folderContentsBox_MouseDoubleClick" SelectionChanged="folderContentsBox_SelectionChanged" Grid.Column="0" Margin="10,38,5,10"/>
-        <paz1:ZoomBorder Name="zoomBorder" Stretch="None" ZoomSpeed="1.2" 
-                        ClipToBounds="True" Focusable="True"
-                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,38,10,10" Grid.Column="1">
+        
+        <ListBox x:Name="folderContentsBox"
+            Grid.Column="0"
+            Grid.RowSpan="2"
+            Margin="10,38,5,10"
+            MouseDoubleClick="folderContentsBox_MouseDoubleClick"
+            SelectionChanged="folderContentsBox_SelectionChanged"
+         />
+        
+        <paz1:ZoomBorder Name="zoomBorder"
+            Grid.Column="1"
+            Grid.Row="0"
+            Stretch="None"
+            ZoomSpeed="1.2" 
+            ClipToBounds="True"
+            Focusable="True"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            Margin="10,38,10,10"
+        >
             <Image x:Name="imagePreviewer"/>
         </paz1:ZoomBorder>
 
-        <TextBox x:Name="currentPathBox" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="currentPathBox_KeyUp" TextChanged="currentPathBox_TextChanged" Margin="88,10,10,0" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="currentPathBox"
+            Height="23"
+            TextWrapping="Wrap"
+            VerticalAlignment="Top"
+            KeyUp="currentPathBox_KeyUp"
+            TextChanged="currentPathBox_TextChanged"
+            Margin="88,10,10,0"
+            Grid.ColumnSpan="2"
+         />
 
         <Grid Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="73" Height="23">
             <Grid.ColumnDefinitions>
@@ -31,7 +61,35 @@
             <Button Grid.Column="1" x:Name="upButton" Content="^" Click="upButton_Click"/>
             <Button Grid.Column="2" x:Name="forwardButton" Content="-&gt;" Click="forwardButton_Click"/>
         </Grid>
-        <GridSplitter HorizontalAlignment="Left" Width="5" Grid.Column="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="0,38,0,10"/>
+        
+        <GridSplitter
+            HorizontalAlignment="Left"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Width="5"
+            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            Margin="0,38,0,10"
+         />
+
+        <GridSplitter
+            Grid.Row="0"
+            Grid.Column="1"
+            ResizeDirection="Rows"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Stretch"
+            Height="5"
+            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            Margin="0,0,10,0" 
+         />
+
+        <GroupBox Header="Tags"
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="10,0,10,10"
+         >
+            <ListBox x:Name="tagsBox"/>
+        </GroupBox>
+
 
     </Grid>
 </Window>
