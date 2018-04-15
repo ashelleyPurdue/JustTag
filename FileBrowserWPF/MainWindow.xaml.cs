@@ -240,9 +240,11 @@ namespace FileBrowserWPF
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
             string[] tags = GetFileTags(name);
 
-            tagsBox.Items.Clear();
+            StringBuilder builder = new StringBuilder();
             foreach (string t in tags)
-                tagsBox.Items.Add(t);
+                builder.AppendLine(t);
+
+            tagsBox.Text = builder.ToString();
         }
     }
 }

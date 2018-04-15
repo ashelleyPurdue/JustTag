@@ -97,7 +97,7 @@
             Margin="10,5,10,62"
          >
             <Grid>
-                <ListBox x:Name="tagsBox"/>
+                <TextBox x:Name="tagsBox"/>
                 <Button x:Name="tagSaveButton"
                     Content="Save"
                     Visibility="Hidden"
