@@ -53,11 +53,11 @@ namespace FileBrowserWPF
             // Add all subdirectories to the listbox.
             // We want the subdirectories listed first so
             // the user can navigate easier
-            folderContentsBox.Items.Clear();
+            List<FileSystemInfo> fileSource = new List<FileSystemInfo>();
             
             var subdirs = currentDir.EnumerateDirectories();
             foreach (DirectoryInfo dir in subdirs)
-                folderContentsBox.Items.Add(dir);
+                fileSource.Add(dir);
 
             // Add all files to the listbox that match the filter
             var files = currentDir.EnumerateFiles();
@@ -66,8 +66,10 @@ namespace FileBrowserWPF
                 if (!MatchesTagFilter(file.Name))
                     continue;
 
-                folderContentsBox.Items.Add(file);
+                fileSource.Add(file);
             }
+
+            folderContentsBox.ItemsSource = fileSource;
         }
 
         private void ShowFilePreview()
