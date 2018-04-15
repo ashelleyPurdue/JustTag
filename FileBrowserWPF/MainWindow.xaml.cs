@@ -365,6 +365,9 @@ namespace FileBrowserWPF
             // Cancel the current jump action
             sliderDragDelayer?.Stop();
 
+            // Stop the slider from moving on its own while the user is dragging
+            sliderUpdateTimer.Stop();
+
             // Start a new one
             sliderDragDelayer = new DispatcherTimer();
             sliderDragDelayer.Interval = TimeSpan.FromMilliseconds(30);
@@ -379,6 +382,9 @@ namespace FileBrowserWPF
 
                 // Don't run again
                 sliderDragDelayer.Stop();
+
+                // Let the slider start moving again
+                sliderUpdateTimer.Start();
             };
 
             sliderDragDelayer.Start();
