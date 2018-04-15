@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FileBrowserWPF
 {
@@ -82,7 +83,8 @@ namespace FileBrowserWPF
 
         private string[] GetFileTags(string fileName)
         {
-            return new string[] { "dummy", "tags" };
+            string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
+            return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         // Event handlers
@@ -151,6 +153,10 @@ namespace FileBrowserWPF
 
         private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Don't do anything if selection is null
+            if (folderContentsBox.SelectedItem == null)
+                return;
+
             ShowFilePreview();
 
             // Update the tag box with this file's tags
