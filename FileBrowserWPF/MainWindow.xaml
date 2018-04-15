@@ -107,7 +107,7 @@
                Margin="10,0,0,36" Height="26" Width="39" RenderTransformOrigin="1.462,0.577"
          />
 
-        <TextBox 
+        <TextBox x:Name="tagFilterTextbox" 
             Grid.Column="1" 
             Grid.Row="1"
             HorizontalAlignment="Stretch" 

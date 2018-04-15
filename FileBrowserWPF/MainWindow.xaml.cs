@@ -36,8 +36,6 @@ namespace FileBrowserWPF
 
         private void UpdateCurrentDirectory()
         {
-            Console.WriteLine(pathHistory.ToString());
-
             // Move to the directory
             Directory.SetCurrentDirectory(pathHistory.Current);
             DirectoryInfo currentDir = new DirectoryInfo(pathHistory.Current);
@@ -51,7 +49,9 @@ namespace FileBrowserWPF
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
-            // Add all subdirectories to the listbox
+            // Add all subdirectories to the listbox.
+            // We want the subdirectories listed first so
+            // the user can navigate easier
             folderContentsBox.Items.Clear();
             
             var subdirs = currentDir.EnumerateDirectories();
@@ -89,7 +89,21 @@ namespace FileBrowserWPF
 
         private bool MatchesTagFilter(string fileName)
         {
-            return GetFileTags(fileName).Contains("pinup");
+            // Get all the tags from the filename
+            string[] tags = GetFileTags(fileName);
+
+            // Parse all the required tags from the filter
+            // TODO: Move this part somewhere else so we only have to parse the filter once.
+            string[] requiredTags = tagFilterTextbox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Return false if any of the required tags are missing
+            // TODO: Allow for the exclusion of tags
+            foreach (string t in requiredTags)
+                if (!tags.Contains(t))
+                    return false;
+
+            // It has all the tags, so return true
+            return true;
         }
 
         private string[] GetFileTags(string fileName)
