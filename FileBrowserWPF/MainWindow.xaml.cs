@@ -23,15 +23,6 @@ namespace FileBrowserWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly HashSet<string> imageFormats = new HashSet<string>(new string[]
-        {
-            ".jpeg",
-            ".jpg",
-            ".png",
-            ".bmp",
-            ".tiff"
-        });
-
         private NavigationStack<string> pathHistory;
         private HashSet<string> allKnownTags = new HashSet<string>();
 
