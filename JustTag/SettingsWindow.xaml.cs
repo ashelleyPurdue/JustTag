@@ -24,6 +24,18 @@ namespace JustTag
         public SettingsWindow()
         {
             InitializeComponent();
+
+            // Start the checkbox checked if it's already installed(and has the correct path)
+            string regVal = Registry.GetValue(@"HKEY_CLASSES_ROOT\*\shell\JustTag\command", "", null) as string;
+
+            string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string expectedVal = "\"" + exePath + "\" \"%1\"";
+            if (regVal == expectedVal)
+            {
+                installContextMenuCheckbox.Checked -= installContextMenuCheckbox_Checked;
+                installContextMenuCheckbox.IsChecked = true;
+                installContextMenuCheckbox.Checked += installContextMenuCheckbox_Checked;
+            }
         }
 
         private void installContextMenuCheckbox_Checked(object sender, RoutedEventArgs e)
@@ -57,7 +69,7 @@ namespace JustTag
         private void installContextMenuCheckbox_Unchecked(object sender, RoutedEventArgs e)
         {
             // Delete the keys added by install
-            Registry.ClassesRoot.DeleteSubKeyTree(@"*\shell\JustTag");
+            Registry.ClassesRoot.DeleteSubKeyTree(@"*\shell\JustTag", false);
         }
     }
 }
