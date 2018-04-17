@@ -95,6 +95,10 @@ namespace JustTag
 
             string[] filterWords = tagFilterTextbox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
+            // HACK: If any of the words are ":untagged:", show only files without any tags.
+            if (filterWords.Contains(":untagged:"))
+                return tags.Length == 0;
+
             foreach (string word in filterWords)
             {
                 // Sort each word into either forbidden or required tags
