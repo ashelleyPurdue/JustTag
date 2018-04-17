@@ -26,7 +26,7 @@ namespace JustTag
             InitializeComponent();
         }
 
-        private void installShellButton_Click(object sender, RoutedEventArgs e)
+        private void installContextMenuCheckbox_Checked(object sender, RoutedEventArgs e)
         {
             // Set the proper entries in the registry to make this program show up in the
             // context menu
@@ -54,7 +54,7 @@ namespace JustTag
             );
         }
 
-        private void uninstallShellButton_Click(object sender, RoutedEventArgs e)
+        private void installContextMenuCheckbox_Unchecked(object sender, RoutedEventArgs e)
         {
             // Delete the keys added by install
             Registry.ClassesRoot.DeleteSubKeyTree(@"*\shell\JustTag");
