@@ -1,0 +1,16 @@
+﻿<Window x:Class="JustTag.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JustTag"
+        mc:Ignorable="d"
+        Title="Settings" Height="300" Width="476.068">
+    <Grid>
+        <StackPanel Margin="10,10,10,10">
+            <CheckBox x:Name="installContextMenuCheckbox" Unchecked="installContextMenuCheckbox_Unchecked" Checked="installContextMenuCheckbox_Checked">
+                Add an "Open with JustTag" option to Windows Explorer"(Requires admin rights)
+            </CheckBox>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -412,5 +412,12 @@ namespace JustTag
 
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
         }
+
+        private void settingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Open the settings window
+            SettingsWindow w = new SettingsWindow();
+            w.ShowDialog();
+        }
     }
 }
