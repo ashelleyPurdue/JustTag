@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JustTag"
+             xmlns:paz="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -11,6 +12,22 @@
             <RowDefinition Height="21*"/>
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
+
+
+        <paz:ZoomBorder Name="zoomBorder"
+            Grid.Row="0"
+            Stretch="None"
+            ZoomSpeed="1.2" 
+            ClipToBounds="True"
+            Focusable="True"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+        >
+            <MediaElement Name="videoPlayer"
+                LoadedBehavior="Manual"
+                MediaOpened="videoPlayer_MediaOpened"
+             />
+        </paz:ZoomBorder>
 
         <Grid x:Name="videoControls"
             Grid.Row="1"
