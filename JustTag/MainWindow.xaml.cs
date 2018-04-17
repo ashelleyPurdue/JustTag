@@ -234,7 +234,11 @@ namespace JustTag
             if (folderContentsBox.SelectedItem == null)
                 return;
 
-            ShowFilePreview();
+            // Show a file preview if it's not a folder
+            FileInfo file = folderContentsBox.SelectedItem as FileInfo;
+
+            if (file != null)
+                videoPlayer.ShowFilePreview(file);
 
             // Update the tag box with this file's tags
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
