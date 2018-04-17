@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace JustTag
 {
@@ -20,6 +21,12 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
+        private DispatcherTimer sliderUpdateTimer;  // Updates the slider position as the video is playing
+
+        private bool videoPlaying = false;          // MediaElement doesn't have an IsPlaying property, so we need to
+                                                    // track it ourselves.  What a hassle!
+
+
         public VideoPlayer()
         {
             InitializeComponent();
