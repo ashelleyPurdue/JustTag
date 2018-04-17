@@ -33,52 +33,15 @@
             SelectionChanged="folderContentsBox_SelectionChanged"
          />
 
-        <paz1:ZoomBorder Name="zoomBorder"
+        <local:VideoPlayer x:Name="videoPlayer"
             Grid.ColumnSpan="2"
             Grid.Column="1"
             Grid.Row="1"
-            Stretch="None"
-            ZoomSpeed="1.2" 
             ClipToBounds="True"
             Focusable="True"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
-        >
-            <MediaElement Name="videoPlayer"
-                LoadedBehavior="Manual"
-                MediaOpened="videoPlayer_MediaOpened"
-             />
-        </paz1:ZoomBorder>
-
-        <Grid x:Name="videoControls"
-            Grid.ColumnSpan="2"
-            Grid.Column="1"
-            Grid.Row="1"
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Stretch"
-            Height="50"
-            IsEnabled="False"
-        >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-
-            <Button x:Name="playButton"
-                Grid.Column="0"
-                Content="Play"
-                Margin="5,5,5,5"
-                Click="playButton_Click"
-             />
-
-            <Slider x:Name="videoTimeSlider"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Margin="5,5,5,5"
-                    MouseMove="videoTimeSlider_MouseMoved"
-                    PreviewMouseDown="videoTimeSlider_MouseDown"
-             />
-        </Grid>
+        />
 
         <TextBox x:Name="currentPathBox"
             Grid.Row="2"
