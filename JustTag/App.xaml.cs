@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FileBrowserWPF
+namespace JustTag
 {
     /// <summary>
     /// Interaction logic for App.xaml

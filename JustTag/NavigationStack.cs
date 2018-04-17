@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileBrowserWPF
+namespace JustTag
 {
     /// <summary>
     /// A stack, except you can move backwards and fowards

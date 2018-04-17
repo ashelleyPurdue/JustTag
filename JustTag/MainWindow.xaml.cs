@@ -16,7 +16,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
 
-namespace FileBrowserWPF
+namespace JustTag
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
