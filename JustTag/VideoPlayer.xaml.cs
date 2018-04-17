@@ -26,10 +26,15 @@ namespace JustTag
         private bool videoPlaying = false;          // MediaElement doesn't have an IsPlaying property, so we need to
                                                     // track it ourselves.  What a hassle!
 
-
         public VideoPlayer()
         {
             InitializeComponent();
+
+            // Hook up the slider update timer
+            sliderUpdateTimer = new DispatcherTimer();
+            sliderUpdateTimer.Interval = TimeSpan.FromMilliseconds(30);
+            sliderUpdateTimer.Tick += SliderUpdateTimer_Tick;
+            sliderUpdateTimer.Start();
         }
 
         private void PlayOrPause(bool play)
