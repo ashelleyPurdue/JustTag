@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JustTag"
         xmlns:paz1="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
         mc:Ignorable="d"
-        Title="MainWindow" Height="556" Width="703" Background="#FFF0F0F0">
+        Title="JustTag" Height="556" Width="703" Background="#FFF0F0F0">
     <Grid>
 
         <Grid.RowDefinitions>
