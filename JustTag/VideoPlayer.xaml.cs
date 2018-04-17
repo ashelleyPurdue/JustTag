@@ -25,6 +25,26 @@ namespace JustTag
             InitializeComponent();
         }
 
+        private void PlayOrPause(bool play)
+        {
+            // Play/pause the video
+            if (play)
+            {
+                videoPlayer.Play();
+                sliderUpdateTimer.Start();
+            }
+            else
+            {
+                videoPlayer.Pause();
+                sliderUpdateTimer.Stop();
+            }
+            // Remember the playing state, because MediaElement is stupid.
+            videoPlaying = play;
+
+            // Update the play button's text
+            playButton.Content = play ? "Pause" : "Play";
+        }
+
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
             // Play/pause the video
