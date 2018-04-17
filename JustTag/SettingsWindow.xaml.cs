@@ -25,8 +25,13 @@ namespace JustTag
         public SettingsWindow()
         {
             InitializeComponent();
+            InitializeContextMenuCheckbox();
+        }
 
-            // Disable the install checkbox if we're not in admin mode.
+        // Misc methods
+        private void InitializeContextMenuCheckbox()
+        {
+            // Disable the checkbox if we're not in admin mode.
             // Stolen from https://stackoverflow.com/questions/5953240/c-sharp-administrator-privilege-checking
             bool isElevated;
             using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
@@ -44,11 +49,16 @@ namespace JustTag
             string expectedVal = "\"" + exePath + "\" \"%1\"";
             if (regVal == expectedVal)
             {
+                // We need to temporarily unsubscribe it from the Checked event, because simply changing
+                // IsChecked will trigger it otherwise.
                 installContextMenuCheckbox.Checked -= installContextMenuCheckbox_Checked;
                 installContextMenuCheckbox.IsChecked = true;
                 installContextMenuCheckbox.Checked += installContextMenuCheckbox_Checked;
             }
         }
+        
+
+        // Event handlers
 
         private void installContextMenuCheckbox_Checked(object sender, RoutedEventArgs e)
         {
