@@ -37,6 +37,9 @@ namespace JustTag
             sliderUpdateTimer.Start();
         }
 
+
+        // Misc methods
+
         private void PlayOrPause(bool play)
         {
             // Play/pause the video
@@ -55,6 +58,19 @@ namespace JustTag
 
             // Update the play button's text
             playButton.Content = play ? "Pause" : "Play";
+        }
+
+
+        // Event handlers
+
+        private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            // It's rude to suddenly start playing a video without asking,
+            // so pause it after we've seen the first frame.
+            PlayOrPause(false);
+
+            // If it's a video, enable the playback controls
+            videoControls.IsEnabled = videoPlayer.NaturalDuration.HasTimeSpan;
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
