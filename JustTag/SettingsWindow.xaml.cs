@@ -28,6 +28,8 @@ namespace JustTag
 
         private void installShellButton_Click(object sender, RoutedEventArgs e)
         {
+            // Set the proper entries in the registry to make this program show up in the
+            // context menu
             string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
             Registry.SetValue
@@ -50,6 +52,12 @@ namespace JustTag
                 "",
                 "\"" + exePath + "\" \"%1\""
             );
+        }
+
+        private void uninstallShellButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Delete the keys added by install
+            Registry.ClassesRoot.DeleteSubKeyTree(@"*\shell\JustTag");
         }
     }
 }
