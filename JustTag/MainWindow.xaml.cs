@@ -23,10 +23,6 @@ namespace JustTag
         private bool videoPlaying = false;  // MediaElement doesn't have an IsPlaying property, so we need to
                                             // track it ourselves.  What a hassle!
 
-        private bool dragCooldown = false;  // When the user drags the timer, we don't want to skip immediately because
-                                            // that'd cause thousands of micro-jumps as they're dragging.  We use this object
-                                            // to put it on a delay.
-
         private DispatcherTimer sliderUpdateTimer;  // Updates the slider position as the video is playing
 
         public MainWindow()
@@ -362,10 +358,6 @@ namespace JustTag
             if (e.LeftButton != MouseButtonState.Pressed)
                 return;
 
-            // Don't go on if we're still cooling down
-            if (dragCooldown)
-                return;
-
             // Find the time to skip to
             double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
             double time = videoPlayer.NaturalDuration.TimeSpan.TotalSeconds * percent;
@@ -378,13 +370,16 @@ namespace JustTag
             System.Threading.Thread.Sleep(2);
             videoPlayer.Pause();
 
-            // Don't call this again until a cooldown has passed
-            dragCooldown = true;
+            // Don't let this event fire again until a minimum amount of time has passed
+            // This way we don't get a bunch of micro-jumps as the user moves.
+            videoTimeSlider.MouseMove -= videoTimeSlider_MouseMoved;
             new System.Threading.Thread(() =>
             {
-                // Finish the cooldown after sleeping
+                // Sleep for a bit
                 System.Threading.Thread.Sleep(30);
-                dragCooldown = false;
+
+                // Resubscribe to the event
+                videoTimeSlider.MouseMove += videoTimeSlider_MouseMoved;
             }).Start();
 
         }
