@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Security.Principal;
 
 namespace JustTag
 {
@@ -25,7 +26,18 @@ namespace JustTag
         {
             InitializeComponent();
 
-            // Start the checkbox checked if it's already installed(and has the correct path)
+            // Disable the install checkbox if we're not in admin mode.
+            // Stolen from https://stackoverflow.com/questions/5953240/c-sharp-administrator-privilege-checking
+            bool isElevated;
+            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+            {
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            if (!isElevated)
+                installContextMenuCheckbox.IsEnabled = false;
+
+            // Start the install checkbox as checked if it's already installed(and has the correct path)
             string regVal = Registry.GetValue(@"HKEY_CLASSES_ROOT\*\shell\JustTag\command", "", null) as string;
 
             string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;

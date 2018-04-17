@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JustTag"
         mc:Ignorable="d"
-        Title="Settings" Height="300" Width="365.812">
+        Title="Settings" Height="300" Width="476.068">
     <Grid>
         <StackPanel Margin="10,10,10,10">
             <CheckBox x:Name="installContextMenuCheckbox" Unchecked="installContextMenuCheckbox_Unchecked" Checked="installContextMenuCheckbox_Checked">
-                Add an "Open with JustTag" option to Windows Explorer"
+                Add an "Open with JustTag" option to Windows Explorer"(Requires admin rights)
             </CheckBox>
         </StackPanel>
     </Grid>
