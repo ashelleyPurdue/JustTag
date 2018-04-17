@@ -33,7 +33,7 @@ namespace JustTag
             Registry.SetValue
             (
                 @"HKEY_CLASSES_ROOT\*\shell\JustTag",
-                "(Default)",
+                "",
                 "Open w&ith JustTag"
             );
 
@@ -47,7 +47,7 @@ namespace JustTag
             Registry.SetValue
             (
                 @"HKEY_CLASSES_ROOT\*\shell\JustTag\command",
-                "(Default)",
+                "",
                 "\"" + exePath + "\" \"%1\""
             );
         }
