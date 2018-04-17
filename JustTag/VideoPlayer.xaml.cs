@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,17 @@ namespace JustTag
 
 
         // Misc methods
+
+        public void ShowFilePreview(FileInfo selectedFile)
+        {
+            // Disable the navigation controls
+            videoControls.IsEnabled = false;
+
+            // Put it in the media element and start playing.
+            // We're going to pause it immediately during the MediaOpened event
+            videoPlayer.Source = new Uri(selectedFile.FullName);
+            PlayOrPause(true);
+        }
 
         private void PlayOrPause(bool play)
         {
