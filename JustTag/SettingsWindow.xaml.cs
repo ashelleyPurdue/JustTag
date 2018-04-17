@@ -32,21 +32,21 @@ namespace JustTag
 
             Registry.SetValue
             (
-                @"\HKEY_CLASSES_ROOT\*\shell\JustTag",
+                @"HKEY_CLASSES_ROOT\*\shell\JustTag",
                 "(Default)",
                 "Open w&ith JustTag"
             );
 
             Registry.SetValue
             (
-                @"\HKEY_CLASSES_ROOT\*\shell\JustTag",
+                @"HKEY_CLASSES_ROOT\*\shell\JustTag",
                 "Icon",
                 exePath
             );
 
             Registry.SetValue
             (
-                @"\HKEY_CLASSES_ROOT\*\shell\JustTag\command",
+                @"HKEY_CLASSES_ROOT\*\shell\JustTag\command",
                 "(Default)",
                 "\"" + exePath + "\" \"%1\""
             );
