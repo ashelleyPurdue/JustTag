@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,36 @@ namespace JustTag
     /// </summary>
     public partial class SettingsWindow : Window
     {
+
         public SettingsWindow()
         {
             InitializeComponent();
+        }
+
+        private void installShellButton_Click(object sender, RoutedEventArgs e)
+        {
+            string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            Registry.SetValue
+            (
+                @"\HKEY_CLASSES_ROOT\*\shell\JustTag",
+                "(Default)",
+                "Open w&ith JustTag"
+            );
+
+            Registry.SetValue
+            (
+                @"\HKEY_CLASSES_ROOT\*\shell\JustTag",
+                "Icon",
+                exePath
+            );
+
+            Registry.SetValue
+            (
+                @"\HKEY_CLASSES_ROOT\*\shell\JustTag\command",
+                "(Default)",
+                "\"" + exePath + "\" \"%1\""
+            );
         }
     }
 }
