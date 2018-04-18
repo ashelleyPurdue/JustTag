@@ -29,10 +29,11 @@
             Grid.Column="1"
             Grid.Row="2"
             Grid.RowSpan="2"
-            Margin="5,5,5,10"
+            Margin="5,60,5,10"
             MouseDoubleClick="folderContentsBox_MouseDoubleClick"
             SelectionChanged="folderContentsBox_SelectionChanged"
-         />
+         >
+        </ListBox>
 
         <local:VideoPlayer x:Name="videoPlayer"
             Grid.ColumnSpan="1"
@@ -131,15 +132,24 @@
                Margin="10,0,0,36" Height="26" Width="39" RenderTransformOrigin="1.462,0.577"
          />
 
-        <TextBox x:Name="tagFilterTextbox" 
-            Grid.Column="2" 
-            Grid.Row="3"
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Bottom"
-            Height="24"
-            Margin="10,0,10,10"
-            KeyUp="textbox_KeyUp"
-         />
+        <StackPanel 
+            Grid.Column="1"
+            Grid.Row="2"   
+            Margin="5"
+         >
+            <DockPanel>
+                <Label Content="Filter:"/>
+                <TextBox x:Name="tagFilterTextbox"
+                         HorizontalAlignment="Stretch"
+                         KeyUp="textbox_KeyUp"
+                />
+            </DockPanel>
+
+            <CheckBox x:Name="shuffleCheckbox"
+                      Content="Shuffle"
+                      Margin="5"
+            />
+        </StackPanel>
 
         <GroupBox Header="All Known Tags"
             Grid.Column="0"
