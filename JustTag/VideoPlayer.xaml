@@ -9,8 +9,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="21*"/>
-            <RowDefinition Height="4*"/>
+            <RowDefinition/>
+            <RowDefinition Height="38"/>
         </Grid.RowDefinitions>
 
 
@@ -31,9 +31,6 @@
 
         <Grid x:Name="videoControls"
             Grid.Row="1"
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Stretch"
-            Height="50"
             IsEnabled="False" 
         >
             <Grid.ColumnDefinitions>
@@ -43,6 +40,7 @@
 
             <Button x:Name="playButton"
                 Grid.Column="0"
+                Grid.Row="1"
                 Content="Play"
                 Margin="5,5,5,5"
                 Click="playButton_Click"
@@ -50,6 +48,7 @@
 
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
+                    Grid.Row="1"
                     VerticalAlignment="Center"
                     Margin="5,5,5,5"
                     MouseMove="videoTimeSlider_MouseMoved"
