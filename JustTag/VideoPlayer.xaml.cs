@@ -104,11 +104,6 @@ namespace JustTag
             // Jump to the time
             videoPlayer.Position = TimeSpan.FromSeconds(time);
 
-            // Show one frame
-            videoPlayer.Play();
-            System.Threading.Thread.Sleep(2);
-            videoPlayer.Pause();
-
             // Don't let this event fire again until a minimum amount of time has passed
             // This way we don't get a bunch of micro-jumps as the user moves.
             videoTimeSlider.MouseMove -= videoTimeSlider_MouseMoved;

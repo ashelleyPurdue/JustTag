@@ -25,6 +25,7 @@
         >
             <MediaElement Name="videoPlayer"
                 LoadedBehavior="Manual"
+                ScrubbingEnabled="True"
                 MediaOpened="videoPlayer_MediaOpened"
              />
         </paz:ZoomBorder>
