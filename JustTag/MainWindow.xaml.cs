@@ -80,12 +80,19 @@ namespace JustTag
             fileSource.AddRange(folders);
 
             // Add all the files that match the filter
-            var matchingFiles = from file in files
-                                where MatchesTagFilter(file.Name)
-                                select file;
+            // Also record their tags in the "all known tags" list
+            foreach (FileSystemInfo file in files)
+            {
+                // Record all the tags
+                string[] tags = GetFileTags(file.Name);
+                foreach (string tag in tags)
+                    allKnownTags.Add(tag);
 
-            // Put them all in the listbox
-            fileSource.AddRange(matchingFiles);
+                // Add it if it matches
+                if (MatchesTagFilter(file.Name))
+                    fileSource.Add(file);
+            }
+
             folderContentsBox.ItemsSource = fileSource;
 
             // Update the known tags listbox
