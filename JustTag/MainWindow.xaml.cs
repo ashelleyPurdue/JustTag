@@ -297,6 +297,14 @@ namespace JustTag
             tagSaveButton.Visibility = Visibility.Hidden;
         }
 
+        private void tagsBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // Press the save button if it's ctrl+s
+            bool ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            if (e.Key == Key.S && ctrl)
+                tagSaveButton_Click(sender, null);
+        }
+
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
             // Open the settings window
