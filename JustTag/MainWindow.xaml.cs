@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
 using System.Text.RegularExpressions;
+using IWshRuntimeLibrary;
 using System.Windows.Threading;
 
 namespace JustTag
@@ -49,31 +50,42 @@ namespace JustTag
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
-            // Add all subdirectories to the listbox.
-            // We want the subdirectories listed first so
-            // the user can navigate easier
-            List<FileSystemInfo> fileSource = new List<FileSystemInfo>();
-            
-            var subdirs = currentDir.EnumerateDirectories();
-            foreach (DirectoryInfo dir in subdirs)
-                fileSource.Add(dir);
+            // Sort the directory entries into folders and files
+            // This way we can display folders first so the user
+            // Can navigate easier.
+            var folders = new List<FileSystemInfo>();
+            var files = new List<FileSystemInfo>();
 
-            // Add all files to the listbox that match the filter
-            var files = currentDir.EnumerateFiles();
-            foreach (FileInfo file in files)
+            var entries = currentDir.EnumerateFileSystemInfos();
+            foreach (FileSystemInfo e in entries)
             {
-                // Add all this file's tags to the list of known tags
-                string[] tags = GetFileTags(file.Name);
-                foreach (string t in tags)
-                    allKnownTags.Add(t);
+                // If it's a shortcut, resolve its target first
+                FileSystemInfo entry = e;
 
-                // Don't add this file to the listbox if it doesn't match the filter
-                if (!MatchesTagFilter(file.Name))
-                    continue;
+                if (entry.Extension.ToLower() == ".lnk")
+                    entry = GetShortcutTarget(entry);
 
-                fileSource.Add(file);
+                // Pick the right list to put it in
+                List<FileSystemInfo> correctList = files;
+
+                if (entry is DirectoryInfo)
+                    correctList = folders;
+
+                // Put it in the list
+                correctList.Add(entry);
             }
 
+            // Add the folders first
+            var fileSource = new List<FileSystemInfo>();
+            fileSource.AddRange(folders);
+
+            // Add all the files that match the filter
+            var matchingFiles = from file in files
+                                where MatchesTagFilter(file.Name)
+                                select file;
+
+            // Put them all in the listbox
+            fileSource.AddRange(matchingFiles);
             folderContentsBox.ItemsSource = fileSource;
 
             // Update the known tags listbox
@@ -81,6 +93,20 @@ namespace JustTag
             List<string> knownTagsList = allKnownTags.ToList();
             knownTagsList.Sort();
             allTagsListbox.ItemsSource = knownTagsList;
+        }
+
+        private FileSystemInfo GetShortcutTarget(FileSystemInfo shortcut)
+        {
+            // Get the target path
+            IWshShell shell = new WshShell();
+            IWshShortcut lnk = shell.CreateShortcut(shortcut.FullName);
+            string target = lnk.TargetPath;
+
+            // Put it in a FileSystemInfo of the correct type
+            if (Directory.Exists(target))
+                return new DirectoryInfo(target);
+
+            return new FileInfo(target);
         }
 
         private bool MatchesTagFilter(string fileName)
@@ -128,7 +154,10 @@ namespace JustTag
 
         private string[] GetFileTags(string fileName)
         {
+            // This horrible regex just extracts everything in between '[' and ']'.
             string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
+
+            // Split them by space
             return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
