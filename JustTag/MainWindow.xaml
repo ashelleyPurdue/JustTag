@@ -109,7 +109,7 @@
             Margin="10,5,10,62"
          >
             <Grid>
-                <TextBox x:Name="tagsBox" TextChanged="tagsBox_TextChanged" AcceptsReturn="True"/>
+                <TextBox x:Name="tagsBox" TextChanged="tagsBox_TextChanged" AcceptsReturn="True" PreviewKeyDown="tagsBox_PreviewKeyDown"/>
                 <Button x:Name="tagSaveButton"
                     Content="Save"
                     Visibility="Hidden"
