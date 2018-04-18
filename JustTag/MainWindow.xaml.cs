@@ -299,9 +299,13 @@ namespace JustTag
 
         private void tagsBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            // Press the save button if it's ctrl+s
-            bool ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-            if (e.Key == Key.S && ctrl)
+            // HACK: Don't do anything if the save button is invisible
+            if (tagSaveButton.Visibility == Visibility.Hidden)
+                return;
+
+            // Press the save button if it's shift+enter
+            bool shift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            if (e.Key == Key.Enter && shift)
                 tagSaveButton_Click(sender, null);
         }
 
