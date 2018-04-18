@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
 using System.Text.RegularExpressions;
+using IWshRuntimeLibrary;
 using System.Windows.Threading;
 
 namespace JustTag
@@ -96,8 +97,16 @@ namespace JustTag
 
         private FileSystemInfo GetShortcutTarget(FileSystemInfo shortcut)
         {
-            // TEMPORARY: Just make it link back to the working directory
-            return new DirectoryInfo(Directory.GetCurrentDirectory());
+            // Get the target path
+            IWshShell shell = new WshShell();
+            IWshShortcut lnk = shell.CreateShortcut(shortcut.FullName);
+            string target = lnk.TargetPath;
+
+            // Put it in a FileSystemInfo of the correct type
+            if (Directory.Exists(target))
+                return new DirectoryInfo(target);
+
+            return new FileInfo(target);
         }
 
         private bool MatchesTagFilter(string fileName)
