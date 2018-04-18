@@ -56,14 +56,21 @@ namespace JustTag
             var files = new List<FileSystemInfo>();
 
             var entries = currentDir.EnumerateFileSystemInfos();
-            foreach (FileSystemInfo entry in entries)
+            foreach (FileSystemInfo e in entries)
             {
+                // If it's a shortcut, resolve its target first
+                FileSystemInfo entry = e;
+
+                if (entry.Extension.ToLower() == ".lnk")
+                    entry = GetShortcutTarget(entry);
+
+                // Pick the right list to put it in
                 List<FileSystemInfo> correctList = files;
 
-                // TODO: If it's a shortcut to a folder, count it here too.
                 if (entry is DirectoryInfo)
                     correctList = folders;
 
+                // Put it in the list
                 correctList.Add(entry);
             }
 
@@ -85,6 +92,12 @@ namespace JustTag
             List<string> knownTagsList = allKnownTags.ToList();
             knownTagsList.Sort();
             allTagsListbox.ItemsSource = knownTagsList;
+        }
+
+        private FileSystemInfo GetShortcutTarget(FileSystemInfo shortcut)
+        {
+            // TEMPORARY: Just make it link back to the working directory
+            return new DirectoryInfo(Directory.GetCurrentDirectory());
         }
 
         private bool MatchesTagFilter(string fileName)
