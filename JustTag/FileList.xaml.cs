@@ -57,5 +57,10 @@ namespace JustTag
         {
             InitializeComponent();
         }
+
+        public void ScrollIntoView(object item)
+        {
+            list.ScrollIntoView(item);
+        }
     }
 }
