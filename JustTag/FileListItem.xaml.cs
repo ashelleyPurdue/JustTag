@@ -31,14 +31,11 @@ namespace JustTag
             InitializeComponent();
             this.file = file;
 
-            // Set the text
             nameLabel.Content = file.Name;
 
-            // Set the icon
-            if (!(file is FileInfo))
-                return;
-
-            iconImg.Source = Utils.GetFileIcon(file);
+            // Change the icon if it's not a folder
+            if (file is FileInfo)
+                iconImg.Source = Utils.GetFileIcon(file);
         }
 
     }

@@ -11,6 +11,7 @@
                DockPanel.Dock="Left"
                Width="20"
                Height="20"
+               Source="/JustTag;component/Resources/folderIcon.png"
          />
         <Label x:Name="nameLabel" DockPanel.Dock="Left" VerticalAlignment="Top">Test</Label>
     </DockPanel>
