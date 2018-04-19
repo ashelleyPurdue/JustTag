@@ -29,12 +29,6 @@ namespace JustTag
             remove { list.SelectionChanged -= value; }
         }
 
-        public IEnumerable<FileSystemInfo> ItemsSource
-        {
-            get { return list.ItemsSource as IEnumerable<FileSystemInfo>; }
-            set { list.ItemsSource = value; }
-        }
-
         public FileSystemInfo SelectedItem
         {
             set { list.SelectedItem = value; }
@@ -54,14 +48,38 @@ namespace JustTag
 
         #endregion
 
+        public IEnumerable<FileSystemInfo> ItemsSource
+        {
+            get { return m_itemsSource; }
+            set
+            {
+                m_itemsSource = value;
+                UpdateItems();
+            }
+        }
+        private IEnumerable<FileSystemInfo> m_itemsSource;
+
+
         public FileList()
         {
             InitializeComponent();
         }
 
+
+        // Interface
+
         public void ScrollIntoView(FileSystemInfo item)
         {
             list.ScrollIntoView(item);
         }
+
+
+        // Misc methods
+
+        private void UpdateItems()
+        {
+            list.ItemsSource = m_itemsSource;
+        }
+
     }
 }
