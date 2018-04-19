@@ -7,9 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="26" d:DesignWidth="300">
     <DockPanel LastChildFill="True">
-        <Button DockPanel.Dock="Left"
-                Width="10"
-                Height="10"
+        <Image x:Name="iconImg" 
+               DockPanel.Dock="Left"
+               Width="10"
+               Height="10"
          />
         <Label x:Name="nameLabel" DockPanel.Dock="Left" VerticalAlignment="Top">Test</Label>
     </DockPanel>
