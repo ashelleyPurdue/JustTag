@@ -66,6 +66,13 @@ namespace JustTag
         /// <returns></returns>
         public static ImageSource GetFileIcon(FileSystemInfo file)
         {
+            // If it's already in the cache, just return it from there
+            string ext = file.Extension.ToLower();
+
+            if (fileIconCache.ContainsKey(ext))
+                return fileIconCache[ext];
+
+            // It's not in the cache, so load it.
             ImageSource imageSource;
             Icon icon = Icon.ExtractAssociatedIcon(file.FullName);
 
@@ -76,6 +83,8 @@ namespace JustTag
                 imageSource = BitmapFrame.Create(stream);
             }
 
+            // Add it to the cache and return it
+            fileIconCache.Add(ext, imageSource);
             return imageSource;
         }
     }
