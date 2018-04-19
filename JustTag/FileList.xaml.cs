@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
+using System.IO;
 
 namespace JustTag
 {
@@ -28,16 +29,16 @@ namespace JustTag
             remove { list.SelectionChanged -= value; }
         }
 
-        public IEnumerable ItemsSource
+        public IEnumerable<FileSystemInfo> ItemsSource
         {
-            get { return list.ItemsSource; }
+            get { return list.ItemsSource as IEnumerable<FileSystemInfo>; }
             set { list.ItemsSource = value; }
         }
 
-        public Object SelectedItem
+        public FileSystemInfo SelectedItem
         {
             set { list.SelectedItem = value; }
-            get { return list.SelectedItem; }
+            get { return (FileSystemInfo)list.SelectedItem; }
         }
 
         public IList SelectedItems
@@ -58,7 +59,7 @@ namespace JustTag
             InitializeComponent();
         }
 
-        public void ScrollIntoView(object item)
+        public void ScrollIntoView(FileSystemInfo item)
         {
             list.ScrollIntoView(item);
         }
