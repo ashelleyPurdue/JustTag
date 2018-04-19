@@ -331,7 +331,10 @@ namespace JustTag
             // Press the save button if it's shift+enter
             bool shift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
             if (e.Key == Key.Enter && shift)
+            {
+                e.Handled = true;
                 tagSaveButton_Click(sender, null);
+            }
         }
 
         private void settingsButton_Click(object sender, RoutedEventArgs e)
