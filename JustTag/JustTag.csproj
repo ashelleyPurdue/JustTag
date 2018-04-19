@@ -66,6 +66,9 @@
     <Compile Include="FileList.xaml.cs">
       <DependentUpon>FileList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileListItem.xaml.cs">
+      <DependentUpon>FileListItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -74,6 +77,10 @@
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
     <Page Include="FileList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FileListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -32,7 +32,10 @@ namespace JustTag
         public FileSystemInfo SelectedItem
         {
             set { list.SelectedItem = value; }
-            get { return (FileSystemInfo)list.SelectedItem; }
+            get
+            {
+                return ((FileListItem)list.SelectedItem)?.file;
+            }
         }
 
         public IList SelectedItems
@@ -79,34 +82,13 @@ namespace JustTag
         private void UpdateItems()
         {
             // Add all the items to the listbox as panels
-            List<DockPanel> itemPanels = new List<DockPanel>();
+            List<FileListItem> itemControls = new List<FileListItem>();
 
             foreach (FileSystemInfo item in m_itemsSource)
-            {
-                // Create and configure the panel
-                DockPanel itemPanel = new DockPanel();
-
-                itemPanel.LastChildFill = true;
-                itemPanels.Add(itemPanel);
-
-                // TODO: Add the icon instead of a button
-                Button icon = new Button();
-                icon.Content = "";
-                icon.Width = 10;
-                icon.Height = 10;
-
-                itemPanel.Children.Add(icon);
-
-                // Add the label
-                Label itemLabel = new Label();
-                itemLabel.Content = item.Name;
-
-                DockPanel.SetDock(itemLabel, Dock.Left);
-                itemPanel.Children.Add(itemLabel);
-            }
+                itemControls.Add(new FileListItem(item));
 
             // Put all the panels into the listbox
-            list.ItemsSource = itemPanels;
+            list.ItemsSource = itemControls;
         }
 
     }
