@@ -9,8 +9,8 @@
     <DockPanel LastChildFill="True">
         <Image x:Name="iconImg" 
                DockPanel.Dock="Left"
-               Width="10"
-               Height="10"
+               Width="20"
+               Height="20"
          />
         <Label x:Name="nameLabel" DockPanel.Dock="Left" VerticalAlignment="Top">Test</Label>
     </DockPanel>
