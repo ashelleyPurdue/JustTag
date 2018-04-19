@@ -25,16 +25,6 @@
             <MenuItem x:Name="settingsButton" Header="Settings" Click="settingsButton_Click"/>
         </Menu>
 
-        <ListBox x:Name="folderContentsBox"
-            Grid.Column="1"
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Margin="5,60,5,10"
-            MouseDoubleClick="folderContentsBox_MouseDoubleClick"
-            SelectionChanged="folderContentsBox_SelectionChanged"
-         >
-        </ListBox>
-
         <local:VideoPlayer x:Name="videoPlayer"
             Grid.ColumnSpan="1"
             Grid.Column="2"
@@ -132,12 +122,13 @@
                Margin="10,0,0,36" Height="26" Width="39" RenderTransformOrigin="1.462,0.577"
          />
 
-        <StackPanel 
+        <DockPanel 
             Grid.Column="1"
-            Grid.Row="2"   
-            Margin="5"
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Margin="5,5,5,10"
          >
-            <DockPanel>
+            <DockPanel DockPanel.Dock="Top" Margin="5">
                 <Label Content="Filter:"/>
                 <TextBox x:Name="tagFilterTextbox"
                          HorizontalAlignment="Stretch"
@@ -146,10 +137,17 @@
             </DockPanel>
 
             <CheckBox x:Name="shuffleCheckbox"
+                      DockPanel.Dock="Top"
                       Content="Shuffle"
                       Margin="5"
             />
-        </StackPanel>
+
+            <ListBox x:Name="folderContentsBox"
+                Margin="5"
+                MouseDoubleClick="folderContentsBox_MouseDoubleClick"
+                SelectionChanged="folderContentsBox_SelectionChanged"
+            />
+        </DockPanel>
 
         <GroupBox Header="All Known Tags"
             Grid.Column="0"
