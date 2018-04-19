@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Drawing;
+
 using System.IO;
 
 namespace JustTag
@@ -23,6 +23,8 @@ namespace JustTag
     public partial class FileListItem : UserControl
     {
         public readonly FileSystemInfo file;
+
+        private static Dictionary<string, ImageSource> fileIconCache = new Dictionary<string, ImageSource>();
 
         public FileListItem(FileSystemInfo file)
         {
@@ -36,17 +38,8 @@ namespace JustTag
             if (!(file is FileInfo))
                 return;
 
-            ImageSource imageSource;
-            Icon icon = Icon.ExtractAssociatedIcon(file.FullName);
-
-            using (Bitmap bmp = icon.ToBitmap())
-            {
-                MemoryStream stream = new MemoryStream();
-                bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                imageSource = BitmapFrame.Create(stream);
-            }
-
-            iconImg.Source = imageSource;
+            iconImg.Source = Utils.GetFileIcon(file);
         }
+
     }
 }
