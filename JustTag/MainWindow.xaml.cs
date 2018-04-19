@@ -8,8 +8,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
 using System.Text.RegularExpressions;
-using IWshRuntimeLibrary;
-using System.Windows.Threading;
 
 namespace JustTag
 {
@@ -63,7 +61,7 @@ namespace JustTag
                 FileSystemInfo entry = e;
 
                 if (entry.Extension.ToLower() == ".lnk")
-                    entry = GetShortcutTarget(entry);
+                    entry = Utils.GetShortcutTarget(entry);
 
                 // Pick the right list to put it in
                 List<FileSystemInfo> correctList = files;
@@ -74,6 +72,11 @@ namespace JustTag
                 // Put it in the list
                 correctList.Add(entry);
             }
+
+            // Shuffle the files if "shuffle" is ticked
+            if ((bool)shuffleCheckbox.IsChecked)
+                files = Utils.ShuffleList(files);
+
 
             // Add the folders first
             var fileSource = new List<FileSystemInfo>();
@@ -100,20 +103,6 @@ namespace JustTag
             List<string> knownTagsList = allKnownTags.ToList();
             knownTagsList.Sort();
             allTagsListbox.ItemsSource = knownTagsList;
-        }
-
-        private FileSystemInfo GetShortcutTarget(FileSystemInfo shortcut)
-        {
-            // Get the target path
-            IWshShell shell = new WshShell();
-            IWshShortcut lnk = shell.CreateShortcut(shortcut.FullName);
-            string target = lnk.TargetPath;
-
-            // Put it in a FileSystemInfo of the correct type
-            if (Directory.Exists(target))
-                return new DirectoryInfo(target);
-
-            return new FileInfo(target);
         }
 
         private bool MatchesTagFilter(string fileName)
