@@ -99,7 +99,7 @@
         <GroupBox Header="Tags"
             Grid.Row="3"
             Grid.Column="2"
-            Margin="10,5,10,62"
+            Margin="10,5,10,10"
          >
             <Grid>
                 <TextBox x:Name="tagsBox" TextChanged="tagsBox_TextChanged" AcceptsReturn="True" PreviewKeyDown="tagsBox_PreviewKeyDown"/>
@@ -114,21 +114,13 @@
             </Grid>
         </GroupBox>
 
-        <Label Content="Filter:"
-               Grid.Column="2"
-               Grid.Row="3"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Bottom"
-               Margin="10,0,0,36" Height="26" Width="39" RenderTransformOrigin="1.462,0.577"
-         />
-
         <DockPanel 
             Grid.Column="1"
             Grid.Row="2"
             Grid.RowSpan="2"
             Margin="5,5,5,10"
          >
-            <DockPanel DockPanel.Dock="Top" Margin="5">
+            <DockPanel DockPanel.Dock="Top">
                 <Label Content="Filter:"/>
                 <TextBox x:Name="tagFilterTextbox"
                          HorizontalAlignment="Stretch"
