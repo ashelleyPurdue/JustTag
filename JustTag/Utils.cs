@@ -5,11 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using IWshRuntimeLibrary;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Drawing;
 
 namespace JustTag
 {
     public static class Utils
     {
+        // Maps file extensions to icons
+        private static Dictionary<string, ImageSource> fileIconCache = new Dictionary<string, ImageSource>();
+
         /// <summary>
         /// Follows a shortcut and returns the FileSystemInfo that it points to.
         /// </summary>
@@ -51,6 +57,35 @@ namespace JustTag
             }
 
             return outputList;
+        }
+
+        /// <summary>
+        /// Returns an ImageSource with the given file's icon
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static ImageSource GetFileIcon(FileSystemInfo file)
+        {
+            // If it's already in the cache, just return it from there
+            string ext = file.Extension.ToLower();
+
+            if (fileIconCache.ContainsKey(ext))
+                return fileIconCache[ext];
+
+            // It's not in the cache, so load it.
+            ImageSource imageSource;
+            Icon icon = Icon.ExtractAssociatedIcon(file.FullName);
+
+            using (Bitmap bmp = icon.ToBitmap())
+            {
+                MemoryStream stream = new MemoryStream();
+                bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                imageSource = BitmapFrame.Create(stream);
+            }
+
+            // Add it to the cache and return it
+            fileIconCache.Add(ext, imageSource);
+            return imageSource;
         }
     }
 }
