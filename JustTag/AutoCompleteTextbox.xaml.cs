@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -55,8 +56,13 @@ namespace JustTag
             currentWord = words[words.Length - 1];
 
             // Fill the combo box with the words that match it.
-            // TODO: Use a regex to filter this
-            autoCompleteDropdown.ItemsSource = autoCompletionSource;
+            Regex wordRegex = new Regex("^" + currentWord + ".*");
+
+            var matchingWords = from word in autoCompletionSource
+                                where wordRegex.IsMatch(word)
+                                select word;
+
+            autoCompleteDropdown.ItemsSource = matchingWords;
         }
     }
 }

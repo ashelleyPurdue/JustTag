@@ -31,6 +31,7 @@ namespace JustTag
 
             // Set the filter textbox's autocomplete source to all the tags
             tagFilterTextbox.autoCompletionSource = allKnownTags;
+
         }
 
 
