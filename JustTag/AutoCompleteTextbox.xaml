@@ -6,9 +6,10 @@
              xmlns:local="clr-namespace:JustTag"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <DockPanel>
+        <ComboBox x:Name="autoCompleteDropdown"/>
         <TextBox x:Name="textbox"
-                 AcceptsTab="False"
+                 AcceptsTab="False" TextChanged="textbox_TextChanged"
         />
-    </Grid>
+    </DockPanel>
 </UserControl>

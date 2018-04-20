@@ -40,9 +40,23 @@ namespace JustTag
 
         public IEnumerable<string> autoCompletionSource;
 
+        private string currentWord;
+
         public AutoCompleteTextbox()
         {
             InitializeComponent();
+        }
+
+        private void textbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Set the current word to the last word in the textbox
+            // TODO: use the cursor position to find the current word
+            string[] words = textbox.Text.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            currentWord = words[words.Length - 1];
+
+            // Fill the combo box with the words that match it.
+            // TODO: Use a regex to filter this
+            autoCompleteDropdown.ItemsSource = autoCompletionSource;
         }
     }
 }
