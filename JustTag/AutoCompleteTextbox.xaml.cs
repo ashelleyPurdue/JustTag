@@ -32,6 +32,12 @@ namespace JustTag
             set { textbox.AcceptsReturn = value; }
         }
 
+        public string Text
+        {
+            get { return textbox.Text; }
+            set { textbox.Text = value; }
+        }
+
         public IEnumerable<string> autoCompletionSource;
 
         public AutoCompleteTextbox()
