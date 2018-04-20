@@ -48,6 +48,17 @@ namespace JustTag
             InitializeComponent();
         }
 
+        // Misc methods
+
+        private void MoveDropdownToCursor()
+        {
+            double offset = textbox.CaretIndex * 10;
+            autoCompleteDropdown.Margin = new Thickness(offset, 10, 0, 0);
+        }
+
+
+        // Event Handlers
+
         private void textbox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Set the current word to the last word in the textbox
@@ -63,6 +74,7 @@ namespace JustTag
                                 select word;
 
             autoCompleteDropdown.ItemsSource = matchingWords;
+            MoveDropdownToCursor();
         }
     }
 }
