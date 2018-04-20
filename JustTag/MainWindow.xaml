@@ -126,7 +126,7 @@
          >
             <DockPanel DockPanel.Dock="Top">
                 <Label Content="Filter:"/>
-                <TextBox x:Name="tagFilterTextbox"
+                <local:AutoCompleteTextbox x:Name="tagFilterTextbox"
                          HorizontalAlignment="Stretch"
                          KeyUp="textbox_KeyUp"
                 />
