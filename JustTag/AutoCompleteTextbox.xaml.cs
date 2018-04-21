@@ -85,6 +85,11 @@ namespace JustTag
         private string GetWordAt(string str, int pos)
         {
             // Returns the word at the given cursor position.
+            // Returns the empty string if str is empty
+
+            if (str == "")
+                return "";
+
             int currPos = pos;
 
             // HACK: if the pos is beyond the string, move it to
