@@ -47,6 +47,8 @@ namespace JustTag
             InitializeComponent();
         }
 
+        private string currentWord;
+
 
         // Misc methods
 
@@ -133,8 +135,8 @@ namespace JustTag
 
         private void UpdateSuggestionBox()
         {
-            // Get the current word
-            string currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
+            // Update the current word
+            currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
 
             // If the cursor is not in a word or the textbox is not in focus, hide the suggestion box and don't go on
             if (currentWord == null || !textbox.IsKeyboardFocused)
@@ -193,12 +195,20 @@ namespace JustTag
             {
                 e.Handled = true;
 
+                // Get the word to insert
                 string insertedWord = (string)suggestionList.Items[0];  // TODO: Change this to the selected item instead of the first item.
-                                                                        // TODO: Chop off the part the user has already typed.
+
+                // Chop off the part the user has already typed.
+                insertedWord = insertedWord.Substring(currentWord.Length);
+
+                // Insert the word
+                textbox.BeginChange();
 
                 int caretIndex = textbox.CaretIndex;
                 textbox.Text = textbox.Text.Insert(caretIndex, insertedWord);
                 textbox.CaretIndex = caretIndex + insertedWord.Length;
+
+                textbox.EndChange();
             }
         }
     }
