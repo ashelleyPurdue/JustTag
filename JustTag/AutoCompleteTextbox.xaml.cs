@@ -94,11 +94,14 @@ namespace JustTag
             // let's just say the caret points to the *previous* character.
             int pos = caretIndex - 1;
 
-            // HACK: if the pos is beyond the string, move it to
-            // the last character.  This is to accomodate situations
-            // where the typing cursor is at the very end of the string.
+            // HACK: If pos is out of bounds, move it back in bounds
+            // This is to accomodate situations where the typing cursor
+            // is at the very start or end of the string.
             if (pos >= str.Length)
                 pos = str.Length - 1;
+
+            if (pos < 0)
+                pos = 0;
 
             // If we're already in whitespace, we're not in a word
             if (Char.IsWhiteSpace(str[pos]))
