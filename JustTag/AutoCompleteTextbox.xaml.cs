@@ -138,15 +138,12 @@ namespace JustTag
             // Update the current word
             currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
 
-            // If the cursor is not in a word or the textbox is not in focus, hide the suggestion box and don't go on
-            if (currentWord == null || !textbox.IsKeyboardFocused)
+            // If the cursor is not in a word, hide the suggestion box and don't go on
+            if (currentWord == null)
             {
                 suggestionBox.IsOpen = false;
                 return;
             }
-
-            // Show the suggestion box
-            suggestionBox.IsOpen = true;
 
             // Fill the suggestion box with the words that complete it
             Regex wordRegex = new Regex("^" + currentWord + ".+");
@@ -157,16 +154,25 @@ namespace JustTag
 
             suggestionList.ItemsSource = matchingWords;
 
+            // Stop if the suggestion box is empty
+            if (suggestionList.Items.Count == 0)
+            {
+                suggestionBox.IsOpen = false;
+                return;
+            }
+
             // Resize the list so it matches the width of the suggestions
             string longestStr = GetLongestString(matchingWords);
 
             FormattedText textSize = Utils.GetFormattedText(longestStr, suggestionList);
             suggestionList.Width = textSize.Width + 15;
 
-            // Move the suggestion box to the cursor
+            // Show the suggestion box at the cursor
             Thickness pos = GetCursorPos();
             suggestionBox.HorizontalOffset = pos.Left + suggestionList.Width;
             suggestionBox.VerticalOffset = pos.Top;
+
+            suggestionBox.IsOpen = true;
         }
 
 
