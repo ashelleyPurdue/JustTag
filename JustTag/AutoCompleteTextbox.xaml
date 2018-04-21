@@ -14,7 +14,7 @@
                  SelectionChanged="textbox_SelectionChanged"
         />
         <Popup IsOpen="True">
-            <ListBox x:Name="suggestionBox"
+            <ListBox x:Name="suggestionList"
                      HorizontalAlignment="Left"
                      VerticalAlignment="Top"
                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
