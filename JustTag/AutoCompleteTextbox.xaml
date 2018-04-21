@@ -13,12 +13,14 @@
                  LostKeyboardFocus="textbox_LostKeyboardFocus"
                  SelectionChanged="textbox_SelectionChanged"
         />
-        <ListBox x:Name="suggestionBox"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Top"
-                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                 Visibility="Collapsed" 
-        />
+        <Popup IsOpen="True">
+            <ListBox x:Name="suggestionBox"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                     Visibility="Collapsed" 
+            />
+        </Popup>
     </Grid>
 </UserControl>
