@@ -90,21 +90,6 @@ namespace JustTag
         }
 
         /// <summary>
-        /// Get the required height and width of the specified text. Uses FormattedText
-        /// Taken from StackOverflow: https://stackoverflow.com/questions/824281/wpf-equivalent-to-textrenderer
-        /// </summary>
-        public static Size MeasureTextSize(string text, FontFamily fontFamily, FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch, double fontSize)
-        {
-            FormattedText ft = new FormattedText(text,
-                                                 CultureInfo.CurrentCulture,
-                                                 FlowDirection.LeftToRight,
-                                                 new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
-                                                 fontSize,
-                                                 Brushes.Black);
-            return new Size(ft.Width, ft.Height);
-        }
-
-        /// <summary>
         /// Shorthand for constructing a FormattedText object with the given control's font parameters
         /// </summary>
         /// <param name="text"></param>

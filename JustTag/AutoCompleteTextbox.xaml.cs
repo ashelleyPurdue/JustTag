@@ -117,16 +117,8 @@ namespace JustTag
 
             // Resize the dropdown list so it matches the width of the suggestions
             string longestStr = GetLongestString(matchingWords);
-            Size textSize = Utils.MeasureTextSize
-            (
-                longestStr,
-                suggestionBox.FontFamily,
-                suggestionBox.FontStyle,
-                suggestionBox.FontWeight,
-                suggestionBox.FontStretch,
-                suggestionBox.FontSize
-            );
 
+            FormattedText textSize = Utils.GetFormattedText(longestStr, suggestionBox);
             suggestionBox.Width = textSize.Width + 15;
         }
 
