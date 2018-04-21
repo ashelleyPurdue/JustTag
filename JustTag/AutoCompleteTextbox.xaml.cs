@@ -139,12 +139,12 @@ namespace JustTag
             // If the cursor is not in a word or the textbox is not in focus, hide the suggestion box and don't go on
             if (currentWord == null || !textbox.IsKeyboardFocused)
             {
-                suggestionBox.Visibility = Visibility.Collapsed;
+                suggestionBox.IsOpen = false;
                 return;
             }
 
             // Show the suggestion box
-            suggestionBox.Visibility = Visibility.Visible;
+            suggestionBox.IsOpen = true;
 
             // Fill the suggestion box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
@@ -153,14 +153,18 @@ namespace JustTag
                                 where wordRegex.IsMatch(word)
                                 select word;
 
-            suggestionBox.ItemsSource = matchingWords;
-            suggestionBox.Margin = GetCursorPos();       // Move the menu to the cursor pos
+            suggestionList.ItemsSource = matchingWords;
 
-            // Resize the dropdown list so it matches the width of the suggestions
+            // Resize the list so it matches the width of the suggestions
             string longestStr = GetLongestString(matchingWords);
 
-            FormattedText textSize = Utils.GetFormattedText(longestStr, suggestionBox);
-            suggestionBox.Width = textSize.Width + 15;
+            FormattedText textSize = Utils.GetFormattedText(longestStr, suggestionList);
+            suggestionList.Width = textSize.Width + 15;
+
+            // Move the suggestion box to the cursor
+            Thickness pos = GetCursorPos();
+            suggestionBox.HorizontalOffset = pos.Left + suggestionList.Width;
+            suggestionBox.VerticalOffset = pos.Top;
         }
 
 
@@ -169,7 +173,7 @@ namespace JustTag
         private void textbox_LostKeyboardFocus(object sender, RoutedEventArgs e)
         {
             // Hide the suggestion box when losing keyboard focus
-            suggestionBox.Visibility = Visibility.Collapsed;
+            suggestionBox.IsOpen = false;
         }
 
         private void textbox_TextChanged(object sender, TextChangedEventArgs e)
