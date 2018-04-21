@@ -81,7 +81,7 @@ namespace JustTag
             return longest;
         }
 
-        private string GetWordAt(string str, int pos)
+        private string GetWordAt(string str, int caretIndex)
         {
             // Returns the word at the given cursor position.
             // Returns null if it's not on a word (ie: in the middle of whitespace)
@@ -90,37 +90,39 @@ namespace JustTag
             if (str == "")
                 return null;
 
-            int currPos = pos;
+            // Since the caret exists in *between* characters, not *on* them,
+            // let's just say the caret points to the *previous* character.
+            int pos = caretIndex - 1;
 
             // HACK: if the pos is beyond the string, move it to
             // the last character.  This is to accomodate situations
             // where the typing cursor is at the very end of the string.
-            if (currPos >= str.Length)
-                currPos = str.Length - 1;
+            if (pos >= str.Length)
+                pos = str.Length - 1;
 
             // If we're already in whitespace, we're not in a word
-            if (Char.IsWhiteSpace(str[currPos]))
+            if (Char.IsWhiteSpace(str[pos]))
                 return null;
 
             // Rewind until we reach whitespace or the beginning of the string
             while (true)
             {
-                if (currPos == 0)
+                if (pos == 0)
                     break;
 
-                if (Char.IsWhiteSpace(str[currPos - 1]))
+                if (Char.IsWhiteSpace(str[pos - 1]))
                     break;
 
-                currPos--;
+                pos--;
             }
 
 
             // Step forward until we reach the end of the word
             StringBuilder builder = new StringBuilder();
-            while (currPos < str.Length && !Char.IsWhiteSpace(str[currPos]))
+            while (pos < str.Length && !Char.IsWhiteSpace(str[pos]))
             {
-                builder.Append(str[currPos]);
-                currPos++;
+                builder.Append(str[pos]);
+                pos++;
             }
 
             return builder.ToString();
