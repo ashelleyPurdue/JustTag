@@ -191,7 +191,7 @@ namespace JustTag
         private void textbox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             // Don't do anything special if there aren't any items in the suggestion list
-            if (!suggestionBox.IsOpen)
+            if (!suggestionBox.IsOpen || suggestionList.Items.Count == 0)
                 return;
 
             // If it's the tab key, autocomplete
@@ -219,17 +219,28 @@ namespace JustTag
             }
 
             // If it's the up or down keys, change the user's selection
+            int selectedIndex = suggestionList.SelectedIndex;
+
             if (e.Key == Key.Up)
             {
                 e.Handled = true;
-                suggestionList.SelectedIndex--;
+                selectedIndex--;
             }
 
             if (e.Key == Key.Down)
             {
                 e.Handled = true;
-                suggestionList.SelectedIndex++;
+                selectedIndex++;
             }
+
+            // Make the selected index loop around
+            while (selectedIndex < 0)
+                selectedIndex += suggestionList.Items.Count;
+
+            selectedIndex %= suggestionList.Items.Count;
+
+            // Apply the selection change
+            suggestionList.SelectedIndex = selectedIndex;
         }
     }
 }
