@@ -8,6 +8,8 @@ using IWshRuntimeLibrary;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Drawing;
+using System.Globalization;
+using System.Windows;
 
 namespace JustTag
 {
@@ -86,6 +88,21 @@ namespace JustTag
             // Add it to the cache and return it
             fileIconCache.Add(ext, imageSource);
             return imageSource;
+        }
+
+        /// <summary>
+        /// Get the required height and width of the specified text. Uses FormattedText
+        /// Taken from StackOverflow: https://stackoverflow.com/questions/824281/wpf-equivalent-to-textrenderer
+        /// </summary>
+        public static System.Windows.Size MeasureTextSize(string text, System.Windows.Media.FontFamily fontFamily, System.Windows.FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch, double fontSize)
+        {
+            FormattedText ft = new FormattedText(text,
+                                                 CultureInfo.CurrentCulture,
+                                                 FlowDirection.LeftToRight,
+                                                 new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
+                                                 fontSize,
+                                                 System.Windows.Media.Brushes.Black);
+            return new System.Windows.Size(ft.Width, ft.Height);
         }
     }
 }

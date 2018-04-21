@@ -58,18 +58,20 @@ namespace JustTag
         }
 
         /// <summary>
-        /// Returns the length of the longest string in the collection
+        /// Returns the longest string in the collection
         /// </summary>
         /// <param name="strings"></param>
         /// <returns></returns>
-        private int GetLongestLength(IEnumerable<string> strings)
+        private string GetLongestString(IEnumerable<string> strings)
         {
-            int longest = 0;
+            string longest = "";
 
             foreach (string s in strings)
             {
-                if (s.Length > longest)
-                    longest = s.Length;
+                if (s.Length > longest.Length)
+                {
+                    longest = s;
+                }
             }
 
             return longest;
@@ -100,8 +102,18 @@ namespace JustTag
             MoveDropdownToCursor();
 
             // Resize the dropdown list so it matches the width of the suggestions
-            int maxLen = GetLongestLength(matchingWords);
-            autoCompleteDropdown.Width = maxLen * 10;
+            string longestStr = GetLongestString(matchingWords);
+            Size textSize = Utils.MeasureTextSize
+            (
+                longestStr,
+                autoCompleteDropdown.FontFamily,
+                autoCompleteDropdown.FontStyle,
+                autoCompleteDropdown.FontWeight,
+                autoCompleteDropdown.FontStretch,
+                autoCompleteDropdown.FontSize
+            );
+
+            autoCompleteDropdown.Width = textSize.Width;
         }
     }
 }
