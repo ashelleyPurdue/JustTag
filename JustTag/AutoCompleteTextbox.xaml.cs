@@ -185,5 +185,21 @@ namespace JustTag
         {
             UpdateSuggestionBox();
         }
+
+        private void textbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // If it's the tab key, autocomplete
+            if (e.Key == Key.Tab && suggestionList.Items.Count != 0)
+            {
+                e.Handled = true;
+
+                string insertedWord = (string)suggestionList.Items[0];  // TODO: Change this to the selected item instead of the first item.
+                                                                        // TODO: Chop off the part the user has already typed.
+
+                int caretIndex = textbox.CaretIndex;
+                textbox.Text = textbox.Text.Insert(caretIndex, insertedWord);
+                textbox.CaretIndex = caretIndex + insertedWord.Length;
+            }
+        }
     }
 }
