@@ -52,7 +52,7 @@ namespace JustTag
 
         // Misc methods
 
-        private Thickness GetCursorPos()
+        private Point GetCursorPos()
         {
             // Returns the relative position of the typing cursor
 
@@ -63,10 +63,7 @@ namespace JustTag
             FormattedText formattedText = Utils.GetFormattedText(earlierText, textbox);
             formattedText.MaxTextWidth = textbox.ActualWidth;
 
-            double width = formattedText.Width;
-            double height = formattedText.Height;
-
-            return new Thickness(formattedText.Width, formattedText.Height, 0, 0);
+            return new Point(formattedText.Width, formattedText.Height);
         }
 
         private string GetLongestString(IEnumerable<string> strings)
@@ -168,9 +165,9 @@ namespace JustTag
             suggestionList.Width = textSize.Width + 15;
 
             // Show the suggestion box at the cursor
-            Thickness pos = GetCursorPos();
-            suggestionBox.HorizontalOffset = pos.Left + suggestionList.Width;
-            suggestionBox.VerticalOffset = pos.Top;
+            Point pos = GetCursorPos();
+            suggestionBox.HorizontalOffset = pos.X + suggestionList.Width;
+            suggestionBox.VerticalOffset = pos.Y;
 
             suggestionBox.IsOpen = true;
         }
