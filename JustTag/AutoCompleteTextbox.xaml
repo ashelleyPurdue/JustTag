@@ -12,7 +12,7 @@
                  TextChanged="textbox_TextChanged"
                  LostKeyboardFocus="textbox_LostKeyboardFocus"
         />
-        <ListBox x:Name="autoCompleteDropdown"
+        <ListBox x:Name="suggestionBox"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top"
                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"

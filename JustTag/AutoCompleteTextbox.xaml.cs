@@ -99,11 +99,11 @@ namespace JustTag
             // If the current word is blank or the textbox isn't in focus, hide the suggestion box.
             if (currentWord.Length == 0 || !textbox.IsKeyboardFocused)
             {
-                autoCompleteDropdown.Visibility = Visibility.Collapsed;
+                suggestionBox.Visibility = Visibility.Collapsed;
                 return;
             }
 
-            autoCompleteDropdown.Visibility = Visibility.Visible;
+            suggestionBox.Visibility = Visibility.Visible;
 
             // Fill the list box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
@@ -112,28 +112,28 @@ namespace JustTag
                                 where wordRegex.IsMatch(word)
                                 select word;
 
-            autoCompleteDropdown.ItemsSource = matchingWords;
-            autoCompleteDropdown.Margin = GetCursorPos();       // Move the menu to the cursor pos
+            suggestionBox.ItemsSource = matchingWords;
+            suggestionBox.Margin = GetCursorPos();       // Move the menu to the cursor pos
 
             // Resize the dropdown list so it matches the width of the suggestions
             string longestStr = GetLongestString(matchingWords);
             Size textSize = Utils.MeasureTextSize
             (
                 longestStr,
-                autoCompleteDropdown.FontFamily,
-                autoCompleteDropdown.FontStyle,
-                autoCompleteDropdown.FontWeight,
-                autoCompleteDropdown.FontStretch,
-                autoCompleteDropdown.FontSize
+                suggestionBox.FontFamily,
+                suggestionBox.FontStyle,
+                suggestionBox.FontWeight,
+                suggestionBox.FontStretch,
+                suggestionBox.FontSize
             );
 
-            autoCompleteDropdown.Width = textSize.Width + 15;
+            suggestionBox.Width = textSize.Width + 15;
         }
 
         private void textbox_LostKeyboardFocus(object sender, RoutedEventArgs e)
         {
             // Hide the suggestion box when losing keyboard focus
-            autoCompleteDropdown.Visibility = Visibility.Collapsed;
+            suggestionBox.Visibility = Visibility.Collapsed;
         }
     }
 }
