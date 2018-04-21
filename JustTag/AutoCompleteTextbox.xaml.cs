@@ -148,8 +148,8 @@ namespace JustTag
             // Show the suggestion box
             suggestionBox.IsOpen = true;
 
-            // Fill the suggestion box with the words that match it.
-            Regex wordRegex = new Regex("^" + currentWord + ".*");
+            // Fill the suggestion box with the words that complete it
+            Regex wordRegex = new Regex("^" + currentWord + ".+");
 
             var matchingWords = from word in autoCompletionSource
                                 where wordRegex.IsMatch(word)
@@ -216,6 +216,8 @@ namespace JustTag
                 textbox.CaretIndex = caretIndex + insertedWord.Length;
 
                 textbox.EndChange();
+
+                return;
             }
 
             // If it's the up or down keys, change the user's selection
