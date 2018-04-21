@@ -51,27 +51,35 @@ namespace JustTag
 
         // Misc methods
 
+        private Thickness GetCursorPos()
+        {
+            // Returns the relative position of the typing cursor
+
+            // Get all the text before the cursor so we can measure it.
+            string earlierText = textbox.Text.Substring(0, textbox.CaretIndex);
+
+            // Measure it
+            FormattedText formattedText = Utils.GetFormattedText(earlierText, textbox);
+            formattedText.MaxTextWidth = textbox.Width;
+
+            return new Thickness(formattedText.Width, formattedText.Height, 0, 0);
+        }
+
         private void MoveDropdownToCursor()
         {
             double offset = textbox.CaretIndex * 10;
             autoCompleteDropdown.Margin = new Thickness(offset, 10, 0, 0);
         }
 
-        /// <summary>
-        /// Returns the longest string in the collection
-        /// </summary>
-        /// <param name="strings"></param>
-        /// <returns></returns>
         private string GetLongestString(IEnumerable<string> strings)
         {
+            // Returns the longest string in the collection
             string longest = "";
 
             foreach (string s in strings)
             {
                 if (s.Length > longest.Length)
-                {
                     longest = s;
-                }
             }
 
             return longest;
