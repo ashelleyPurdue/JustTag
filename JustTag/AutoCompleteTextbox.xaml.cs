@@ -140,9 +140,8 @@ namespace JustTag
                 return;
             }
 
-            // Show the suggestion box at the cursor
+            // Show the suggestion box
             suggestionBox.IsOpen = true;
-            suggestionBox.Margin = GetCursorPos();
 
             // Fill the suggestion box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
@@ -158,6 +157,11 @@ namespace JustTag
 
             FormattedText textSize = Utils.GetFormattedText(longestStr, suggestionList);
             suggestionList.Width = textSize.Width + 15;
+
+            // Move the suggestion box to the cursor
+            Thickness pos = GetCursorPos();
+            suggestionBox.HorizontalOffset = pos.Left + suggestionList.Width;
+            suggestionBox.VerticalOffset = pos.Top;
         }
 
 
