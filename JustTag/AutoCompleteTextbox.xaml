@@ -13,6 +13,8 @@
         <ListBox x:Name="autoCompleteDropdown"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top"
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
         />
     </Grid>
 </UserControl>

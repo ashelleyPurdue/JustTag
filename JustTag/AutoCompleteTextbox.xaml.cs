@@ -113,7 +113,7 @@ namespace JustTag
                 autoCompleteDropdown.FontSize
             );
 
-            autoCompleteDropdown.Width = textSize.Width;
+            autoCompleteDropdown.Width = textSize.Width + 15;
         }
     }
 }
