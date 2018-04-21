@@ -11,7 +11,7 @@
                  AcceptsTab="False"
                  TextChanged="textbox_TextChanged"
                  LostKeyboardFocus="textbox_LostKeyboardFocus"
-                 SelectionChanged="textbox_SelectionChanged"
+                 SelectionChanged="textbox_SelectionChanged" PreviewKeyDown="textbox_PreviewKeyDown"
         />
         <Popup x:Name="suggestionBox"
                HorizontalAlignment="Left"

@@ -47,6 +47,8 @@ namespace JustTag
             InitializeComponent();
         }
 
+        private string currentWord;
+
 
         // Misc methods
 
@@ -133,8 +135,8 @@ namespace JustTag
 
         private void UpdateSuggestionBox()
         {
-            // Get the current word
-            string currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
+            // Update the current word
+            currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
 
             // If the cursor is not in a word or the textbox is not in focus, hide the suggestion box and don't go on
             if (currentWord == null || !textbox.IsKeyboardFocused)
@@ -184,6 +186,61 @@ namespace JustTag
         private void textbox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             UpdateSuggestionBox();
+        }
+
+        private void textbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // Don't do anything special if there aren't any items in the suggestion list
+            if (!suggestionBox.IsOpen || suggestionList.Items.Count == 0)
+                return;
+
+            // If it's the tab key, autocomplete
+            if (e.Key == Key.Tab)
+            {
+                e.Handled = true;
+
+                // Get the selected word from the suggestion list
+                if (suggestionList.SelectedIndex < 0)
+                    suggestionList.SelectedIndex = 0;
+
+                string insertedWord = (string)suggestionList.Items[suggestionList.SelectedIndex];
+
+                // Chop off the part the user has already typed.
+                insertedWord = insertedWord.Substring(currentWord.Length);
+
+                // Insert the word
+                textbox.BeginChange();
+
+                int caretIndex = textbox.CaretIndex;
+                textbox.Text = textbox.Text.Insert(caretIndex, insertedWord);
+                textbox.CaretIndex = caretIndex + insertedWord.Length;
+
+                textbox.EndChange();
+            }
+
+            // If it's the up or down keys, change the user's selection
+            int selectedIndex = suggestionList.SelectedIndex;
+
+            if (e.Key == Key.Up)
+            {
+                e.Handled = true;
+                selectedIndex--;
+            }
+
+            if (e.Key == Key.Down)
+            {
+                e.Handled = true;
+                selectedIndex++;
+            }
+
+            // Make the selected index loop around
+            while (selectedIndex < 0)
+                selectedIndex += suggestionList.Items.Count;
+
+            selectedIndex %= suggestionList.Items.Count;
+
+            // Apply the selection change
+            suggestionList.SelectedIndex = selectedIndex;
         }
     }
 }
