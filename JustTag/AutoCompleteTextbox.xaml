@@ -11,6 +11,7 @@
                  AcceptsTab="False"
                  TextChanged="textbox_TextChanged"
                  LostKeyboardFocus="textbox_LostKeyboardFocus"
+                 SelectionChanged="textbox_SelectionChanged"
         />
         <ListBox x:Name="suggestionBox"
                  HorizontalAlignment="Left"

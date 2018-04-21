@@ -128,10 +128,7 @@ namespace JustTag
             return builder.ToString();
         }
 
-
-        // Event Handlers
-
-        private void textbox_TextChanged(object sender, TextChangedEventArgs e)
+        private void UpdateSuggestionBox()
         {
             // Get the current word
             string currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
@@ -163,10 +160,23 @@ namespace JustTag
             suggestionBox.Width = textSize.Width + 15;
         }
 
+
+        // Event Handlers
+
         private void textbox_LostKeyboardFocus(object sender, RoutedEventArgs e)
         {
             // Hide the suggestion box when losing keyboard focus
             suggestionBox.Visibility = Visibility.Collapsed;
+        }
+
+        private void textbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateSuggestionBox();
+        }
+
+        private void textbox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            UpdateSuggestionBox();
         }
     }
 }
