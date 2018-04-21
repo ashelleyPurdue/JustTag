@@ -85,13 +85,13 @@ namespace JustTag
         private string GetWordAt(string str, int pos)
         {
             // Returns the word at the given cursor position.
-            // If it's not on a word (IE: in the middle of whitespace), returns null
-
-            // If we started in whitespace, return null
-            if (Char.IsWhiteSpace(str[pos]))
-                return null;
-
             int currPos = pos;
+
+            // HACK: if the pos is beyond the string, move it to
+            // the last character.  This is to accomodate situations
+            // where the typing cursor is at the very end of the string.
+            if (currPos >= str.Length)
+                currPos = str.Length - 1;
 
             // Rewind until we reach whitespace
             while (currPos > 0 && !Char.IsWhiteSpace(str[currPos]))
@@ -113,25 +113,13 @@ namespace JustTag
 
         private void textbox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Set the current word to the last word in the textbox
-            // If there are no words, it's the empty string
-            // TODO: use the cursor position to find the current word
-            string[] words = textbox.Text.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            // Update the current word
+            currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
 
-            currentWord = "";
-            if (words.Length != 0)
-                currentWord = words[words.Length - 1];
-
-            // If the current word is blank or the textbox isn't in focus, hide the suggestion box.
-            if (currentWord.Length == 0 || !textbox.IsKeyboardFocused)
-            {
-                suggestionBox.Visibility = Visibility.Collapsed;
-                return;
-            }
-
+            // Show the suggestion box
             suggestionBox.Visibility = Visibility.Visible;
 
-            // Fill the list box with the words that match it.
+            // Fill the suggestion box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
 
             var matchingWords = from word in autoCompletionSource
