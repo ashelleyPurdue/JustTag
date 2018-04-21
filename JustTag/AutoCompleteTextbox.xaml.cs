@@ -62,9 +62,13 @@ namespace JustTag
         private void textbox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Set the current word to the last word in the textbox
+            // If there are no words, it's the empty string
             // TODO: use the cursor position to find the current word
             string[] words = textbox.Text.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            currentWord = words[words.Length - 1];
+
+            currentWord = "";
+            if (words.Length != 0)
+                currentWord = words[words.Length - 1];
 
             // Fill the combo box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
