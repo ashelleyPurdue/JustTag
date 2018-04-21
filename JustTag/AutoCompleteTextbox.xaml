@@ -8,14 +8,16 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <TextBox x:Name="textbox"
-                 AcceptsTab="False" TextChanged="textbox_TextChanged"
+                 AcceptsTab="False"
+                 TextChanged="textbox_TextChanged"
+                 LostKeyboardFocus="textbox_LostKeyboardFocus"
         />
         <ListBox x:Name="autoCompleteDropdown"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top"
                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                 Visibility="Collapsed"
+                 Visibility="Collapsed" 
         />
     </Grid>
 </UserControl>

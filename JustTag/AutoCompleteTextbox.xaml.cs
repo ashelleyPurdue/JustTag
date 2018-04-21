@@ -96,8 +96,8 @@ namespace JustTag
             if (words.Length != 0)
                 currentWord = words[words.Length - 1];
 
-            // If the current word is blank, hide the suggestion box.
-            if (currentWord.Length == 0)
+            // If the current word is blank or the textbox isn't in focus, hide the suggestion box.
+            if (currentWord.Length == 0 || !textbox.IsKeyboardFocused)
             {
                 autoCompleteDropdown.Visibility = Visibility.Collapsed;
                 return;
@@ -128,6 +128,12 @@ namespace JustTag
             );
 
             autoCompleteDropdown.Width = textSize.Width + 15;
+        }
+
+        private void textbox_LostKeyboardFocus(object sender, RoutedEventArgs e)
+        {
+            // Hide the suggestion box when losing keyboard focus
+            autoCompleteDropdown.Visibility = Visibility.Collapsed;
         }
     }
 }
