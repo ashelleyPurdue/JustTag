@@ -136,12 +136,13 @@ namespace JustTag
             // If the cursor is not in a word, hide the suggestion box and don't go on
             if (currentWord == null)
             {
-                suggestionList.Visibility = Visibility.Collapsed;
+                suggestionBox.IsOpen = false;
                 return;
             }
 
-            // Show the suggestion box
-            suggestionList.Visibility = Visibility.Visible;
+            // Show the suggestion box at the cursor
+            suggestionBox.IsOpen = true;
+            suggestionBox.Margin = GetCursorPos();
 
             // Fill the suggestion box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
@@ -151,9 +152,8 @@ namespace JustTag
                                 select word;
 
             suggestionList.ItemsSource = matchingWords;
-            suggestionList.Margin = GetCursorPos();       // Move the menu to the cursor pos
 
-            // Resize the dropdown list so it matches the width of the suggestions
+            // Resize the list so it matches the width of the suggestions
             string longestStr = GetLongestString(matchingWords);
 
             FormattedText textSize = Utils.GetFormattedText(longestStr, suggestionList);
@@ -166,7 +166,7 @@ namespace JustTag
         private void textbox_LostKeyboardFocus(object sender, RoutedEventArgs e)
         {
             // Hide the suggestion box when losing keyboard focus
-            suggestionList.Visibility = Visibility.Collapsed;
+            suggestionBox.IsOpen = false;
         }
 
         private void textbox_TextChanged(object sender, TextChangedEventArgs e)
