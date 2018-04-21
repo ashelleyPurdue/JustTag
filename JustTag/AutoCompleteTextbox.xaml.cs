@@ -40,8 +40,8 @@ namespace JustTag
         }
 
         public IEnumerable<string> autoCompletionSource;
-
         private string currentWord;
+
 
         public AutoCompleteTextbox()
         {
@@ -80,6 +80,32 @@ namespace JustTag
             }
 
             return longest;
+        }
+
+        private string GetWordAt(string str, int pos)
+        {
+            // Returns the word at the given cursor position.
+            // If it's not on a word (IE: in the middle of whitespace), returns null
+
+            // If we started in whitespace, return null
+            if (Char.IsWhiteSpace(str[pos]))
+                return null;
+
+            int currPos = pos;
+
+            // Rewind until we reach whitespace
+            while (currPos > 0 && !Char.IsWhiteSpace(str[currPos]))
+                currPos--;
+
+            // Step forward until we reach the end of the word
+            StringBuilder builder = new StringBuilder();
+            while (currPos < str.Length && !Char.IsWhiteSpace(str[currPos]))
+            {
+                builder.Append(str[currPos]);
+                currPos++;
+            }
+
+            return builder.ToString();
         }
 
 
