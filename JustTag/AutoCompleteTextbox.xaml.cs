@@ -68,11 +68,6 @@ namespace JustTag
             return new Thickness(formattedText.Width, formattedText.Height, 0, 0);
         }
 
-        private void MoveDropdownToCursor()
-        {
-            autoCompleteDropdown.Margin = GetCursorPos();
-        }
-
         private string GetLongestString(IEnumerable<string> strings)
         {
             // Returns the longest string in the collection
@@ -101,6 +96,15 @@ namespace JustTag
             if (words.Length != 0)
                 currentWord = words[words.Length - 1];
 
+            // If the current word is blank, hide the suggestion box.
+            if (currentWord.Length == 0)
+            {
+                autoCompleteDropdown.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            autoCompleteDropdown.Visibility = Visibility.Visible;
+
             // Fill the list box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
 
@@ -109,7 +113,7 @@ namespace JustTag
                                 select word;
 
             autoCompleteDropdown.ItemsSource = matchingWords;
-            MoveDropdownToCursor();
+            autoCompleteDropdown.Margin = GetCursorPos();       // Move the menu to the cursor pos
 
             // Resize the dropdown list so it matches the width of the suggestions
             string longestStr = GetLongestString(matchingWords);
