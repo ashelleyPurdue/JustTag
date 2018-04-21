@@ -28,6 +28,10 @@ namespace JustTag
 
             // Hook the listbox up to the list of known tags
             allTagsListbox.ItemsSource = allKnownTags;
+
+            // Set the filter textbox's autocomplete source to all the tags
+            tagFilterTextbox.autoCompletionSource = allKnownTags;
+            tagsBox.autoCompletionSource = allKnownTags;
         }
 
 
