@@ -103,5 +103,32 @@ namespace JustTag
                                                  Brushes.Black);
             return new Size(ft.Width, ft.Height);
         }
+
+        /// <summary>
+        /// Shorthand for constructing a FormattedText object with the given control's font parameters
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static FormattedText GetFormattedText(string text, System.Windows.Controls.Control control)
+        {
+            Typeface typeface = new Typeface
+            (
+                control.FontFamily,
+                control.FontStyle,
+                control.FontWeight,
+                control.FontStretch
+            );
+
+            return new FormattedText
+            (
+                text,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                typeface,
+                control.FontSize,
+                Brushes.Black
+            );
+        }
     }
 }
