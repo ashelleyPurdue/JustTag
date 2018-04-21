@@ -136,8 +136,8 @@ namespace JustTag
             // Get the current word
             string currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
 
-            // If the cursor is not in a word, hide the suggestion box and don't go on
-            if (currentWord == null)
+            // If the cursor is not in a word or the textbox is not in focus, hide the suggestion box and don't go on
+            if (currentWord == null || !textbox.IsKeyboardFocused)
             {
                 suggestionBox.Visibility = Visibility.Collapsed;
                 return;
