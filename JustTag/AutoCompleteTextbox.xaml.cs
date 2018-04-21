@@ -94,8 +94,17 @@ namespace JustTag
                 currPos = str.Length - 1;
 
             // Rewind until we reach whitespace
-            while (currPos > 0 && !Char.IsWhiteSpace(str[currPos]))
+            while (true)
+            {
+                if (currPos == 0)
+                    break;
+
+                if (Char.IsWhiteSpace(str[currPos - 1]))
+                    break;
+
                 currPos--;
+            }
+
 
             // Step forward until we reach the end of the word
             StringBuilder builder = new StringBuilder();
