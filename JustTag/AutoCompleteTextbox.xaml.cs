@@ -48,12 +48,31 @@ namespace JustTag
             InitializeComponent();
         }
 
+
         // Misc methods
 
         private void MoveDropdownToCursor()
         {
             double offset = textbox.CaretIndex * 10;
             autoCompleteDropdown.Margin = new Thickness(offset, 10, 0, 0);
+        }
+
+        /// <summary>
+        /// Returns the length of the longest string in the collection
+        /// </summary>
+        /// <param name="strings"></param>
+        /// <returns></returns>
+        private int GetLongestLength(IEnumerable<string> strings)
+        {
+            int longest = 0;
+
+            foreach (string s in strings)
+            {
+                if (s.Length > longest)
+                    longest = s.Length;
+            }
+
+            return longest;
         }
 
 
@@ -70,7 +89,7 @@ namespace JustTag
             if (words.Length != 0)
                 currentWord = words[words.Length - 1];
 
-            // Fill the combo box with the words that match it.
+            // Fill the list box with the words that match it.
             Regex wordRegex = new Regex("^" + currentWord + ".*");
 
             var matchingWords = from word in autoCompletionSource
@@ -79,6 +98,10 @@ namespace JustTag
 
             autoCompleteDropdown.ItemsSource = matchingWords;
             MoveDropdownToCursor();
+
+            // Resize the dropdown list so it matches the width of the suggestions
+            int maxLen = GetLongestLength(matchingWords);
+            autoCompleteDropdown.Width = maxLen * 10;
         }
     }
 }

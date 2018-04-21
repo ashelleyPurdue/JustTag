@@ -10,6 +10,9 @@
         <TextBox x:Name="textbox"
                  AcceptsTab="False" TextChanged="textbox_TextChanged"
         />
-        <ComboBox x:Name="autoCompleteDropdown" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ListBox x:Name="autoCompleteDropdown"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+        />
     </Grid>
 </UserControl>
