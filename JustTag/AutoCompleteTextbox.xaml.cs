@@ -40,7 +40,6 @@ namespace JustTag
         }
 
         public IEnumerable<string> autoCompletionSource;
-        private string currentWord;
 
 
         public AutoCompleteTextbox()
@@ -127,8 +126,8 @@ namespace JustTag
 
         private void textbox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Update the current word
-            currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
+            // Get the current word
+            string currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
 
             // Show the suggestion box
             suggestionBox.Visibility = Visibility.Visible;
