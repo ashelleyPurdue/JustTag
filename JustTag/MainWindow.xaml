@@ -102,7 +102,7 @@
             Margin="10,5,10,10"
          >
             <Grid>
-                <TextBox x:Name="tagsBox"
+                <local:AutoCompleteTextbox x:Name="tagsBox"
                          TextChanged="tagsBox_TextChanged"
                          PreviewKeyDown="tagsBox_PreviewKeyDown"
                          AcceptsReturn="True"
