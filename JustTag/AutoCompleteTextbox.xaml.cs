@@ -199,8 +199,11 @@ namespace JustTag
             {
                 e.Handled = true;
 
-                // Get the word to insert
-                string insertedWord = (string)suggestionList.Items[0];  // TODO: Change this to the selected item instead of the first item.
+                // Get the selected word from the suggestion list
+                if (suggestionList.SelectedIndex < 0)
+                    suggestionList.SelectedIndex = 0;
+
+                string insertedWord = (string)suggestionList.Items[suggestionList.SelectedIndex];
 
                 // Chop off the part the user has already typed.
                 insertedWord = insertedWord.Substring(currentWord.Length);
