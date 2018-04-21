@@ -84,10 +84,11 @@ namespace JustTag
         private string GetWordAt(string str, int pos)
         {
             // Returns the word at the given cursor position.
-            // Returns the empty string if str is empty
+            // Returns null if it's not on a word (ie: in the middle of whitespace)
 
+            // There are no words in an empty string, so pos can't be in a word
             if (str == "")
-                return "";
+                return null;
 
             int currPos = pos;
 
@@ -97,7 +98,11 @@ namespace JustTag
             if (currPos >= str.Length)
                 currPos = str.Length - 1;
 
-            // Rewind until we reach whitespace
+            // If we're already in whitespace, we're not in a word
+            if (Char.IsWhiteSpace(str[currPos]))
+                return null;
+
+            // Rewind until we reach whitespace or the beginning of the string
             while (true)
             {
                 if (currPos == 0)
@@ -128,6 +133,13 @@ namespace JustTag
         {
             // Get the current word
             string currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
+
+            // If the cursor is not in a word, hide the suggestion box and don't go on
+            if (currentWord == null)
+            {
+                suggestionBox.Visibility = Visibility.Collapsed;
+                return;
+            }
 
             // Show the suggestion box
             suggestionBox.Visibility = Visibility.Visible;
