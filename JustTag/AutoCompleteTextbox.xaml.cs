@@ -60,15 +60,17 @@ namespace JustTag
 
             // Measure it
             FormattedText formattedText = Utils.GetFormattedText(earlierText, textbox);
-            formattedText.MaxTextWidth = textbox.Width;
+            formattedText.MaxTextWidth = textbox.ActualWidth;
+
+            double width = formattedText.Width;
+            double height = formattedText.Height;
 
             return new Thickness(formattedText.Width, formattedText.Height, 0, 0);
         }
 
         private void MoveDropdownToCursor()
         {
-            double offset = textbox.CaretIndex * 10;
-            autoCompleteDropdown.Margin = new Thickness(offset, 10, 0, 0);
+            autoCompleteDropdown.Margin = GetCursorPos();
         }
 
         private string GetLongestString(IEnumerable<string> strings)
