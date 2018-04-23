@@ -295,12 +295,8 @@ namespace JustTag
             tagSaveButton.Visibility = Visibility.Visible;
         }
 
-        private void tagSaveButton_Click(object sender, RoutedEventArgs e)
+        private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Close the file so we can rename it.
-            videoPlayer.videoPlayer.Stop();
-            videoPlayer.videoPlayer.Source = null;
-
             // Update the selected file's tags
             FileInfo file = folderContentsBox.SelectedItem as FileInfo;
 
@@ -331,8 +327,12 @@ namespace JustTag
                 }
                 catch(IOException)
                 {
+                    // Close the file so we can rename it.
+                    videoPlayer.videoPlayer.Stop();
+                    videoPlayer.videoPlayer.Source = null;
+
                     // Wait and try again
-                    System.Threading.Thread.Sleep(100);
+                    await System.Threading.Tasks.Task.Delay(100);
                 }
             }
 
