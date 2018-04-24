@@ -165,17 +165,39 @@
     <Resource Include="Resources\folderIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ffmpeg\avcodec-57.dll" />
-    <Content Include="ffmpeg\avdevice-57.dll" />
-    <Content Include="ffmpeg\avfilter-6.dll" />
-    <Content Include="ffmpeg\avformat-57.dll" />
-    <Content Include="ffmpeg\avutil-55.dll" />
-    <Content Include="ffmpeg\ffmpeg.exe" />
-    <Content Include="ffmpeg\ffplay.exe" />
-    <Content Include="ffmpeg\ffprobe.exe" />
-    <Content Include="ffmpeg\postproc-54.dll" />
-    <Content Include="ffmpeg\swresample-2.dll" />
-    <Content Include="ffmpeg\swscale-4.dll" />
+    <None Include="ffmpeg\avcodec-57.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\avdevice-57.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\avfilter-6.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\avformat-57.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\avutil-55.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\ffmpeg.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\ffplay.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\ffprobe.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\postproc-54.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\swresample-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ffmpeg\swscale-4.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
