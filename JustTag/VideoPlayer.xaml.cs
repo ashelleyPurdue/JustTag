@@ -92,7 +92,9 @@ namespace JustTag
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
             // Swallowing exceptions is bad juju.
-            throw e.ErrorException;
+            #if DEBUG
+            MessageBox.Show(e.ErrorException.Message);
+            # endif
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
