@@ -77,7 +77,6 @@ namespace JustTag
 
         private void videoPlayer_MediaOpening(object sender, Unosquare.FFME.Events.MediaOpeningRoutedEventArgs e)
         {
-            MessageBox.Show("Opening");
         }
 
         private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
