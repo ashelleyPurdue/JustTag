@@ -25,10 +25,9 @@
             HorizontalAlignment="Stretch"
         >
             <ffme:MediaElement Name="videoPlayer"
-                LoadedBehavior="Play"
+                LoadedBehavior="Manual"
                 ScrubbingEnabled="True"
                 MediaOpened="videoPlayer_MediaOpened"
-                MediaOpening="videoPlayer_MediaOpening"
                 MediaFailed="videoPlayer_MediaFailed"
              />
         </paz:ZoomBorder>
