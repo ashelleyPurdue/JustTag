@@ -37,6 +37,15 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ffme.common, Version=3.4.2.230, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFME.Windows.3.4.230\lib\net461\ffme.common.dll</HintPath>
+    </Reference>
+    <Reference Include="ffme.win, Version=2018.3.29.16310, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFME.Windows.3.4.230\lib\net461\ffme.win.dll</HintPath>
+    </Reference>
+    <Reference Include="FFmpeg.AutoGen, Version=3.4.0.5, Culture=neutral, PublicKeyToken=9b7632533a381715, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFmpeg.AutoGen.3.4.0.5\lib\net45\FFmpeg.AutoGen.dll</HintPath>
+    </Reference>
     <Reference Include="PanAndZoom, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PanAndZoom.1.0.1\lib\net45\PanAndZoom.dll</HintPath>
     </Reference>
