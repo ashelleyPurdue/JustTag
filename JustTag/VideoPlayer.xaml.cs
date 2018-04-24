@@ -48,7 +48,7 @@ namespace JustTag
 
             // Put it in the media element and start playing.
             // We're going to pause it immediately during the MediaOpened event
-            videoPlayer.Open(new Uri(selectedFile.FullName));
+            videoPlayer.Source = new Uri(selectedFile.FullName);
             //PlayOrPause(true);
         }
 
