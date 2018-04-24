@@ -48,8 +48,8 @@ namespace JustTag
 
             // Put it in the media element and start playing.
             // We're going to pause it immediately during the MediaOpened event
-            videoPlayer.Source = new Uri(selectedFile.FullName);
-            PlayOrPause(true);
+            videoPlayer.Open(new Uri(selectedFile.FullName));
+            //PlayOrPause(true);
         }
 
         private void PlayOrPause(bool play)
@@ -75,6 +75,11 @@ namespace JustTag
 
         // Event handlers
 
+        private void videoPlayer_MediaOpening(object sender, Unosquare.FFME.Events.MediaOpeningRoutedEventArgs e)
+        {
+            MessageBox.Show("Opening");
+        }
+
         private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
             // It's rude to suddenly start playing a video without asking,
@@ -83,6 +88,12 @@ namespace JustTag
 
             // If it's a video, enable the playback controls
             videoControls.IsEnabled = videoPlayer.NaturalDuration.HasTimeSpan;
+        }
+
+        private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            // Swallowing exceptions is bad juju.
+            throw e.ErrorException;
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
