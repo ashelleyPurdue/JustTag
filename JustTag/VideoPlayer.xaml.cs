@@ -27,6 +27,10 @@ namespace JustTag
         private bool videoPlaying = false;          // MediaElement doesn't have an IsPlaying property, so we need to
                                                     // track it ourselves.  What a hassle!
 
+        private double cachedGifDuration = 0;       // MediaElement does't properly return the length of animated gifs, so we need
+                                                    // to calculate it ourselves when we load it.
+       
+
         public VideoPlayer()
         {
             InitializeComponent();
@@ -45,6 +49,10 @@ namespace JustTag
         {
             // Disable the navigation controls
             videoControls.IsEnabled = false;
+
+            // If it's a gif, calculate its duration
+            if (selectedFile.Extension.ToLower() == ".gif")
+                cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
 
             // Put it in the media element and start playing.
             // We're going to pause it immediately during the MediaOpened event
@@ -72,37 +80,40 @@ namespace JustTag
             playButton.Content = play ? "Pause" : "Play";
         }
 
-        private double GetVideoDuration()
+        private double CalculateGifDuration(string filePath)
+        {
+            // Algorithm taken from https://stackoverflow.com/questions/47343230/how-do-you-get-the-duration-of-a-gif-file-in-c
+            int totalDuration = 0;
+
+            using (var image = System.Drawing.Image.FromFile(filePath))
+            {
+                double minimumFrameDelay = 16;  // TODO: Calculate from the framerate?
+
+                var frameDimension = new System.Drawing.Imaging.FrameDimension(image.FrameDimensionsList[0]);
+                int frameCount = image.GetFrameCount(frameDimension);
+
+                for (int f = 0; f < frameCount; f++)
+                {
+                    byte[] delayPropertyBytes = image.GetPropertyItem(20736).Value;
+                    int frameDelay = BitConverter.ToInt32(delayPropertyBytes, f * 4) * 10;
+                    // Minimum delay is 16 ms. It's 1/60 sec i.e. 60 fps
+                    totalDuration += (frameDelay < minimumFrameDelay ? (int)minimumFrameDelay : frameDelay);
+                }
+            }
+
+            // Convert total duration from milliseconds to seconds
+            double durationSeconds = 0.001 * totalDuration;
+            return durationSeconds;
+        }
+
+        private double GetCurrentVideoDuration()
         {
             // Gets the duration in seconds of the currently open video.
             // If it's not a video or it's not open, returns 0
 
             // If it's a gif, handle it differently;
             if (videoPlayer.MediaFormat == "gif")
-            {
-                string filePath = videoPlayer.Source.AbsolutePath;
-                int totalDuration = 0;
-
-                double minimumFrameDelay = 16;  // TODO: Calculate from the framerate?
-
-                using (var image = System.Drawing.Image.FromFile(filePath))
-                {
-                    var frameDimension = new System.Drawing.Imaging.FrameDimension(image.FrameDimensionsList[0]);
-                    int frameCount = image.GetFrameCount(frameDimension);
-
-                    for (int f = 0; f < frameCount; f++)
-                    {
-                        byte[] delayPropertyBytes = image.GetPropertyItem(20736).Value;
-                        int frameDelay = BitConverter.ToInt32(delayPropertyBytes, f * 4) * 10;
-                        // Minimum delay is 16 ms. It's 1/60 sec i.e. 60 fps
-                        totalDuration += (frameDelay < minimumFrameDelay ? (int)minimumFrameDelay : frameDelay);
-                    }
-                }
-
-                // Convert total duration from milliseconds to seconds
-                double durationSeconds = 0.001 * totalDuration;
-                return durationSeconds;
-            }
+                return cachedGifDuration;
 
             // If it's not a video, return 0
             if (!videoPlayer.NaturalDuration.HasTimeSpan)
@@ -150,7 +161,7 @@ namespace JustTag
 
             // Find the time to skip to
             double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
-            double time = GetVideoDuration() * percent;
+            double time = GetCurrentVideoDuration() * percent;
 
             // Jump to the time
             videoPlayer.Position = TimeSpan.FromSeconds(time);
@@ -178,13 +189,13 @@ namespace JustTag
         private void SliderUpdateTimer_Tick(object sender, EventArgs e)
         {
             // Don't do anything if the open file has no duration
-            double duration = GetVideoDuration();
+            double duration = GetCurrentVideoDuration();
 
             if (duration == 0)
                 return;
 
             // Update the slider to match the video time
-            double percent = videoPlayer.Position.TotalSeconds / GetVideoDuration();
+            double percent = videoPlayer.Position.TotalSeconds / GetCurrentVideoDuration();
 
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
         }
