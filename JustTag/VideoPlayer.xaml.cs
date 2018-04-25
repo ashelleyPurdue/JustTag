@@ -72,6 +72,25 @@ namespace JustTag
             playButton.Content = play ? "Pause" : "Play";
         }
 
+        private double GetVideoDuration()
+        {
+            // Gets the duration in seconds of the currently open video.
+            // If it's not a video or it's not open, returns 0
+
+            // If it's a gif, handle it differently;
+            if (videoPlayer.MediaFormat == "gif")
+            {
+                // TODO
+                return 0;
+            }
+
+            // If it's not a video, return 0
+            if (!videoPlayer.NaturalDuration.HasTimeSpan)
+                return 0;
+
+            // It's a normal video, so we can just use the duration property
+            return videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+        }
 
         // Event handlers
 
@@ -86,7 +105,7 @@ namespace JustTag
             PlayOrPause(false);
 
             // If it's a video, enable the playback controls
-            videoControls.IsEnabled = videoPlayer.NaturalDuration.HasTimeSpan;
+            videoControls.IsEnabled = videoPlayer.CanPause;
         }
 
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
@@ -111,7 +130,7 @@ namespace JustTag
 
             // Find the time to skip to
             double percent = videoTimeSlider.Value / videoTimeSlider.Maximum;
-            double time = videoPlayer.NaturalDuration.TimeSpan.TotalSeconds * percent;
+            double time = GetVideoDuration() * percent;
 
             // Jump to the time
             videoPlayer.Position = TimeSpan.FromSeconds(time);
@@ -138,12 +157,14 @@ namespace JustTag
 
         private void SliderUpdateTimer_Tick(object sender, EventArgs e)
         {
-            // Don't do anything if the open file is not a video
-            if (!videoPlayer.NaturalDuration.HasTimeSpan)
+            // Don't do anything if the open file has no duration
+            double duration = GetVideoDuration();
+
+            if (duration == 0)
                 return;
 
             // Update the slider to match the video time
-            double percent = videoPlayer.Position.TotalSeconds / videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+            double percent = videoPlayer.Position.TotalSeconds / GetVideoDuration();
 
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
         }
