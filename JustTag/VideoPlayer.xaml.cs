@@ -80,8 +80,28 @@ namespace JustTag
             // If it's a gif, handle it differently;
             if (videoPlayer.MediaFormat == "gif")
             {
-                // TODO
-                return 0;
+                string filePath = videoPlayer.Source.AbsolutePath;
+                int totalDuration = 0;
+
+                double minimumFrameDelay = 16;  // TODO: Calculate from the framerate?
+
+                using (var image = System.Drawing.Image.FromFile(filePath))
+                {
+                    var frameDimension = new System.Drawing.Imaging.FrameDimension(image.FrameDimensionsList[0]);
+                    int frameCount = image.GetFrameCount(frameDimension);
+
+                    for (int f = 0; f < frameCount; f++)
+                    {
+                        byte[] delayPropertyBytes = image.GetPropertyItem(20736).Value;
+                        int frameDelay = BitConverter.ToInt32(delayPropertyBytes, f * 4) * 10;
+                        // Minimum delay is 16 ms. It's 1/60 sec i.e. 60 fps
+                        totalDuration += (frameDelay < minimumFrameDelay ? (int)minimumFrameDelay : frameDelay);
+                    }
+                }
+
+                // Convert total duration from milliseconds to seconds
+                double durationSeconds = 0.001 * totalDuration;
+                return durationSeconds;
             }
 
             // If it's not a video, return 0
