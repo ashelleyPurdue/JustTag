@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Globalization;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace JustTag
 {
@@ -115,5 +116,56 @@ namespace JustTag
                 Brushes.Black
             );
         }
+
+        /// <summary>
+        /// Extracts all the tags from the given file name
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string[] GetFileTags(string fileName)
+        {
+            // This horrible regex just extracts everything in between '[' and ']'.
+            string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
+
+            // Split them by space
+            return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// Renames the given file so it has the given tags
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="newTags"></param>
+        public static string ChangeFileTags(string fileName, string[] newTags)
+        {
+            // Get the stuff before and after the tags
+            string beforeTags = fileName.Split('[', '.')[0];
+            string extension = System.IO.Path.GetExtension(fileName);
+
+            // If the new tags list is empty, don't even bother
+            // with the brackets.
+            if (newTags.Length == 0)
+                return beforeTags + extension;
+
+            // Make a new tag string from the array
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append("[");
+            for (int i = 0; i < newTags.Length; i++)
+            {
+                // Add a space if this isn't the first
+                if (i != 0)
+                    builder.Append(" ");
+
+                // Add the tag
+                builder.Append(newTags[i]);
+            }
+            builder.Append("]");
+
+            // Jam them together to make the new filename
+            return beforeTags + builder.ToString() + extension;
+        }
+
+
     }
 }
