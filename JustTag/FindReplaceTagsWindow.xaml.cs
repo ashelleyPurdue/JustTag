@@ -67,7 +67,7 @@ namespace JustTag
             }
         }
 
-        private void replaceButton_Click(object sender, RoutedEventArgs e)
+        private async void replaceButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO: Error checking on the input
             string findTag = findTextbox.Text;
@@ -78,7 +78,10 @@ namespace JustTag
             progressBar.Visibility = Visibility.Visible;
 
             // Replace the tags
-            ReplaceTags(findTag, replaceTag);
+            await Task.Run(() =>
+            {
+                ReplaceTags(findTag, replaceTag);
+            });
 
             // Re-enable stuff
             IsEnabled = true;
