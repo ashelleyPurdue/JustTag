@@ -23,6 +23,12 @@
 
         <Menu Grid.Row="0" Grid.ColumnSpan="3">
             <MenuItem x:Name="settingsButton" Header="Settings" Click="settingsButton_Click"/>
+            <MenuItem Header="Tools">
+                <MenuItem x:Name="findReplaceTagsButton"
+                          Header="Find and replace tags"
+                          Click="findReplaceTagsButton_Click"
+                />
+            </MenuItem>
         </Menu>
 
         <local:VideoPlayer x:Name="videoPlayer"

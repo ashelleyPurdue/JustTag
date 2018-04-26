@@ -371,5 +371,10 @@ namespace JustTag
             SettingsWindow w = new SettingsWindow();
             w.ShowDialog();
         }
+
+        private void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
