@@ -112,7 +112,7 @@ namespace JustTag
         private bool MatchesTagFilter(string fileName)
         {
             // Get all the tags from the filename
-            string[] tags = GetFileTags(fileName);
+            string[] tags = Utils.GetFileTags(fileName);
 
             // Parse the filter
             // TODO: Move this part somewhere else so we only have to parse the filter once.
