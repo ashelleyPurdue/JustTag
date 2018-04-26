@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JustTag"
         mc:Ignorable="d"
-        Title="FindReplaceTagsWindow" Height="144.207" Width="240.549">
+        SizeToContent="Height"
+        Title="FindReplaceTagsWindow" Width="240.549">
 
-    <Grid>
+    <StackPanel>
         
         <Grid Margin="10,10,10,0" >
             <Grid.ColumnDefinitions>
@@ -43,8 +44,14 @@
                     Content="Go"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
-                    Margin="0,0,10,13"
+                    Margin="0,10,10,10"
                     Width="75"
          />
-    </Grid>
+
+        <ProgressBar x:Name="progressBar"
+                     Height="20"
+                     Margin="10,0,10,10"
+                     Visibility="Collapsed"
+        />
+    </StackPanel>
 </Window>
