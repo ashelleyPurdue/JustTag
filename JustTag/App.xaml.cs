@@ -13,5 +13,10 @@ namespace JustTag
     /// </summary>
     public partial class App : Application
     {
+        public App():base()
+        {
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            Unosquare.FFME.MediaElement.FFmpegDirectory = System.IO.Path.Combine(baseDir, "ffmpeg\\");
+        }
     }
 }

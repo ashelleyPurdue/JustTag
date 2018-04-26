@@ -295,7 +295,7 @@ namespace JustTag
             tagSaveButton.Visibility = Visibility.Visible;
         }
 
-        private void tagSaveButton_Click(object sender, RoutedEventArgs e)
+        private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
             // Update the selected file's tags
             FileInfo file = folderContentsBox.SelectedItem as FileInfo;
@@ -315,7 +315,31 @@ namespace JustTag
             int selectedIndex = folderContentsBox.SelectedIndex;
 
             // Rename the file
-            file.MoveTo(newFilePath);
+            // We may need to wait for the file to be closed.
+            bool success = false;
+            for (int tryCount = 0; tryCount < 10; tryCount++)
+            {
+                try
+                {
+                    file.MoveTo(newFilePath);
+                    success = true;
+                    break;
+                }
+                catch(IOException)
+                {
+                    // Close the file so we can rename it.
+                    videoPlayer.videoPlayer.Stop();
+                    videoPlayer.videoPlayer.Source = null;
+
+                    // Wait and try again
+                    await System.Threading.Tasks.Task.Delay(100);
+                }
+            }
+
+            // If we failed, inform the user.
+            if (!success)
+                MessageBox.Show("ERROR: Could not rename file.  Is it already open?");
+            
             UpdateCurrentDirectory();
 
             // Scroll back to the same selected index
