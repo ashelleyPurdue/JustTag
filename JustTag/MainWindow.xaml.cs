@@ -330,8 +330,12 @@ namespace JustTag
 
         private void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
         {
+            // Show a window for finding/replacing
             var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
             findReplaceWindow.ShowDialog();
+
+            // Refresh the UI
+            UpdateCurrentDirectory();
         }
     }
 }

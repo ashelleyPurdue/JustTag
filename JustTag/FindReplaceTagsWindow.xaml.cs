@@ -77,15 +77,14 @@ namespace JustTag
             IsEnabled = false;
             progressBar.Visibility = Visibility.Visible;
 
-            // Replace the tags
+            // Replace the tags asynchronously
             await Task.Run(() =>
             {
                 ReplaceTags(findTag, replaceTag);
             });
 
-            // Re-enable stuff
-            IsEnabled = true;
-            progressBar.Visibility = Visibility.Collapsed;
+            // Close this window
+            Close();
         }
     }
 }
