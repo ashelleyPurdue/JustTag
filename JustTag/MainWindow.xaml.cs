@@ -374,7 +374,8 @@ namespace JustTag
 
         private void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
+            findReplaceWindow.ShowDialog();
         }
     }
 }

@@ -19,9 +19,13 @@ namespace JustTag
     /// </summary>
     public partial class FindReplaceTagsWindow : Window
     {
-        public FindReplaceTagsWindow()
+        public FindReplaceTagsWindow(string directory, IEnumerable<string> autoCompleteTags)
         {
             InitializeComponent();
+
+            // Set the autocomplete sources
+            findTextbox.autoCompletionSource = autoCompleteTags;
+            replaceTextbox.autoCompletionSource = autoCompleteTags;
         }
     }
 }
