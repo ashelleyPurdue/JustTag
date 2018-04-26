@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace JustTag
 {
@@ -19,13 +20,69 @@ namespace JustTag
     /// </summary>
     public partial class FindReplaceTagsWindow : Window
     {
+        private string directory;
+
         public FindReplaceTagsWindow(string directory, IEnumerable<string> autoCompleteTags)
         {
             InitializeComponent();
 
+            this.directory = directory;
+
             // Set the autocomplete sources
             findTextbox.autoCompletionSource = autoCompleteTags;
             replaceTextbox.autoCompletionSource = autoCompleteTags;
+        }
+
+        private void ReplaceTags(string findTag, string replaceTag)
+        {
+            // Loop over all files in the directory
+            DirectoryInfo dir = new DirectoryInfo(directory);
+            var files = dir.EnumerateFiles();
+
+            foreach (FileInfo f in files)
+            {
+                // Get the tags
+                HashSet<string> tags = new HashSet<string>(Utils.GetFileTags(f.Name));
+
+                // Skip this file if it doesn't have the find tag
+                if (!tags.Contains(findTag))
+                    continue;
+
+                // Replace the tag
+                tags.Remove(findTag);
+                tags.Add(replaceTag);
+
+                // Save the changes to the file system.
+                string newName = Utils.ChangeFileTags(f.Name, tags.ToArray());
+                string newPath = System.IO.Path.Combine(f.DirectoryName, newName);
+
+                try
+                {
+                    f.MoveTo(newPath);
+                }
+                catch (IOException e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
+
+        private void replaceButton_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Error checking on the input
+            string findTag = findTextbox.Text;
+            string replaceTag = replaceTextbox.Text;
+
+            // Disable the controls while we wait
+            IsEnabled = false;
+            progressBar.Visibility = Visibility.Visible;
+
+            // Replace the tags
+            ReplaceTags(findTag, replaceTag);
+
+            // Re-enable stuff
+            IsEnabled = true;
+            progressBar.Visibility = Visibility.Collapsed;
         }
     }
 }
