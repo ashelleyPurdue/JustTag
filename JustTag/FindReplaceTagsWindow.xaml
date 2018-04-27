@@ -42,6 +42,7 @@
         </Grid>
         <Button x:Name="replaceButton"
                     Content="Go"
+                    IsDefault="True"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     Margin="0,10,10,10"
