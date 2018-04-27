@@ -219,6 +219,10 @@ namespace JustTag
 
         private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Don't do anything if the last preview hasn't loaded yet
+            if (videoPlayer.videoPlayer.IsOpening)
+                return;
+
             // Don't do anything if selection is null
             if (folderContentsBox.SelectedItem == null)
                 return;
