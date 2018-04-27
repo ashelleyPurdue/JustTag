@@ -91,7 +91,7 @@ namespace JustTag
             foreach (FileSystemInfo file in files)
             {
                 // Record all the tags
-                string[] tags = GetFileTags(file.Name);
+                string[] tags = Utils.GetFileTags(file.Name);
                 foreach (string tag in tags)
                     allKnownTags.Add(tag);
 
@@ -112,7 +112,7 @@ namespace JustTag
         private bool MatchesTagFilter(string fileName)
         {
             // Get all the tags from the filename
-            string[] tags = GetFileTags(fileName);
+            string[] tags = Utils.GetFileTags(fileName);
 
             // Parse the filter
             // TODO: Move this part somewhere else so we only have to parse the filter once.
@@ -150,50 +150,6 @@ namespace JustTag
 
             // It passed the filter
             return true;
-        }
-
-        private string[] GetFileTags(string fileName)
-        {
-            // This horrible regex just extracts everything in between '[' and ']'.
-            string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
-
-            // Split them by space
-            return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        /// <summary>
-        /// Renames the given file so it has the given tags
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="newTags"></param>
-        private string ChangeFileTags(string fileName, string[] newTags)
-        {
-            // Get the stuff before and after the tags
-            string beforeTags = fileName.Split('[', '.')[0];
-            string extension = System.IO.Path.GetExtension(fileName);
-
-            // If the new tags list is empty, don't even bother
-            // with the brackets.
-            if (newTags.Length == 0)
-                return beforeTags + extension;
-
-            // Make a new tag string from the array
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("[");
-            for (int i = 0; i < newTags.Length; i++)
-            {
-                // Add a space if this isn't the first
-                if (i != 0)
-                    builder.Append(" ");
-
-                // Add the tag
-                builder.Append(newTags[i]);
-            }
-            builder.Append("]");
-
-            // Jam them together to make the new filename
-            return beforeTags + builder.ToString() + extension;
         }
 
 
@@ -263,6 +219,10 @@ namespace JustTag
 
         private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Don't do anything if the last preview hasn't loaded yet
+            if (videoPlayer.videoPlayer.IsOpening)
+                return;
+
             // Don't do anything if selection is null
             if (folderContentsBox.SelectedItem == null)
                 return;
@@ -275,7 +235,7 @@ namespace JustTag
 
             // Update the tag box with this file's tags
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
-            string[] tags = GetFileTags(name);
+            string[] tags = Utils.GetFileTags(name);
 
             StringBuilder builder = new StringBuilder();
             foreach (string t in tags)
@@ -307,7 +267,7 @@ namespace JustTag
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Get the new file path
-            string newFileName = ChangeFileTags(file.Name, tags);
+            string newFileName = Utils.ChangeFileTags(file.Name, tags);
             string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
 
             // Remember the selected index so we can scroll back to it
@@ -370,6 +330,19 @@ namespace JustTag
             // Open the settings window
             SettingsWindow w = new SettingsWindow();
             w.ShowDialog();
+        }
+
+        private void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Close the currently open file in case it needs to be renamed
+            videoPlayer.UnloadVideo();
+
+            // Show a window for finding/replacing
+            var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
+            findReplaceWindow.ShowDialog();
+
+            // Refresh the UI
+            UpdateCurrentDirectory();
         }
     }
 }
