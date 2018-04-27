@@ -60,6 +60,14 @@ namespace JustTag
             PlayOrPause(true);
         }
 
+        /// <summary>
+        /// Unloads the currently-loaded video.
+        /// </summary>
+        public void UnloadVideo()
+        {
+            videoPlayer.Source = null;
+        }
+
         private void PlayOrPause(bool play)
         {
             // Play/pause the video

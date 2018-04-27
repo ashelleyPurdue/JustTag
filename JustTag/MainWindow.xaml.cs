@@ -334,6 +334,9 @@ namespace JustTag
 
         private void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
         {
+            // Close the currently open file in case it needs to be renamed
+            videoPlayer.UnloadVideo();
+
             // Show a window for finding/replacing
             var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
             findReplaceWindow.ShowDialog();
