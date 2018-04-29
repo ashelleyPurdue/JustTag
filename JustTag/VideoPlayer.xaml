@@ -29,6 +29,7 @@
                 ScrubbingEnabled="True"
                 MediaOpened="videoPlayer_MediaOpened"
                 MediaFailed="videoPlayer_MediaFailed"
+                PositionChanged="videoPlayer_PositionChanged"
              />
         </paz:ZoomBorder>
 

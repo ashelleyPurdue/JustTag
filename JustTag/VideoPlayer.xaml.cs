@@ -22,8 +22,6 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        private DispatcherTimer sliderUpdateTimer;  // Updates the slider position as the video is playing
-
         private bool videoPlaying = false;          // MediaElement doesn't have an IsPlaying property, so we need to
                                                     // track it ourselves.  What a hassle!
 
@@ -34,12 +32,6 @@ namespace JustTag
         public VideoPlayer()
         {
             InitializeComponent();
-
-            // Hook up the slider update timer
-            sliderUpdateTimer = new DispatcherTimer();
-            sliderUpdateTimer.Interval = TimeSpan.FromMilliseconds(30);
-            sliderUpdateTimer.Tick += SliderUpdateTimer_Tick;
-            sliderUpdateTimer.Start();
         }
 
 
@@ -72,15 +64,10 @@ namespace JustTag
         {
             // Play/pause the video
             if (play)
-            {
                 videoPlayer.Play();
-                sliderUpdateTimer.Start();
-            }
             else
-            {
                 videoPlayer.Pause();
-                sliderUpdateTimer.Stop();
-            }
+
             // Remember the playing state, because MediaElement is stupid.
             videoPlaying = play;
 
@@ -130,6 +117,7 @@ namespace JustTag
             // It's a normal video, so we can just use the duration property
             return videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
         }
+
 
         // Event handlers
 
@@ -194,7 +182,7 @@ namespace JustTag
             PlayOrPause(false);
         }
 
-        private void SliderUpdateTimer_Tick(object sender, EventArgs e)
+        private void videoPlayer_PositionChanged(object sender, Unosquare.FFME.Events.PositionChangedRoutedEventArgs e)
         {
             // Don't do anything if the open file has no duration
             double duration = GetCurrentVideoDuration();
