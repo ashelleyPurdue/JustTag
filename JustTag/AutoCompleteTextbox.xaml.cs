@@ -248,5 +248,12 @@ namespace JustTag
             // Apply the selection change
             suggestionList.SelectedIndex = selectedIndex;
         }
+
+        private void suggestionBox_Opened(object sender, EventArgs e)
+        {
+            // Reset the selected index to zero.  This way the selected index
+            // will always be where the user expects it when the box opens.
+            suggestionList.SelectedIndex = 0;
+        }
     }
 }

@@ -16,7 +16,9 @@
         <Popup x:Name="suggestionBox"
                HorizontalAlignment="Left"
                VerticalAlignment="Top"
-               IsOpen="False" Placement="Relative"
+               IsOpen="False"
+               Placement="Relative"
+               Opened="suggestionBox_Opened"
         >
             <ListBox x:Name="suggestionList"
                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
