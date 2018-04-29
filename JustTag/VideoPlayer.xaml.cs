@@ -43,10 +43,8 @@ namespace JustTag
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
 
-            // Put it in the media element and start playing.
-            // We're going to pause it immediately during the MediaOpened event
+            // Put it in the media element
             videoPlayer.Open(new Uri(selectedFile.FullName));
-            PlayOrPause(true);
         }
 
         /// <summary>
@@ -117,10 +115,6 @@ namespace JustTag
 
         private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
-            // It's rude to suddenly start playing a video without asking,
-            // so pause it after we've seen the first frame.
-            PlayOrPause(false);
-
             // If it's a video, enable the playback controls
             videoControls.IsEnabled = videoPlayer.CanPause;
         }
