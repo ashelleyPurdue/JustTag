@@ -34,6 +34,10 @@ namespace JustTag
 
         // Misc methods
 
+        /// <summary>
+        /// Opens the given file in the video player.
+        /// </summary>
+        /// <param name="selectedFile"></param>
         public void ShowFilePreview(FileInfo selectedFile)
         {
             // Disable the navigation controls
