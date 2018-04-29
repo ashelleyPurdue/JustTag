@@ -6,14 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace JustTag
 {
@@ -22,29 +15,22 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        private DispatcherTimer sliderUpdateTimer;  // Updates the slider position as the video is playing
-
-        private bool videoPlaying = false;          // MediaElement doesn't have an IsPlaying property, so we need to
-                                                    // track it ourselves.  What a hassle!
-
-        private double cachedGifDuration = 0;       // MediaElement does't properly return the length of animated gifs, so we need
+        private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
        
-
+       
         public VideoPlayer()
         {
             InitializeComponent();
-
-            // Hook up the slider update timer
-            sliderUpdateTimer = new DispatcherTimer();
-            sliderUpdateTimer.Interval = TimeSpan.FromMilliseconds(30);
-            sliderUpdateTimer.Tick += SliderUpdateTimer_Tick;
-            sliderUpdateTimer.Start();
         }
 
 
         // Misc methods
 
+        /// <summary>
+        /// Opens the given file in the video player.
+        /// </summary>
+        /// <param name="selectedFile"></param>
         public void ShowFilePreview(FileInfo selectedFile)
         {
             // Disable the navigation controls
@@ -54,10 +40,8 @@ namespace JustTag
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
 
-            // Put it in the media element and start playing.
-            // We're going to pause it immediately during the MediaOpened event
+            // Put it in the media element
             videoPlayer.Open(new Uri(selectedFile.FullName));
-            PlayOrPause(true);
         }
 
         /// <summary>
@@ -72,17 +56,9 @@ namespace JustTag
         {
             // Play/pause the video
             if (play)
-            {
                 videoPlayer.Play();
-                sliderUpdateTimer.Start();
-            }
             else
-            {
                 videoPlayer.Pause();
-                sliderUpdateTimer.Stop();
-            }
-            // Remember the playing state, because MediaElement is stupid.
-            videoPlaying = play;
 
             // Update the play button's text
             playButton.Content = play ? "Pause" : "Play";
@@ -131,18 +107,11 @@ namespace JustTag
             return videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
         }
 
-        // Event handlers
 
-        private void videoPlayer_MediaOpening(object sender, Unosquare.FFME.Events.MediaOpeningRoutedEventArgs e)
-        {
-        }
+        // Event handlers
 
         private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
-            // It's rude to suddenly start playing a video without asking,
-            // so pause it after we've seen the first frame.
-            PlayOrPause(false);
-
             // If it's a video, enable the playback controls
             videoControls.IsEnabled = videoPlayer.CanPause;
         }
@@ -158,7 +127,7 @@ namespace JustTag
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
             // Play/pause the video
-            PlayOrPause(!videoPlaying);
+            PlayOrPause(!videoPlayer.IsPlaying);
         }
 
         private void videoTimeSlider_MouseMoved(object sender, MouseEventArgs e)
@@ -173,19 +142,6 @@ namespace JustTag
 
             // Jump to the time
             videoPlayer.Position = TimeSpan.FromSeconds(time);
-
-            // Don't let this event fire again until a minimum amount of time has passed
-            // This way we don't get a bunch of micro-jumps as the user moves.
-            videoTimeSlider.MouseMove -= videoTimeSlider_MouseMoved;
-            new System.Threading.Thread(() =>
-            {
-                // Sleep for a bit
-                System.Threading.Thread.Sleep(30);
-
-                // Resubscribe to the event
-                videoTimeSlider.MouseMove += videoTimeSlider_MouseMoved;
-            }).Start();
-
         }
 
         private void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
@@ -194,7 +150,7 @@ namespace JustTag
             PlayOrPause(false);
         }
 
-        private void SliderUpdateTimer_Tick(object sender, EventArgs e)
+        private void videoPlayer_PositionChanged(object sender, Unosquare.FFME.Events.PositionChangedRoutedEventArgs e)
         {
             // Don't do anything if the open file has no duration
             double duration = GetCurrentVideoDuration();
