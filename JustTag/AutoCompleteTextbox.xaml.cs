@@ -147,6 +147,7 @@ namespace JustTag
 
             var matchingWords = from word in autoCompletionSource
                                 where wordRegex.IsMatch(word)
+                                orderby word.Length
                                 select word;
 
             suggestionList.ItemsSource = matchingWords;
