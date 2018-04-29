@@ -115,10 +115,6 @@ namespace JustTag
 
         // Event handlers
 
-        private void videoPlayer_MediaOpening(object sender, Unosquare.FFME.Events.MediaOpeningRoutedEventArgs e)
-        {
-        }
-
         private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
             // It's rude to suddenly start playing a video without asking,
