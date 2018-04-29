@@ -132,6 +132,13 @@ namespace JustTag
 
         private void UpdateSuggestionBox()
         {
+            // If the textbox isn't in focus, hide the box and don't go on
+            if (!textbox.IsKeyboardFocused)
+            {
+                suggestionBox.IsOpen = false;
+                return;
+            }
+
             // Update the current word
             currentWord = GetWordAt(textbox.Text, textbox.CaretIndex);
 
