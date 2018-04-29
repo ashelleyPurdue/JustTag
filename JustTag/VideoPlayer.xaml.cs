@@ -22,13 +22,10 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        private bool videoPlaying = false;          // MediaElement doesn't have an IsPlaying property, so we need to
-                                                    // track it ourselves.  What a hassle!
-
-        private double cachedGifDuration = 0;       // MediaElement does't properly return the length of animated gifs, so we need
+        private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
        
-
+       
         public VideoPlayer()
         {
             InitializeComponent();
@@ -67,9 +64,6 @@ namespace JustTag
                 videoPlayer.Play();
             else
                 videoPlayer.Pause();
-
-            // Remember the playing state, because MediaElement is stupid.
-            videoPlaying = play;
 
             // Update the play button's text
             playButton.Content = play ? "Pause" : "Play";
@@ -146,7 +140,7 @@ namespace JustTag
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
             // Play/pause the video
-            PlayOrPause(!videoPlaying);
+            PlayOrPause(!videoPlayer.IsPlaying);
         }
 
         private void videoTimeSlider_MouseMoved(object sender, MouseEventArgs e)
