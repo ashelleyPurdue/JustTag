@@ -114,6 +114,7 @@ namespace JustTag
         {
             // If it's a video, enable the playback controls
             videoControls.IsEnabled = videoPlayer.CanPause;
+            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
 
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
