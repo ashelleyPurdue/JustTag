@@ -112,8 +112,9 @@
                          TextChanged="tagsBox_TextChanged"
                          PreviewKeyDown="tagsBox_PreviewKeyDown"
                          AcceptsReturn="True"
+                         IsEnabled="False" 
                          AllowDrop="True" 
-                         PreviewDrop="tagsBox_PreviewDrop" 
+                         PreviewDrop="tagsBox_PreviewDrop"
                 />
                 <Button x:Name="tagSaveButton"
                     Content="Save"

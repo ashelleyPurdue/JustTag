@@ -227,13 +227,16 @@ namespace JustTag
             if (folderContentsBox.SelectedItem == null)
                 return;
 
-            // Show a file preview if it's not a folder
+            // Don't go on if it's not a file
             FileInfo file = folderContentsBox.SelectedItem as FileInfo;
 
-            if (file != null)
-                videoPlayer.ShowFilePreview(file);
+            if (file == null)
+                return;
 
-            // Update the tag box with this file's tags
+            // Show the file preview
+            videoPlayer.ShowFilePreview(file);
+
+            // Enable the tag box and update it with this file's tags
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
             string[] tags = Utils.GetFileTags(name);
 
@@ -241,6 +244,7 @@ namespace JustTag
             foreach (string t in tags)
                 builder.AppendLine(t);
 
+            tagsBox.IsEnabled = true;
             tagsBox.Text = builder.ToString();
 
             // Hide the save button
