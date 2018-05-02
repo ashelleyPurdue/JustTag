@@ -354,5 +354,35 @@ namespace JustTag
             if (!filterTags.Contains(selectedTag))
                 tagFilterTextbox.Text += " " + selectedTag;
         }
+
+        private void allTagsListbox_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Allow the user to drag a tag and drop it into the tags textbox
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragDrop.DoDragDrop(allTagsListbox, allTagsListbox.SelectedItem, DragDropEffects.Copy);
+        }
+
+        private void tagsBox_PreviewDrop(object sender, DragEventArgs e)
+        {
+            // Don't let the default drag-and-drop stuff happen
+            e.Handled = true;
+
+            // Don't do anything if the dragged data is not a string
+            if (!e.Data.GetDataPresent(typeof(string)))
+                return;
+
+            // Add the dropped tag to the textbox if it's not there already
+            string tag = (string)e.Data.GetData(typeof(string));
+            string[] existingTags = tagsBox.Text.Split(' ', '\n', '\r');
+
+            if (existingTags.Contains(tag))
+                return;
+
+            // Add a newline if there isn't one already
+            if (tagsBox.Text.Length > 0 && !tagsBox.Text.EndsWith("\n"))
+                tagsBox.Text += '\n';
+
+            tagsBox.Text += tag;
+        }
     }
 }

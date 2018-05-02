@@ -112,6 +112,8 @@
                          TextChanged="tagsBox_TextChanged"
                          PreviewKeyDown="tagsBox_PreviewKeyDown"
                          AcceptsReturn="True"
+                         AllowDrop="True" 
+                         PreviewDrop="tagsBox_PreviewDrop" 
                 />
                 <Button x:Name="tagSaveButton"
                     Content="Save"
@@ -156,7 +158,10 @@
             Grid.Row="1"
             Grid.RowSpan="3"
         >
-            <ListBox x:Name="allTagsListbox" Margin="10,10,10,10" MouseDoubleClick="allTagsListbox_MouseDoubleClick"/>
+            <ListBox x:Name="allTagsListbox"
+                     Margin="10,10,10,10"
+                     MouseDoubleClick="allTagsListbox_MouseDoubleClick"
+                     MouseMove="allTagsListbox_MouseMove"/>
         </GroupBox>
     </Grid>
 
