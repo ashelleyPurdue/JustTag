@@ -16,6 +16,7 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
+
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
 
@@ -52,16 +53,15 @@ namespace JustTag
             videoPlayer.Source = null;
         }
 
-        private void PlayOrPause(bool play)
+        private async void PlayOrPause(bool play)
         {
             // Play/pause the video
             if (play)
-                videoPlayer.Play();
+                await videoPlayer.Play();
             else
-                videoPlayer.Pause();
+                await videoPlayer.Pause();
 
-            // Update the play button's text
-            playButton.Content = play ? "Pause" : "Play";
+            UpdateControls();
         }
 
         private double CalculateGifDuration(string filePath)
@@ -107,6 +107,16 @@ namespace JustTag
             return videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
         }
 
+        private void UpdateControls()
+        {
+            // Update the play button
+            playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
+
+            // Update the volume controls
+            volumeSlider.IsEnabled = !videoPlayer.IsMuted;
+            volumeIcon.Visibility = videoPlayer.IsMuted ? Visibility.Hidden : Visibility.Visible;
+            volumeMutedIcon.Visibility = videoPlayer.IsMuted ? Visibility.Visible : Visibility.Hidden;
+        }
 
         // Event handlers
 
@@ -186,10 +196,7 @@ namespace JustTag
         private void muteButton_Click(object sender, RoutedEventArgs e)
         {
             videoPlayer.IsMuted = !videoPlayer.IsMuted;
-
-            volumeSlider.IsEnabled = !videoPlayer.IsMuted;
-            volumeIcon.Visibility       = videoPlayer.IsMuted ? Visibility.Hidden  : Visibility.Visible;
-            volumeMutedIcon.Visibility  = videoPlayer.IsMuted ? Visibility.Visible : Visibility.Hidden;
+            UpdateControls();
         }
     }
 }
