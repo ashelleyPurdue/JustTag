@@ -39,22 +39,34 @@
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="112*"/>
+                <ColumnDefinition Width="13*"/>
             </Grid.ColumnDefinitions>
 
             <Button x:Name="playButton"
                 Grid.Column="0"
-                Grid.Row="1"
                 Content="Play"
                 Margin="5,5,5,5"
                 Click="playButton_Click"
              />
 
+            <Label x:Name="volumeIcon"
+                   Content="volume"
+                   Grid.Column="2"
+            />
+
+            <Slider x:Name="volumeSlider"
+                    Grid.Column="2"
+                    ClipToBounds="False"
+                    Orientation="Vertical"
+                    VerticalAlignment="Bottom"
+                    Height="93" Margin="0,-55,0,0"
+            />
+
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
-                    Grid.Row="1"
                     VerticalAlignment="Center"
-                    Margin="5,5,5,5"
+                    Margin="5,10"
                     MouseMove="videoTimeSlider_MouseMoved"
                     PreviewMouseDown="videoTimeSlider_MouseDown"
              />
