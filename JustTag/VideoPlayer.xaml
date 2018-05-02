@@ -11,7 +11,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="38"/>
         </Grid.RowDefinitions>
 
 
@@ -34,8 +33,11 @@
         </paz:ZoomBorder>
 
         <Grid x:Name="videoControls"
-            Grid.Row="1"
-            IsEnabled="False" 
+            Height="38"
+            Grid.Row="0"
+            Margin="10"
+            VerticalAlignment="Bottom"
+            IsEnabled="False" Background="#7F000000" 
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
