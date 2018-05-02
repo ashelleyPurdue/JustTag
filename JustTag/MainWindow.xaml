@@ -141,11 +141,17 @@
                 />
             </DockPanel>
 
-            <CheckBox x:Name="shuffleCheckbox"
-                      DockPanel.Dock="Top"
-                      Content="Shuffle"
-                      Margin="5"
-            />
+            <Grid DockPanel.Dock="Top">
+                <CheckBox x:Name="shuffleCheckbox"
+                          Content="Shuffle"
+                          Margin="5"
+                />
+                <Button x:Name="searchButton"
+                        Content="Search"
+                        Margin="5"
+                        HorizontalAlignment="Right" Click="searchButton_Click"
+                />
+            </Grid>
 
             <local:FileList x:Name="folderContentsBox"
                 Margin="5"

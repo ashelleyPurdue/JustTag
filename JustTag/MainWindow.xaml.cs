@@ -167,6 +167,12 @@ namespace JustTag
             }
         }
 
+        private void searchButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Apply the filter in the filter textbox
+            UpdateCurrentDirectory();
+        }
+
         private void currentPathBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Change to a red background if the text is not a valid path
@@ -388,5 +394,7 @@ namespace JustTag
 
             tagsBox.Text += tag;
         }
+
+
     }
 }
