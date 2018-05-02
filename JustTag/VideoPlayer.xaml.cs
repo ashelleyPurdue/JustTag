@@ -163,5 +163,17 @@ namespace JustTag
 
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
         }
+
+        private void volumeControls_MouseEnter(object sender, MouseEventArgs e)
+        {
+            // Show the volume slider
+            volumeSlider.Visibility = Visibility.Visible;
+        }
+
+        private void volumeControls_MouseLeave(object sender, MouseEventArgs e)
+        {
+            // Hide the volume slider
+            volumeSlider.Visibility = Visibility.Hidden;
+        }
     }
 }
