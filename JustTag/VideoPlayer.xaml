@@ -52,20 +52,23 @@
 
             <DockPanel x:Name="volumeControls"
                        Grid.Column="2"
-                       
                        MouseEnter="volumeControls_MouseEnter"
                        MouseLeave="volumeControls_MouseLeave"
             >
-                <Label Content="volume"
-                       DockPanel.Dock="Bottom"
-                       Margin="0,0,0,10"
-                       Padding="0"
+                <Button x:Name="muteButton"
+                        Content="volume"
+                        DockPanel.Dock="Bottom"
+                        Width="20"
+                        Margin="0,0,0,10"
+                        Padding="0"
+                        Click="muteButton_Click"
                 />
 
                 <Slider x:Name="volumeSlider"
                         Grid.Column="2"
                         Margin="0,-45,0,0"
                         ClipToBounds="False"
+                        HorizontalAlignment="Center"
                         DockPanel.Dock="Bottom"
                         Orientation="Vertical"
                         Visibility="Visible"

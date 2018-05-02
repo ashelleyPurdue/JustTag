@@ -182,5 +182,13 @@ namespace JustTag
             // Change the volume
             videoPlayer.Volume = volumeSlider.Value / volumeSlider.Maximum;
         }
+
+        private void muteButton_Click(object sender, RoutedEventArgs e)
+        {
+            videoPlayer.IsMuted = !videoPlayer.IsMuted;
+
+            volumeSlider.IsEnabled = !videoPlayer.IsMuted;
+            muteButton.Content = videoPlayer.IsMuted ? "volume" : "muted";
+        }
     }
 }
