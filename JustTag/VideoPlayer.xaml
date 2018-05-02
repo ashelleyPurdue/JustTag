@@ -50,25 +50,30 @@
                 Click="playButton_Click"
              />
 
-            <Grid x:Name="volumeControls"
-                  Grid.Column="2"
-                  ClipToBounds="False"
-                  VerticalAlignment="Bottom"
-                  HorizontalAlignment="Center"
-                  Height="77" 
-                  Margin="0,-39,0,10"
-                  MouseEnter="volumeControls_MouseEnter"
-                  MouseLeave="volumeControls_MouseLeave"
+            <DockPanel x:Name="volumeControls"
+                       Grid.Column="2"
+                       ClipToBounds="False"
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       Height="68" 
+                       Margin="0,-40,0,0"
+                       MouseEnter="volumeControls_MouseEnter"
+                       MouseLeave="volumeControls_MouseLeave"
             >
-                <Label Content="volume" VerticalAlignment="Bottom"/>
+                <Label Content="volume"
+                       DockPanel.Dock="Bottom"
+                       Margin="0,0,0,5"
+                       Padding="0"
+                />
 
                 <Slider x:Name="volumeSlider"
                         Grid.Column="2"
+                        DockPanel.Dock="Bottom"
                         Orientation="Vertical"
-                        Visibility="Hidden"
+                        Visibility="Visible"
                 />
-            </Grid>
-            
+            </DockPanel>
+
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
                     VerticalAlignment="Center"
