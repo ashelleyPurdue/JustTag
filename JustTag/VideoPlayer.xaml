@@ -77,7 +77,7 @@
                         HorizontalAlignment="Center"
                         DockPanel.Dock="Bottom"
                         Orientation="Vertical"
-                        Visibility="Visible"
+                        Visibility="Hidden"
                         ValueChanged="volumeSlider_ValueChanged"
                 />
             </DockPanel>
