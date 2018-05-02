@@ -111,6 +111,7 @@ namespace JustTag
         {
             // Enable/disable video controls
             videoControls.IsEnabled = videoPlayer.CanPause;
+            videoControls.Visibility = IsMouseOver ? Visibility.Visible : Visibility.Hidden;
 
             // Update the play button
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
@@ -208,9 +209,7 @@ namespace JustTag
         private void UserControl_MouseEnterOrLeave(object sender, MouseEventArgs e)
         {
             e.Handled = false;
-
-            // Only show the video controls if the mouse is over
-            videoControls.Visibility = IsMouseOver? Visibility.Visible : Visibility.Hidden;
+            UpdateControls();
         }
     }
 }
