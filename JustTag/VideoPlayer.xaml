@@ -39,8 +39,8 @@
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="112*"/>
-                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="38"/>
             </Grid.ColumnDefinitions>
 
             <Button x:Name="playButton"
@@ -52,14 +52,14 @@
 
             <DockPanel x:Name="volumeControls"
                        Grid.Column="2"
+                       Margin="5,5,10,10"
                        MouseEnter="volumeControls_MouseEnter"
                        MouseLeave="volumeControls_MouseLeave"
             >
                 <Button x:Name="muteButton"
                         Content="volume"
                         DockPanel.Dock="Bottom"
-                        Width="20"
-                        Margin="0,0,0,10"
+                        
                         Padding="0"
                         Click="muteButton_Click"
                 />
@@ -81,7 +81,7 @@
                     VerticalAlignment="Center"
                     Margin="5,10"
                     MouseMove="videoTimeSlider_MouseMoved"
-                    PreviewMouseDown="videoTimeSlider_MouseDown"
+                    PreviewMouseDown="videoTimeSlider_MouseDown" Height="18"
              />
         </Grid>
 
