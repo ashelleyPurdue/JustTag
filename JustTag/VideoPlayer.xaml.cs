@@ -16,13 +16,17 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
+
+        private bool shouldBeMuted = true;          // FFME doesn't let us mute it if there is no sound, so we need to keep
+                                                    // track of this ourselves.
+
 
         public VideoPlayer()
         {
             InitializeComponent();
+            UpdateControls();
         }
 
 
@@ -34,9 +38,6 @@ namespace JustTag
         /// <param name="selectedFile"></param>
         public void ShowFilePreview(FileInfo selectedFile)
         {
-            // Disable the navigation controls
-            videoControls.IsEnabled = false;
-
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
@@ -116,16 +117,19 @@ namespace JustTag
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
 
             // Update the volume controls
-            volumeSlider.IsEnabled = !videoPlayer.IsMuted;
-            volumeIcon.Visibility = videoPlayer.IsMuted ? Visibility.Hidden : Visibility.Visible;
-            volumeMutedIcon.Visibility = videoPlayer.IsMuted ? Visibility.Visible : Visibility.Hidden;
+            videoPlayer.IsMuted = shouldBeMuted;
+            volumeSlider.IsEnabled = !shouldBeMuted;
+            volumeIcon.Visibility = shouldBeMuted ? Visibility.Hidden : Visibility.Visible;
+            volumeMutedIcon.Visibility = shouldBeMuted ? Visibility.Visible : Visibility.Hidden;
         }
 
         // Event handlers
 
-        private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
+        private async void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
-            // If it's a video, enable the playback controls
+            // Autoplay the video
+            await videoPlayer.Play();
+
             UpdateControls();
             volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
@@ -198,7 +202,7 @@ namespace JustTag
 
         private void muteButton_Click(object sender, RoutedEventArgs e)
         {
-            videoPlayer.IsMuted = !videoPlayer.IsMuted;
+            shouldBeMuted = !shouldBeMuted;
             UpdateControls();
         }
     }
