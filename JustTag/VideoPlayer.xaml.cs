@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace JustTag
 {
@@ -17,8 +18,7 @@ namespace JustTag
     {
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
-       
-       
+
         public VideoPlayer()
         {
             InitializeComponent();
@@ -114,6 +114,7 @@ namespace JustTag
         {
             // If it's a video, enable the playback controls
             videoControls.IsEnabled = videoPlayer.CanPause;
+            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
 
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
@@ -162,6 +163,33 @@ namespace JustTag
             double percent = videoPlayer.Position.TotalSeconds / GetCurrentVideoDuration();
 
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
+        }
+
+        private void volumeControls_MouseEnter(object sender, MouseEventArgs e)
+        {
+            // Show the volume slider
+            volumeSlider.Visibility = Visibility.Visible;
+        }
+
+        private void volumeControls_MouseLeave(object sender, MouseEventArgs e)
+        {
+            // Hide the volume slider
+            volumeSlider.Visibility = Visibility.Hidden;
+        }
+
+        private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // Change the volume
+            videoPlayer.Volume = volumeSlider.Value / volumeSlider.Maximum;
+        }
+
+        private void muteButton_Click(object sender, RoutedEventArgs e)
+        {
+            videoPlayer.IsMuted = !videoPlayer.IsMuted;
+
+            volumeSlider.IsEnabled = !videoPlayer.IsMuted;
+            volumeIcon.Visibility       = videoPlayer.IsMuted ? Visibility.Hidden  : Visibility.Visible;
+            volumeMutedIcon.Visibility  = videoPlayer.IsMuted ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }
