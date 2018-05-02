@@ -22,7 +22,6 @@ namespace JustTag
         private bool shouldBeMuted = true;          // FFME doesn't let us mute it if there is no sound, so we need to keep
                                                     // track of this ourselves.
 
-
         public VideoPlayer()
         {
             InitializeComponent();
@@ -204,6 +203,14 @@ namespace JustTag
         {
             shouldBeMuted = !shouldBeMuted;
             UpdateControls();
+        }
+
+        private void UserControl_MouseEnterOrLeave(object sender, MouseEventArgs e)
+        {
+            e.Handled = false;
+
+            // Only show the video controls if the mouse is over
+            videoControls.Visibility = IsMouseOver? Visibility.Visible : Visibility.Hidden;
         }
     }
 }

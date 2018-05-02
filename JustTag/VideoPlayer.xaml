@@ -7,7 +7,11 @@
              xmlns:paz="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
              xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             MouseEnter="UserControl_MouseEnterOrLeave"
+             MouseLeave="UserControl_MouseEnterOrLeave"
+>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -33,11 +37,14 @@
         </paz:ZoomBorder>
 
         <Grid x:Name="videoControls"
-            Height="38"
-            Grid.Row="0"
-            Margin="10"
-            VerticalAlignment="Bottom"
-            IsEnabled="False" Background="#7F000000" 
+              Height="38"
+              Grid.Row="0"
+              Margin="10"
+              VerticalAlignment="Bottom"
+            
+              IsEnabled="False"
+              Visibility="Hidden"
+              Background="#7F000000" 
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
