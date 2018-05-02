@@ -156,7 +156,7 @@
             Grid.Row="1"
             Grid.RowSpan="3"
         >
-            <ListBox x:Name="allTagsListbox" Margin="10,10,10,10"/>
+            <ListBox x:Name="allTagsListbox" Margin="10,10,10,10" MouseDoubleClick="allTagsListbox_MouseDoubleClick"/>
         </GroupBox>
     </Grid>
 

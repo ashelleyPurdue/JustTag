@@ -344,5 +344,15 @@ namespace JustTag
             // Refresh the UI
             UpdateCurrentDirectory();
         }
+
+        private void allTagsListbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Add the selected tag to the filter, if it isn't there already
+            string selectedTag = allTagsListbox.SelectedItem as string;
+            string[] filterTags = tagFilterTextbox.Text.Split(' ');
+
+            if (!filterTags.Contains(selectedTag))
+                tagFilterTextbox.Text += " " + selectedTag;
+        }
     }
 }
