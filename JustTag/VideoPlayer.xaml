@@ -69,6 +69,7 @@
                         DockPanel.Dock="Bottom"
                         Orientation="Vertical"
                         Visibility="Visible"
+                        ValueChanged="volumeSlider_ValueChanged"
                 />
             </DockPanel>
 

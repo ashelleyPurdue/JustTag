@@ -175,5 +175,11 @@ namespace JustTag
             // Hide the volume slider
             volumeSlider.Visibility = Visibility.Hidden;
         }
+
+        private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // Change the volume
+            videoPlayer.Volume = volumeSlider.Value / volumeSlider.Maximum;
+        }
     }
 }
