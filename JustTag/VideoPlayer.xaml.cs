@@ -16,6 +16,8 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
+        public bool IsVideo { get { return GetCurrentVideoDuration() > 0; } }
+
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
 
@@ -110,8 +112,8 @@ namespace JustTag
         private void UpdateControls()
         {
             // Enable/disable video controls
-            videoControls.IsEnabled = videoPlayer.CanPause;
-            videoControls.Visibility = IsMouseOver ? Visibility.Visible : Visibility.Hidden;
+            videoControls.IsEnabled = IsVideo;
+            videoControls.Visibility = (IsVideo && IsMouseOver) ? Visibility.Visible : Visibility.Hidden;
 
             // Update the play button
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
