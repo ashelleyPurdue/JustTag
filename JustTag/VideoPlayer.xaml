@@ -57,12 +57,18 @@
                        MouseLeave="volumeControls_MouseLeave"
             >
                 <Button x:Name="muteButton"
-                        Content="volume"
                         DockPanel.Dock="Bottom"
                         
                         Padding="0"
                         Click="muteButton_Click"
-                />
+                >
+                    <Grid>
+                        <Image x:Name="volumeIcon" Source="Resources/volumeIcon.png"/>
+                        <Image x:Name="volumeMutedIcon" Source="Resources/volumeMutedIcon.png"
+                               Visibility="Hidden"
+                        />
+                    </Grid>
+                </Button>
 
                 <Slider x:Name="volumeSlider"
                         Grid.Column="2"

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace JustTag
 {
@@ -17,8 +18,7 @@ namespace JustTag
     {
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
-       
-       
+
         public VideoPlayer()
         {
             InitializeComponent();
@@ -188,7 +188,8 @@ namespace JustTag
             videoPlayer.IsMuted = !videoPlayer.IsMuted;
 
             volumeSlider.IsEnabled = !videoPlayer.IsMuted;
-            muteButton.Content = videoPlayer.IsMuted ? "volume" : "muted";
+            volumeIcon.Visibility       = videoPlayer.IsMuted ? Visibility.Hidden  : Visibility.Visible;
+            volumeMutedIcon.Visibility  = videoPlayer.IsMuted ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }
