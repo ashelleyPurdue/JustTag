@@ -109,6 +109,9 @@ namespace JustTag
 
         private void UpdateControls()
         {
+            // Enable/disable video controls
+            videoControls.IsEnabled = videoPlayer.CanPause;
+
             // Update the play button
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
 
@@ -123,7 +126,7 @@ namespace JustTag
         private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
             // If it's a video, enable the playback controls
-            videoControls.IsEnabled = videoPlayer.CanPause;
+            UpdateControls();
             volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
 
