@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace JustTag
 {
@@ -15,13 +16,18 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
+        public bool IsVideo { get { return GetCurrentVideoDuration() > 0; } }
+
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
-       
-       
+
+        private bool shouldBeMuted = true;          // FFME doesn't let us mute it if there is no sound, so we need to keep
+                                                    // track of this ourselves.
+
         public VideoPlayer()
         {
             InitializeComponent();
+            UpdateControls();
         }
 
 
@@ -33,9 +39,6 @@ namespace JustTag
         /// <param name="selectedFile"></param>
         public void ShowFilePreview(FileInfo selectedFile)
         {
-            // Disable the navigation controls
-            videoControls.IsEnabled = false;
-
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
@@ -52,16 +55,15 @@ namespace JustTag
             videoPlayer.Source = null;
         }
 
-        private void PlayOrPause(bool play)
+        private async void PlayOrPause(bool play)
         {
             // Play/pause the video
             if (play)
-                videoPlayer.Play();
+                await videoPlayer.Play();
             else
-                videoPlayer.Pause();
+                await videoPlayer.Pause();
 
-            // Update the play button's text
-            playButton.Content = play ? "Pause" : "Play";
+            UpdateControls();
         }
 
         private double CalculateGifDuration(string filePath)
@@ -107,13 +109,31 @@ namespace JustTag
             return videoPlayer.NaturalDuration.TimeSpan.TotalSeconds;
         }
 
+        private void UpdateControls()
+        {
+            // Enable/disable video controls
+            videoControls.IsEnabled = IsVideo;
+            videoControls.Visibility = (IsVideo && IsMouseOver) ? Visibility.Visible : Visibility.Hidden;
+
+            // Update the play button
+            playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
+
+            // Update the volume controls
+            videoPlayer.IsMuted = shouldBeMuted;
+            volumeSlider.IsEnabled = !shouldBeMuted;
+            volumeIcon.Visibility = shouldBeMuted ? Visibility.Hidden : Visibility.Visible;
+            volumeMutedIcon.Visibility = shouldBeMuted ? Visibility.Visible : Visibility.Hidden;
+        }
 
         // Event handlers
 
-        private void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
+        private async void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
         {
-            // If it's a video, enable the playback controls
-            videoControls.IsEnabled = videoPlayer.CanPause;
+            // Autoplay the video
+            await videoPlayer.Play();
+
+            UpdateControls();
+            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
 
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
@@ -162,6 +182,36 @@ namespace JustTag
             double percent = videoPlayer.Position.TotalSeconds / GetCurrentVideoDuration();
 
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
+        }
+
+        private void volumeControls_MouseEnter(object sender, MouseEventArgs e)
+        {
+            // Show the volume slider
+            volumeSlider.Visibility = Visibility.Visible;
+        }
+
+        private void volumeControls_MouseLeave(object sender, MouseEventArgs e)
+        {
+            // Hide the volume slider
+            volumeSlider.Visibility = Visibility.Hidden;
+        }
+
+        private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // Change the volume
+            videoPlayer.Volume = volumeSlider.Value / volumeSlider.Maximum;
+        }
+
+        private void muteButton_Click(object sender, RoutedEventArgs e)
+        {
+            shouldBeMuted = !shouldBeMuted;
+            UpdateControls();
+        }
+
+        private void UserControl_MouseEnterOrLeave(object sender, MouseEventArgs e)
+        {
+            e.Handled = false;
+            UpdateControls();
         }
     }
 }
