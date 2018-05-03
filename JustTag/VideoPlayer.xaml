@@ -7,11 +7,14 @@
              xmlns:paz="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
              xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             MouseEnter="UserControl_MouseEnterOrLeave"
+             MouseLeave="UserControl_MouseEnterOrLeave"
+>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="38"/>
         </Grid.RowDefinitions>
 
 
@@ -34,29 +37,66 @@
         </paz:ZoomBorder>
 
         <Grid x:Name="videoControls"
-            Grid.Row="1"
-            IsEnabled="False" 
+              Height="38"
+              Grid.Row="0"
+              Margin="10"
+              VerticalAlignment="Bottom"
+            
+              IsEnabled="False"
+              Visibility="Hidden"
+              Background="#7F000000" 
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="38"/>
             </Grid.ColumnDefinitions>
 
             <Button x:Name="playButton"
                 Grid.Column="0"
-                Grid.Row="1"
                 Content="Play"
                 Margin="5,5,5,5"
                 Click="playButton_Click"
              />
 
+            <DockPanel x:Name="volumeControls"
+                       Grid.Column="2"
+                       Margin="5,5,10,10"
+                       MouseEnter="volumeControls_MouseEnter"
+                       MouseLeave="volumeControls_MouseLeave"
+            >
+                <Button x:Name="muteButton"
+                        DockPanel.Dock="Bottom"
+                        
+                        Padding="0"
+                        Click="muteButton_Click"
+                >
+                    <Grid>
+                        <Image x:Name="volumeIcon" Source="Resources/volumeIcon.png"/>
+                        <Image x:Name="volumeMutedIcon" Source="Resources/volumeMutedIcon.png"
+                               Visibility="Hidden"
+                        />
+                    </Grid>
+                </Button>
+
+                <Slider x:Name="volumeSlider"
+                        Grid.Column="2"
+                        Margin="0,-45,0,0"
+                        ClipToBounds="False"
+                        HorizontalAlignment="Center"
+                        DockPanel.Dock="Bottom"
+                        Orientation="Vertical"
+                        Visibility="Hidden"
+                        ValueChanged="volumeSlider_ValueChanged"
+                />
+            </DockPanel>
+
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
-                    Grid.Row="1"
                     VerticalAlignment="Center"
-                    Margin="5,5,5,5"
+                    Margin="5,10"
                     MouseMove="videoTimeSlider_MouseMoved"
-                    PreviewMouseDown="videoTimeSlider_MouseDown"
+                    PreviewMouseDown="videoTimeSlider_MouseDown" Height="18"
              />
         </Grid>
 
