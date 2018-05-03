@@ -112,6 +112,9 @@
                          TextChanged="tagsBox_TextChanged"
                          PreviewKeyDown="tagsBox_PreviewKeyDown"
                          AcceptsReturn="True"
+                         IsEnabled="False" 
+                         AllowDrop="True" 
+                         PreviewDrop="tagsBox_PreviewDrop"
                 />
                 <Button x:Name="tagSaveButton"
                     Content="Save"
@@ -138,11 +141,17 @@
                 />
             </DockPanel>
 
-            <CheckBox x:Name="shuffleCheckbox"
-                      DockPanel.Dock="Top"
-                      Content="Shuffle"
-                      Margin="5"
-            />
+            <Grid DockPanel.Dock="Top">
+                <CheckBox x:Name="shuffleCheckbox"
+                          Content="Shuffle"
+                          Margin="5"
+                />
+                <Button x:Name="searchButton"
+                        Content="Search"
+                        Margin="5"
+                        HorizontalAlignment="Right" Click="searchButton_Click"
+                />
+            </Grid>
 
             <local:FileList x:Name="folderContentsBox"
                 Margin="5"
@@ -156,7 +165,10 @@
             Grid.Row="1"
             Grid.RowSpan="3"
         >
-            <ListBox x:Name="allTagsListbox" Margin="10,10,10,10"/>
+            <ListBox x:Name="allTagsListbox"
+                     Margin="10,10,10,10"
+                     MouseDoubleClick="allTagsListbox_MouseDoubleClick"
+                     MouseMove="allTagsListbox_MouseMove"/>
         </GroupBox>
     </Grid>
 

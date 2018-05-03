@@ -167,6 +167,12 @@ namespace JustTag
             }
         }
 
+        private void searchButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Apply the filter in the filter textbox
+            UpdateCurrentDirectory();
+        }
+
         private void currentPathBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Change to a red background if the text is not a valid path
@@ -227,13 +233,16 @@ namespace JustTag
             if (folderContentsBox.SelectedItem == null)
                 return;
 
-            // Show a file preview if it's not a folder
+            // Don't go on if it's not a file
             FileInfo file = folderContentsBox.SelectedItem as FileInfo;
 
-            if (file != null)
-                videoPlayer.ShowFilePreview(file);
+            if (file == null)
+                return;
 
-            // Update the tag box with this file's tags
+            // Show the file preview
+            videoPlayer.ShowFilePreview(file);
+
+            // Enable the tag box and update it with this file's tags
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
             string[] tags = Utils.GetFileTags(name);
 
@@ -241,6 +250,7 @@ namespace JustTag
             foreach (string t in tags)
                 builder.AppendLine(t);
 
+            tagsBox.IsEnabled = true;
             tagsBox.Text = builder.ToString();
 
             // Hide the save button
@@ -344,5 +354,47 @@ namespace JustTag
             // Refresh the UI
             UpdateCurrentDirectory();
         }
+
+        private void allTagsListbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Add the selected tag to the filter, if it isn't there already
+            string selectedTag = allTagsListbox.SelectedItem as string;
+            string[] filterTags = tagFilterTextbox.Text.Split(' ');
+
+            if (!filterTags.Contains(selectedTag))
+                tagFilterTextbox.Text += " " + selectedTag;
+        }
+
+        private void allTagsListbox_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Allow the user to drag a tag and drop it into the tags textbox
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragDrop.DoDragDrop(allTagsListbox, allTagsListbox.SelectedItem, DragDropEffects.Copy);
+        }
+
+        private void tagsBox_PreviewDrop(object sender, DragEventArgs e)
+        {
+            // Don't let the default drag-and-drop stuff happen
+            e.Handled = true;
+
+            // Don't do anything if the dragged data is not a string
+            if (!e.Data.GetDataPresent(typeof(string)))
+                return;
+
+            // Add the dropped tag to the textbox if it's not there already
+            string tag = (string)e.Data.GetData(typeof(string));
+            string[] existingTags = tagsBox.Text.Split(' ', '\n', '\r');
+
+            if (existingTags.Contains(tag))
+                return;
+
+            // Add a newline if there isn't one already
+            if (tagsBox.Text.Length > 0 && !tagsBox.Text.EndsWith("\n"))
+                tagsBox.Text += '\n';
+
+            tagsBox.Text += tag;
+        }
+
+
     }
 }
