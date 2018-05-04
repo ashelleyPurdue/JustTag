@@ -365,11 +365,22 @@ namespace JustTag
                 tagFilterTextbox.Text += " " + selectedTag;
         }
 
+        /// <summary>
+        /// Allows the user to drag a tag and drop it into the tags textbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void allTagsListbox_MouseMove(object sender, MouseEventArgs e)
         {
-            // Allow the user to drag a tag and drop it into the tags textbox
-            if (e.LeftButton == MouseButtonState.Pressed)
-                DragDrop.DoDragDrop(allTagsListbox, allTagsListbox.SelectedItem, DragDropEffects.Copy);
+            // Only go on if we're left clicking and the mouse is over a listbox item
+            IInputElement item = allTagsListbox.InputHitTest(e.GetPosition(allTagsListbox));
+            bool mouseOverItem = item is TextBlock;
+
+            if (e.LeftButton != MouseButtonState.Pressed || !mouseOverItem)
+                return;
+
+            // Start dragging and dropping.
+            DragDrop.DoDragDrop(allTagsListbox, allTagsListbox.SelectedItem, DragDropEffects.Copy);
         }
 
         private void tagsBox_PreviewDrop(object sender, DragEventArgs e)
