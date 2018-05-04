@@ -138,18 +138,10 @@ namespace JustTag
                 requiredTags.Add(word);
             }
 
-            // Return false if any of the required tags are missing
-            foreach (string t in requiredTags)
-                if (!tags.Contains(t))
-                    return false;
-
-            // Return false if any of the forbidden tags are present
-            foreach (string t in forbiddenTags)
-                if (tags.Contains(t))
-                    return false;
-
-            // It passed the filter
-            return true;
+            // Check it against a TagFilter.
+            // TODO: Refactor this so this method isn't necessary
+            TagFilter filter = new TagFilter(requiredTags, forbiddenTags);
+            return filter.Matches(fileName);
         }
 
 
