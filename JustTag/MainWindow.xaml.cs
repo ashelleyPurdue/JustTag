@@ -53,69 +53,32 @@ namespace JustTag
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
 
-            // Sort the directory entries into folders and files
-            // This way we can display folders first so the user
-            // Can navigate easier.
-            var folders = new List<FileSystemInfo>();
-            var files = new List<FileSystemInfo>();
+            // Parse the tag filter
+            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
 
+            // Get all files/folders that match the filter
             var entries = currentDir.EnumerateFileSystemInfos();
-            foreach (FileSystemInfo e in entries)
-            {
-                // If it's a shortcut, resolve its target first
-                FileSystemInfo entry = e;
+            var files = from FileSystemInfo e in entries
+                        where filter.Matches(e.Name)
+                        orderby (e is DirectoryInfo) descending    // Make folders appear first, for easier navigating
+                        select e;
 
-                if (entry.Extension.ToLower() == ".lnk")
-                    entry = Utils.GetShortcutTarget(entry);
-
-                // Pick the right list to put it in
-                List<FileSystemInfo> correctList = files;
-
-                if (entry is DirectoryInfo)
-                    correctList = folders;
-
-                // Put it in the list
-                correctList.Add(entry);
-            }
+            var fileSource = files.ToList();
 
             // Shuffle the files if "shuffle" is ticked
             if ((bool)shuffleCheckbox.IsChecked)
-                files = Utils.ShuffleList(files);
-
-
-            // Add all the files and folders that match the filter.
-            // Also record their tags in the "all known tags" list.
-            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
-
-            // Add the folders first
-            var fileSource = new List<FileSystemInfo>();
-
-            foreach (FileSystemInfo folder in folders)
-            {
-                // Record all the tags
-                string[] tags = Utils.GetFileTags(folder.Name);
-                foreach (string tag in tags)
-                    allKnownTags.Add(tag);
-
-                // Add it if it matches
-                if (filter.Matches(folder.Name))
-                    fileSource.Add(folder);
-            }
-
-            // Now do the files
-            foreach (FileSystemInfo file in files)
-            {
-                // Record all the tags
-                string[] tags = Utils.GetFileTags(file.Name);
-                foreach (string tag in tags)
-                    allKnownTags.Add(tag);
-
-                // Add it if it matches
-                if (filter.Matches(file.Name))
-                    fileSource.Add(file);
-            }
+                fileSource = Utils.ShuffleList(fileSource);
 
             folderContentsBox.ItemsSource = fileSource;
+
+            // Record all encountered tags in the "all known tags" list.
+            foreach (FileSystemInfo file in files)
+            {
+                string[] tags = Utils.GetFileTags(file.Name);
+
+                foreach (string tag in tags)
+                    allKnownTags.Add(tag);
+            }
 
             // Update the known tags listbox
             // Sort it in alphabetical order first
