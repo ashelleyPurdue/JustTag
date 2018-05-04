@@ -52,6 +52,7 @@ namespace JustTag
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
+
             // Sort the directory entries into folders and files
             // This way we can display folders first so the user
             // Can navigate easier.
@@ -111,36 +112,9 @@ namespace JustTag
 
         private bool MatchesTagFilter(string fileName)
         {
-            // Get all the tags from the filename
-            string[] tags = Utils.GetFileTags(fileName);
-
-            // Parse the filter
-            // TODO: Move this part somewhere else so we only have to parse the filter once.
-            List<string> forbiddenTags = new List<string>();
-            List<string> requiredTags = new List<string>();
-
-            string[] filterWords = tagFilterTextbox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            // HACK: If any of the words are ":untagged:", show only files without any tags.
-            if (filterWords.Contains(":untagged:"))
-                return tags.Length == 0;
-
-            foreach (string word in filterWords)
-            {
-                // Sort each word into either forbidden or required tags
-                // Anything with a '-' at the start means it's a forbidden tag.
-                if (word[0] == '-')
-                {
-                    forbiddenTags.Add(word.Substring(1));
-                    continue;
-                }
-
-                requiredTags.Add(word);
-            }
-
             // Check it against a TagFilter.
-            // TODO: Refactor this so this method isn't necessary
-            TagFilter filter = new TagFilter(requiredTags, forbiddenTags);
+            // TODO: Make it so the tag filter is only parsed once
+            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
             return filter.Matches(fileName);
         }
 
