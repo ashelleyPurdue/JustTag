@@ -89,6 +89,8 @@ namespace JustTag
 
             // Add all the files that match the filter
             // Also record their tags in the "all known tags" list
+            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
+
             foreach (FileSystemInfo file in files)
             {
                 // Record all the tags
@@ -97,7 +99,7 @@ namespace JustTag
                     allKnownTags.Add(tag);
 
                 // Add it if it matches
-                if (MatchesTagFilter(file.Name))
+                if (filter.Matches(file.Name))
                     fileSource.Add(file);
             }
 
@@ -108,14 +110,6 @@ namespace JustTag
             List<string> knownTagsList = allKnownTags.ToList();
             knownTagsList.Sort();
             allTagsListbox.ItemsSource = knownTagsList;
-        }
-
-        private bool MatchesTagFilter(string fileName)
-        {
-            // Check it against a TagFilter.
-            // TODO: Make it so the tag filter is only parsed once
-            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
-            return filter.Matches(fileName);
         }
 
 
