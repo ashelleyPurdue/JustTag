@@ -83,14 +83,26 @@ namespace JustTag
                 files = Utils.ShuffleList(files);
 
 
-            // Add the folders first
-            var fileSource = new List<FileSystemInfo>();
-            fileSource.AddRange(folders);
-
-            // Add all the files that match the filter
-            // Also record their tags in the "all known tags" list
+            // Add all the files and folders that match the filter.
+            // Also record their tags in the "all known tags" list.
             TagFilter filter = new TagFilter(tagFilterTextbox.Text);
 
+            // Add the folders first
+            var fileSource = new List<FileSystemInfo>();
+
+            foreach (FileSystemInfo folder in folders)
+            {
+                // Record all the tags
+                string[] tags = Utils.GetFileTags(folder.Name);
+                foreach (string tag in tags)
+                    allKnownTags.Add(tag);
+
+                // Add it if it matches
+                if (filter.Matches(folder.Name))
+                    fileSource.Add(folder);
+            }
+
+            // Now do the files
             foreach (FileSystemInfo file in files)
             {
                 // Record all the tags
