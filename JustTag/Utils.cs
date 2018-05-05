@@ -136,6 +136,32 @@ namespace JustTag
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="newTags"></param>
+        public static void ChangeFileTags(FileSystemInfo file, string[] newTags)
+        {
+            // Find the new name
+            string newName = ChangeFileTags(file.Name, newTags);
+
+            // Find the full path
+            string parentPath;
+            if (file is FileInfo)
+                parentPath = (file as FileInfo).Directory.FullName;
+            else
+                parentPath = (file as DirectoryInfo).Parent.FullName;
+
+            string newPath = System.IO.Path.Combine(parentPath, newName);
+
+            // Rename it
+            if (file is FileInfo)
+                (file as FileInfo).MoveTo(newPath);
+            else
+                (file as DirectoryInfo).MoveTo(newPath);
+        }
+
+        /// <summary>
+        /// Renames the given file so it has the given tags
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="newTags"></param>
         public static string ChangeFileTags(string fileName, string[] newTags)
         {
             // Get the stuff before and after the tags
