@@ -139,7 +139,7 @@ namespace JustTag
         public static void ChangeFileTags(FileSystemInfo file, string[] newTags)
         {
             // Find the new name
-            string newName = ChangeFileTags(file.Name, newTags);
+            string newName = ChangeTagsInFileName(file.Name, newTags);
 
             // Find the full path
             string parentPath;
@@ -158,13 +158,13 @@ namespace JustTag
         }
 
         /// <summary>
-        /// Renames the given file so it has the given tags
+        /// Changes the given file name so it has the given tags
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="newTags"></param>
-        private static string ChangeFileTags(string fileName, string[] newTags)
+        private static string ChangeTagsInFileName(string fileName, string[] newTags)
         {
-            // Get the stuff before and after the tags
+            // Get the stuff before and after the existing tags, if there are any
             string beforeTags = fileName.Split('[', '.')[0];
             string extension = System.IO.Path.GetExtension(fileName);
 
