@@ -141,20 +141,29 @@ namespace JustTag
             // Find the new name
             string newName = ChangeTagsInFileName(file.Name, newTags);
 
-            // Find the full path
-            string parentPath;
+            // Find the full path and move it there.
+            // Frustratingly, FileInfo and DirectoryInfo both have
+            // different names for the "parent" object, hence the
+            // repetition.
             if (file is FileInfo)
-                parentPath = (file as FileInfo).Directory.FullName;
-            else
-                parentPath = (file as DirectoryInfo).Parent.FullName;
+            {
+                FileInfo f = (FileInfo)file;
 
-            string newPath = System.IO.Path.Combine(parentPath, newName);
+                string parentPath = f.Directory.FullName;
+                string newPath = System.IO.Path.Combine(parentPath, newName);
 
-            // Rename it
-            if (file is FileInfo)
-                (file as FileInfo).MoveTo(newPath);
+                f.MoveTo(newPath);
+            }
             else
-                (file as DirectoryInfo).MoveTo(newPath);
+            {
+                DirectoryInfo f = (DirectoryInfo)file;
+
+                string parentPath = f.Parent.FullName;
+                string newPath = System.IO.Path.Combine(parentPath, newName);
+
+                f.MoveTo(newPath);
+            }
+
         }
 
         /// <summary>
