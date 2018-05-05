@@ -177,14 +177,12 @@ namespace JustTag
             if (selectedItem.Extension.ToLower() == ".lnk")
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
-            // Don't go on if it's not a file
-            FileInfo file = selectedItem as FileInfo;
-
-            if (file == null)
-                return;
-
             // Show the file preview
-            videoPlayer.ShowFilePreview(file);
+            // If it's a directory instead of a file, it'll just show up as blank
+            if (selectedItem is FileInfo)
+                videoPlayer.ShowFilePreview(selectedItem as FileInfo);
+            else
+                videoPlayer.UnloadVideo();
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
@@ -210,13 +208,15 @@ namespace JustTag
             tagSaveButton.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Updates the selected file's tags
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
             // Update the selected file's tags
             FileInfo file = folderContentsBox.SelectedItem as FileInfo;
-
-            if (file == null)
-                return;
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
