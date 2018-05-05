@@ -215,45 +215,69 @@ namespace JustTag
         /// <param name="e"></param>
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Update the selected file's tags
-            FileInfo file = folderContentsBox.SelectedItem as FileInfo;
+            FileSystemInfo selectedItem = folderContentsBox.SelectedItem;
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-
-            // Get the new file path
-            string newFileName = Utils.ChangeFileTags(file.Name, tags);
-            string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
 
             // Remember the selected index so we can scroll back to it
             // after saving
             int selectedIndex = folderContentsBox.SelectedIndex;
 
-            // Rename the file
-            // We may need to wait for the file to be closed.
-            bool success = false;
-            for (int tryCount = 0; tryCount < 10; tryCount++)
+            // Change it a different way depending on if it's a file or a folder
+            if (selectedItem is FileInfo)
             {
+                FileInfo file = (FileInfo)selectedItem;
+
+                // Get the new file path
+                string newFileName = Utils.ChangeFileTags(file.Name, tags);
+                string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
+
+                // Rename the file
+                // We may need to wait for the file to be closed, since MediaElement doesn't close 
+                bool success = false;
+                for (int tryCount = 0; tryCount < 10; tryCount++)
+                {
+                    try
+                    {
+                        file.MoveTo(newFilePath);
+                        success = true;
+                        break;
+                    }
+                    catch (IOException)
+                    {
+                        // Close the file so we can rename it.
+                        videoPlayer.videoPlayer.Stop();
+                        videoPlayer.videoPlayer.Source = null;
+
+                        // Wait and try again
+                        await System.Threading.Tasks.Task.Delay(100);
+                    }
+                }
+
+                // If we failed, inform the user.
+                if (!success)
+                    MessageBox.Show("ERROR: Could not rename file.  Is it already open?");
+            }
+            else
+            {
+                DirectoryInfo folder = (DirectoryInfo)selectedItem;
+
+                // Get the new path
+                string newName = Utils.ChangeFileTags(folder.Name, tags);
+                string newPath = System.IO.Path.Combine(folder.Parent.FullName, newName);
+
+                // Move it.
                 try
                 {
-                    file.MoveTo(newFilePath);
-                    success = true;
-                    break;
+                    folder.MoveTo(newPath);
                 }
-                catch(IOException)
+                catch (IOException err)
                 {
-                    // Close the file so we can rename it.
-                    videoPlayer.videoPlayer.Stop();
-                    videoPlayer.videoPlayer.Source = null;
-
-                    // Wait and try again
-                    await System.Threading.Tasks.Task.Delay(100);
+                    MessageBox.Show(err.Message);
                 }
-            }
 
-            // If we failed, inform the user.
-            if (!success)
-                MessageBox.Show("ERROR: Could not rename file.  Is it already open?");
+            }
             
             UpdateCurrentDirectory();
 
