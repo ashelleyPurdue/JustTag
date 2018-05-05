@@ -37,9 +37,9 @@ namespace JustTag
         {
             // Loop over all files in the directory
             DirectoryInfo dir = new DirectoryInfo(directory);
-            var files = dir.EnumerateFiles();
+            var files = dir.EnumerateFileSystemInfos();
 
-            foreach (FileInfo f in files)
+            foreach (FileSystemInfo f in files)
             {
                 // Get the tags
                 HashSet<string> tags = new HashSet<string>(Utils.GetFileTags(f.Name));
@@ -53,12 +53,9 @@ namespace JustTag
                 tags.Add(replaceTag);
 
                 // Save the changes to the file system.
-                string newName = Utils.ChangeFileTags(f.Name, tags.ToArray());
-                string newPath = System.IO.Path.Combine(f.DirectoryName, newName);
-
                 try
                 {
-                    f.MoveTo(newPath);
+                    Utils.ChangeFileTags(f, tags.ToArray());
                 }
                 catch (IOException e)
                 {

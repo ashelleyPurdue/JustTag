@@ -53,57 +53,32 @@ namespace JustTag
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
 
-            // Sort the directory entries into folders and files
-            // This way we can display folders first so the user
-            // Can navigate easier.
-            var folders = new List<FileSystemInfo>();
-            var files = new List<FileSystemInfo>();
+            // Parse the tag filter
+            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
 
+            // Get all files/folders that match the filter
             var entries = currentDir.EnumerateFileSystemInfos();
-            foreach (FileSystemInfo e in entries)
-            {
-                // If it's a shortcut, resolve its target first
-                FileSystemInfo entry = e;
+            var files = from FileSystemInfo e in entries
+                        where filter.Matches(e.Name)
+                        orderby (e is DirectoryInfo) descending    // Make folders appear first, for easier navigating
+                        select e;
 
-                if (entry.Extension.ToLower() == ".lnk")
-                    entry = Utils.GetShortcutTarget(entry);
-
-                // Pick the right list to put it in
-                List<FileSystemInfo> correctList = files;
-
-                if (entry is DirectoryInfo)
-                    correctList = folders;
-
-                // Put it in the list
-                correctList.Add(entry);
-            }
+            var fileSource = files.ToList();
 
             // Shuffle the files if "shuffle" is ticked
             if ((bool)shuffleCheckbox.IsChecked)
-                files = Utils.ShuffleList(files);
-
-
-            // Add the folders first
-            var fileSource = new List<FileSystemInfo>();
-            fileSource.AddRange(folders);
-
-            // Add all the files that match the filter
-            // Also record their tags in the "all known tags" list
-            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
-
-            foreach (FileSystemInfo file in files)
-            {
-                // Record all the tags
-                string[] tags = Utils.GetFileTags(file.Name);
-                foreach (string tag in tags)
-                    allKnownTags.Add(tag);
-
-                // Add it if it matches
-                if (filter.Matches(file.Name))
-                    fileSource.Add(file);
-            }
+                fileSource = Utils.ShuffleList(fileSource);
 
             folderContentsBox.ItemsSource = fileSource;
+
+            // Record all encountered tags in the "all known tags" list.
+            foreach (FileSystemInfo file in files)
+            {
+                string[] tags = Utils.GetFileTags(file.Name);
+
+                foreach (string tag in tags)
+                    allKnownTags.Add(tag);
+            }
 
             // Update the known tags listbox
             // Sort it in alphabetical order first
@@ -163,7 +138,11 @@ namespace JustTag
 
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Object selectedItem = folderContentsBox.SelectedItem;
+            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
+
+            // If it's a shortcut, look up its target
+            if (selectedItem.Extension.ToLower() == ".lnk")
+                selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // If the selected item is a folder, move to that folder.
             DirectoryInfo dir = selectedItem as DirectoryInfo;
@@ -193,16 +172,20 @@ namespace JustTag
             if (folderContentsBox.SelectedItem == null)
                 return;
 
-            // Don't go on if it's not a file
-            FileInfo file = folderContentsBox.SelectedItem as FileInfo;
-
-            if (file == null)
-                return;
+            // If the selected item is a shortcut, resolve it.
+            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
+            if (selectedItem.Extension.ToLower() == ".lnk")
+                selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // Show the file preview
-            videoPlayer.ShowFilePreview(file);
+            // If it's a directory instead of a file, it'll just show up as blank
+            if (selectedItem is FileInfo)
+                videoPlayer.ShowFilePreview(selectedItem as FileInfo);
+            else
+                videoPlayer.UnloadVideo();
 
             // Enable the tag box and update it with this file's tags
+            // NOTE: This affects the shortcut itself, not its target.  This is intentional.
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
             string[] tags = Utils.GetFileTags(name);
 
@@ -225,37 +208,34 @@ namespace JustTag
             tagSaveButton.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Updates the selected file's tags
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Update the selected file's tags
-            FileInfo file = folderContentsBox.SelectedItem as FileInfo;
-
-            if (file == null)
-                return;
+            FileSystemInfo selectedItem = folderContentsBox.SelectedItem;
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-
-            // Get the new file path
-            string newFileName = Utils.ChangeFileTags(file.Name, tags);
-            string newFilePath = System.IO.Path.Combine(file.DirectoryName, newFileName);
 
             // Remember the selected index so we can scroll back to it
             // after saving
             int selectedIndex = folderContentsBox.SelectedIndex;
 
             // Rename the file
-            // We may need to wait for the file to be closed.
+            // We may need to wait for the file to be closed, since MediaElement doesn't close 
             bool success = false;
             for (int tryCount = 0; tryCount < 10; tryCount++)
             {
                 try
                 {
-                    file.MoveTo(newFilePath);
+                    Utils.ChangeFileTags(selectedItem, tags);
                     success = true;
                     break;
                 }
-                catch(IOException)
+                catch (IOException)
                 {
                     // Close the file so we can rename it.
                     videoPlayer.videoPlayer.Stop();
