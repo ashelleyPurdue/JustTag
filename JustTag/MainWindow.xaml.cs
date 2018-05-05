@@ -138,7 +138,11 @@ namespace JustTag
 
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Object selectedItem = folderContentsBox.SelectedItem;
+            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
+
+            // If it's a shortcut, look up its target
+            if (selectedItem.Extension.ToLower() == ".lnk")
+                selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // If the selected item is a folder, move to that folder.
             DirectoryInfo dir = selectedItem as DirectoryInfo;
@@ -168,8 +172,13 @@ namespace JustTag
             if (folderContentsBox.SelectedItem == null)
                 return;
 
+            // If the selected item is a shortcut, resolve it.
+            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
+            if (selectedItem.Extension.ToLower() == ".lnk")
+                selectedItem = Utils.GetShortcutTarget(selectedItem);
+
             // Don't go on if it's not a file
-            FileInfo file = folderContentsBox.SelectedItem as FileInfo;
+            FileInfo file = selectedItem as FileInfo;
 
             if (file == null)
                 return;
@@ -178,6 +187,7 @@ namespace JustTag
             videoPlayer.ShowFilePreview(file);
 
             // Enable the tag box and update it with this file's tags
+            // NOTE: This affects the shortcut itself, not its target.  This is intentional.
             string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
             string[] tags = Utils.GetFileTags(name);
 
