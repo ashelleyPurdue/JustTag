@@ -162,7 +162,7 @@ namespace JustTag
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="newTags"></param>
-        public static string ChangeFileTags(string fileName, string[] newTags)
+        private static string ChangeFileTags(string fileName, string[] newTags)
         {
             // Get the stuff before and after the tags
             string beforeTags = fileName.Split('[', '.')[0];
