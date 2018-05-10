@@ -207,9 +207,21 @@ namespace JustTag
 
         private void tagsBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // TODO: Make the background red if any of the tags are invalid
+            // Make the background red and disable the save button if any of the tags are invalid
+            string[] tags = tagsBox.Text.Split(' ', '\r', '\n');
+            foreach (string tag in tags)
+            {
+                if (!Utils.IsTagValid(tag))
+                {
+                    tagsBox.Background = Brushes.Red;
+                    tagSaveButton.Visibility = Visibility.Hidden;
+
+                    return;
+                }
+            }
 
             // Show the save button
+            tagsBox.Background = Brushes.White;
             tagSaveButton.Visibility = Visibility.Visible;
         }
 
