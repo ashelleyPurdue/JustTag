@@ -98,6 +98,7 @@
                     FontSize="6"
                     Grid.Column="3"
                     Margin="5" 
+                    Click="fullScreenButton_Click"
             />
 
             <Slider x:Name="videoTimeSlider"

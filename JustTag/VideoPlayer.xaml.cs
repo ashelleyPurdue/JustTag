@@ -23,6 +23,8 @@ namespace JustTag
 
         private bool shouldBeMuted = true;          // FFME doesn't let us mute it if there is no sound, so we need to keep
                                                     // track of this ourselves.
+           
+        private bool isFullscreen = false;
 
         public VideoPlayer()
         {
@@ -213,6 +215,34 @@ namespace JustTag
         {
             e.Handled = false;
             UpdateControls();
+        }
+
+        private void fullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window currentWindow = Window.GetWindow(this);
+
+            // If we're already in fullscreen mode, leave it.
+            if (isFullscreen)
+            {
+                currentWindow.Close();
+                return;
+            }
+
+            // TODO: Somehow get a real list of all files
+            FileInfo currentFile = new FileInfo(videoPlayer.Source.AbsolutePath);
+            FileInfo[] files = new FileInfo[] { currentFile };
+
+            // Hide the current window
+            currentWindow.Visibility = Visibility.Hidden;
+
+            // Show the fullscreen window
+            isFullscreen = true;
+            Fullscreen fullscreen = new Fullscreen(this, files, currentFile);
+            fullscreen.ShowDialog();
+
+            // Fullscreen was closed, so switch back to the old window
+            isFullscreen = false;
+            currentWindow.Visibility = Visibility.Visible;
         }
     }
 }
