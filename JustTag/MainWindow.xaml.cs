@@ -346,6 +346,25 @@ namespace JustTag
             tagsBox.Text += tag;
         }
 
+        /// <summary>
+        /// Opens fullscreen mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void fullscreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Get all the files(not folders) in the current folder
+            IEnumerable<FileInfo> files = from FileSystemInfo file in folderContentsBox.ItemsSource
+                                          where file is FileInfo
+                                          select file as FileInfo;
 
+            // Show the fullscreen window
+            this.Visibility = Visibility.Hidden;
+
+            Fullscreen fullscreen = new Fullscreen(files.ToArray());
+            fullscreen.ShowDialog();
+
+            this.Visibility = Visibility.Visible;
+        }
     }
 }

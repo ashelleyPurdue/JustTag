@@ -125,6 +125,7 @@ namespace JustTag
             volumeMutedIcon.Visibility = shouldBeMuted ? Visibility.Visible : Visibility.Hidden;
         }
 
+
         // Event handlers
 
         private async void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
