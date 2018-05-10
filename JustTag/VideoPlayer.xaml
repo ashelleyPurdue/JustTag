@@ -42,7 +42,6 @@
               Margin="10"
               VerticalAlignment="Bottom"
             
-              IsEnabled="False"
               Visibility="Visible"
               Background="#7F000000" 
         >

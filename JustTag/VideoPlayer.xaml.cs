@@ -113,12 +113,18 @@ namespace JustTag
 
         private void UpdateControls()
         {
-            // Enable/disable video controls
-            videoControls.IsEnabled = IsVideo;
-            videoControls.Visibility = (IsVideo && IsMouseOver) ? Visibility.Visible : Visibility.Hidden;
+            // Only show the controls if the mouse is over
+            videoControls.Visibility = IsMouseOver ? Visibility.Visible : Visibility.Hidden;
+
+            // Hide all video-specific controls(play button, slider, etc) if it's not a video
+            Visibility v = IsVideo ? Visibility.Visible : Visibility.Hidden;
+            playButton.Visibility = v;
+            videoTimeSlider.Visibility = v;
+            volumeControls.Visibility = v;
 
             // Update the play button
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
+            playButton.Visibility = IsVideo ? Visibility.Visible : Visibility.Hidden;
 
             // Update the volume controls
             videoPlayer.IsMuted = shouldBeMuted;
