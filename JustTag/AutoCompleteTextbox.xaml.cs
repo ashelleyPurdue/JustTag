@@ -39,6 +39,18 @@ namespace JustTag
             set { textbox.Text = value; }
         }
 
+        public new Brush Background
+        {
+            get { return textbox.Background; }
+            set { textbox.Background = value; }
+        }
+
+        public new Brush Foreground
+        {
+            get { return textbox.Foreground; }
+            set { textbox.Foreground = value; }
+        }
+
         public IEnumerable<string> autoCompletionSource;
 
 
