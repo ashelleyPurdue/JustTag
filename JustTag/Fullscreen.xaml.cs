@@ -25,6 +25,7 @@ namespace JustTag
         private VideoPlayer videoPlayer;
 
         private Grid oldVideoPlayerParent;
+        private int oldVideoPlayerParentIndex;  // The index of videoPlayer in oldVideoPlayerParent.Children.
 
         /// <summary>
         /// 
@@ -49,6 +50,7 @@ namespace JustTag
             this.videoPlayer = videoPlayer;
 
             oldVideoPlayerParent = videoPlayer.Parent as Grid;
+            oldVideoPlayerParentIndex = oldVideoPlayerParent.Children.IndexOf(videoPlayer);
             oldVideoPlayerParent.Children.Remove(videoPlayer);
 
             grid.Children.Insert(0, videoPlayer);
@@ -70,7 +72,7 @@ namespace JustTag
         {
             // HACK: Restore the video player to its old parent
             grid.Children.Remove(videoPlayer);
-            oldVideoPlayerParent.Children.Add(videoPlayer);
+            oldVideoPlayerParent.Children.Insert(oldVideoPlayerParentIndex, videoPlayer);
         }
 
         private void normalScreenButton_Click(object sender, RoutedEventArgs e)
