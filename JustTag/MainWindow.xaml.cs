@@ -355,13 +355,15 @@ namespace JustTag
         {
             // Get all the files(not folders) in the current folder
             IEnumerable<FileInfo> files = from FileSystemInfo file in folderContentsBox.ItemsSource
-                                          where file is FileInfo
-                                          select file as FileInfo;
+                                                where file is FileInfo
+                                                select file as FileInfo;
+
+            FileInfo currentFile = folderContentsBox.SelectedItem as FileInfo;
 
             // Show the fullscreen window
             this.Visibility = Visibility.Hidden;
 
-            Fullscreen fullscreen = new Fullscreen(files.ToArray());
+            Fullscreen fullscreen = new Fullscreen(files.ToArray(), currentFile);
             fullscreen.ShowDialog();
 
             this.Visibility = Visibility.Visible;

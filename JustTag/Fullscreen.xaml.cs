@@ -21,15 +21,21 @@ namespace JustTag
     public partial class Fullscreen : Window
     {
         private FileInfo[] files;
+        private int currentFileIndex = 0;
 
-        public Fullscreen(FileInfo[] files)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="files"> All of the files that the user can flip between with the arrow buttons</param>
+        /// <param name="currentFile"> The file start with showing</param>
+        public Fullscreen(FileInfo[] files, FileInfo currentFile)
         {
             InitializeComponent();
             this.files = files;
 
-            // Open the first file in the list
-            // TODO: pass in the starting file as an argument
-            videoPlayer.ShowFilePreview(files[0]);
+            // Open the starting file
+            currentFileIndex = Array.IndexOf(files, currentFile);
+            videoPlayer.ShowFilePreview(files[currentFileIndex]);
         }
 
         private void normalScreenButton_Click(object sender, RoutedEventArgs e)
