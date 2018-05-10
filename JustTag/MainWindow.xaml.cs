@@ -363,7 +363,7 @@ namespace JustTag
             // Show the fullscreen window
             this.Visibility = Visibility.Hidden;
 
-            Fullscreen fullscreen = new Fullscreen(files.ToArray(), currentFile);
+            Fullscreen fullscreen = new Fullscreen(videoPlayer, files.ToArray(), currentFile);
             fullscreen.ShowDialog();
 
             this.Visibility = Visibility.Visible;

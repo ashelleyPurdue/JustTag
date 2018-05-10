@@ -22,13 +22,17 @@ namespace JustTag
     {
         private FileInfo[] files;
         private int currentFileIndex = 0;
+        private VideoPlayer videoPlayer;
+
+        private Grid oldVideoPlayerParent;
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="videoPlayer"> We pass the video player object in from MainWindow so it will have the same state</param>
         /// <param name="files"> All of the files that the user can flip between with the arrow buttons</param>
         /// <param name="currentFile"> The file start with showing</param>
-        public Fullscreen(FileInfo[] files, FileInfo currentFile)
+        public Fullscreen(VideoPlayer videoPlayer, FileInfo[] files, FileInfo currentFile)
         {
             InitializeComponent();
             this.files = files;
@@ -40,8 +44,14 @@ namespace JustTag
             if (currentFileIndex < 0)
                 currentFileIndex = 0;
 
-            // Show the file
-            videoPlayer.ShowFilePreview(files[currentFileIndex]);
+            // HACK: Embed the video player in this window
+            // This way it will have the same state(time, volume, etc.)
+            this.videoPlayer = videoPlayer;
+
+            oldVideoPlayerParent = videoPlayer.Parent as Grid;
+            oldVideoPlayerParent.Children.Remove(videoPlayer);
+
+            grid.Children.Insert(0, videoPlayer);
         }
 
 
@@ -55,6 +65,13 @@ namespace JustTag
 
 
         // Event handlers
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // HACK: Restore the video player to its old parent
+            grid.Children.Remove(videoPlayer);
+            oldVideoPlayerParent.Children.Add(videoPlayer);
+        }
 
         private void normalScreenButton_Click(object sender, RoutedEventArgs e)
         {

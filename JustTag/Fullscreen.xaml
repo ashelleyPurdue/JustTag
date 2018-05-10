@@ -13,9 +13,9 @@
         WindowState="Maximized"
         WindowStyle="None"
         PreviewKeyDown="Window_PreviewKeyDown"
+        Closing="Window_Closing"
 >
-    <Grid>
-        <local:VideoPlayer x:Name="videoPlayer"/>
+    <Grid x:Name="grid">
         <Button x:Name="normalScreenButton"
                 Content="Normal Screen"
                 HorizontalAlignment="Right"
