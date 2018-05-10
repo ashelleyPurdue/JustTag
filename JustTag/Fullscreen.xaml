@@ -10,7 +10,9 @@
         Width="300"
         Background="Black"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized" WindowStyle="None"
+        WindowState="Maximized"
+        WindowStyle="None"
+        PreviewKeyDown="Window_PreviewKeyDown"
 >
     <Grid>
         <local:VideoPlayer x:Name="videoPlayer"/>
