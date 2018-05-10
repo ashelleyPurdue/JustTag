@@ -228,16 +228,14 @@ namespace JustTag
                 return;
             }
 
-            // TODO: Somehow get a real list of all files
-            FileInfo currentFile = new FileInfo(videoPlayer.Source.AbsolutePath);
-            FileInfo[] files = new FileInfo[] { currentFile };
-
             // Hide the current window
             currentWindow.Visibility = Visibility.Hidden;
 
             // Show the fullscreen window
             isFullscreen = true;
-            Fullscreen fullscreen = new Fullscreen(this, files, currentFile);
+
+            FileInfo currentFile = new FileInfo(videoPlayer.Source.AbsolutePath);
+            Fullscreen fullscreen = new Fullscreen(this, currentFile);
             fullscreen.ShowDialog();
 
             // Fullscreen was closed, so switch back to the old window
