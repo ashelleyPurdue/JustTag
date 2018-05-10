@@ -35,6 +35,12 @@ namespace JustTag
 
             // Open the starting file
             currentFileIndex = Array.IndexOf(files, currentFile);
+
+            // If there is no such file(eg: if it is a folder), just default to the first
+            if (currentFileIndex < 0)
+                currentFileIndex = 0;
+
+            // Show the file
             videoPlayer.ShowFilePreview(files[currentFileIndex]);
         }
 
