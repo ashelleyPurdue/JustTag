@@ -31,5 +31,10 @@ namespace JustTag
             // TODO: pass in the starting file as an argument
             videoPlayer.ShowFilePreview(files[0]);
         }
+
+        private void normalScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }
