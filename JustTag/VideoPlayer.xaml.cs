@@ -131,6 +131,10 @@ namespace JustTag
             volumeSlider.IsEnabled = !shouldBeMuted;
             volumeIcon.Visibility = shouldBeMuted ? Visibility.Hidden : Visibility.Visible;
             volumeMutedIcon.Visibility = shouldBeMuted ? Visibility.Visible : Visibility.Hidden;
+
+            // Update the full screen button
+            fullScreenButton.IsEnabled = videoPlayer.Source != null;
+            fullScreenButton.Content = isFullscreen ? "Normal size" : "Fullscreen";
         }
 
 
@@ -239,6 +243,7 @@ namespace JustTag
 
             // Show the fullscreen window
             isFullscreen = true;
+            UpdateControls();
 
             FileInfo currentFile = new FileInfo(videoPlayer.Source.AbsolutePath);
             Fullscreen fullscreen = new Fullscreen(this, currentFile);
@@ -246,6 +251,7 @@ namespace JustTag
 
             // Fullscreen was closed, so switch back to the old window
             isFullscreen = false;
+            UpdateControls();
             currentWindow.Visibility = Visibility.Visible;
         }
     }
