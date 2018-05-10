@@ -85,6 +85,9 @@
     <Compile Include="FindReplaceTagsWindow.xaml.cs">
       <DependentUpon>FindReplaceTagsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Fullscreen.xaml.cs">
+      <DependentUpon>Fullscreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -106,6 +109,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FindReplaceTagsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Fullscreen.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">

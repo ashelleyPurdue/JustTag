@@ -19,6 +19,25 @@ namespace JustTag
         private static Dictionary<string, ImageSource> fileIconCache = new Dictionary<string, ImageSource>();
 
         /// <summary>
+        /// Like modulo, except it works with negative numbers
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static int WrapIndex(int index, int max)
+        {
+            // Positive numbers are easy
+            if (index >= 0)
+                return index % max;
+
+            int output = index;
+            while (output < 0)
+                output += max;
+
+            return output;
+        }
+
+        /// <summary>
         /// Follows a shortcut and returns the FileSystemInfo that it points to.
         /// </summary>
         /// <param name="shortcut"></param>

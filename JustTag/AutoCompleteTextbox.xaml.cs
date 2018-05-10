@@ -247,10 +247,7 @@ namespace JustTag
             }
 
             // Make the selected index loop around
-            while (selectedIndex < 0)
-                selectedIndex += suggestionList.Items.Count;
-
-            selectedIndex %= suggestionList.Items.Count;
+            selectedIndex = Utils.WrapIndex(selectedIndex, suggestionList.Items.Count);
 
             // Apply the selection change
             suggestionList.SelectedIndex = selectedIndex;

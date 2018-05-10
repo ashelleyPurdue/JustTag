@@ -43,12 +43,13 @@
               VerticalAlignment="Bottom"
             
               IsEnabled="False"
-              Visibility="Hidden"
+              Visibility="Visible"
               Background="#7F000000" 
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="38"/>
                 <ColumnDefinition Width="38"/>
             </Grid.ColumnDefinitions>
 
@@ -92,12 +93,21 @@
                 />
             </DockPanel>
 
+            <Button x:Name="fullScreenButton"
+                    Content="fullscreen"
+                    FontSize="6"
+                    Grid.Column="3"
+                    Margin="5" 
+                    Click="fullScreenButton_Click"
+            />
+
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     Margin="5,10"
                     MouseMove="videoTimeSlider_MouseMoved"
-                    PreviewMouseDown="videoTimeSlider_MouseDown" Height="18"
+                    PreviewMouseDown="videoTimeSlider_MouseDown"
+                    Height="18"
              />
         </Grid>
 

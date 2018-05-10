@@ -71,6 +71,11 @@ namespace JustTag
 
             folderContentsBox.ItemsSource = fileSource;
 
+            // Put them in the list of all files you can flip through in full-screen mode
+            Fullscreen.browsableFiles = (from f in fileSource
+                                         where f is FileInfo
+                                         select (FileInfo)f).ToArray();
+
             // Record all encountered tags in the "all known tags" list.
             foreach (FileSystemInfo file in files)
             {
@@ -345,7 +350,5 @@ namespace JustTag
 
             tagsBox.Text += tag;
         }
-
-
     }
 }
