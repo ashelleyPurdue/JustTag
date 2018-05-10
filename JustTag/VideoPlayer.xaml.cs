@@ -113,18 +113,28 @@ namespace JustTag
 
         private void UpdateControls()
         {
-            // Enable/disable video controls
-            videoControls.IsEnabled = IsVideo;
-            videoControls.Visibility = (IsVideo && IsMouseOver) ? Visibility.Visible : Visibility.Hidden;
+            // Only show the controls if the mouse is over
+            videoControls.Visibility = IsMouseOver ? Visibility.Visible : Visibility.Hidden;
+
+            // Hide all video-specific controls(play button, slider, etc) if it's not a video
+            Visibility v = IsVideo ? Visibility.Visible : Visibility.Hidden;
+            playButton.Visibility = v;
+            videoTimeSlider.Visibility = v;
+            volumeControls.Visibility = v;
 
             // Update the play button
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
+            playButton.Visibility = IsVideo ? Visibility.Visible : Visibility.Hidden;
 
             // Update the volume controls
             videoPlayer.IsMuted = shouldBeMuted;
             volumeSlider.IsEnabled = !shouldBeMuted;
             volumeIcon.Visibility = shouldBeMuted ? Visibility.Hidden : Visibility.Visible;
             volumeMutedIcon.Visibility = shouldBeMuted ? Visibility.Visible : Visibility.Hidden;
+
+            // Update the full screen button
+            fullScreenButton.IsEnabled = videoPlayer.Source != null;
+            fullScreenButton.Content = isFullscreen ? "Normal size" : "Fullscreen";
         }
 
 
@@ -233,6 +243,7 @@ namespace JustTag
 
             // Show the fullscreen window
             isFullscreen = true;
+            UpdateControls();
 
             FileInfo currentFile = new FileInfo(videoPlayer.Source.AbsolutePath);
             Fullscreen fullscreen = new Fullscreen(this, currentFile);
@@ -240,6 +251,7 @@ namespace JustTag
 
             // Fullscreen was closed, so switch back to the old window
             isFullscreen = false;
+            UpdateControls();
             currentWindow.Visibility = Visibility.Visible;
         }
     }
