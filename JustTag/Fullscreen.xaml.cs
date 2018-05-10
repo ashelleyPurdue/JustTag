@@ -45,6 +45,15 @@ namespace JustTag
         }
 
 
+        // Misc methods
+
+        private void UpdateUI()
+        {
+            currentFileIndex = Utils.WrapIndex(currentFileIndex, files.Length); // Wrap the index around
+            videoPlayer.ShowFilePreview(files[currentFileIndex]);               // Show the file
+        }
+
+
         // Event handlers
 
         private void normalScreenButton_Click(object sender, RoutedEventArgs e)
@@ -54,24 +63,36 @@ namespace JustTag
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            // Close if it's the escape key
             if (e.Key == Key.Escape)
+            {
                 Close();
+                return;
+            }
+
+            // Navigate left/right if it's the left/right keys
+            if (e.Key == Key.Left || e.Key == Key.Right)
+            {
+                if (e.Key == Key.Left)
+                    currentFileIndex--;
+                else
+                    currentFileIndex++;
+
+                UpdateUI();
+                return;
+            }
         }
 
         private void prevButton_Click(object sender, RoutedEventArgs e)
         {
             currentFileIndex--;
-            currentFileIndex = Utils.WrapIndex(currentFileIndex, files.Length);
-
-            videoPlayer.ShowFilePreview(files[currentFileIndex]);
+            UpdateUI();
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e)
         {
             currentFileIndex++;
-            currentFileIndex = Utils.WrapIndex(currentFileIndex, files.Length);
-
-            videoPlayer.ShowFilePreview(files[currentFileIndex]);
+            UpdateUI();
         }
     }
 }
