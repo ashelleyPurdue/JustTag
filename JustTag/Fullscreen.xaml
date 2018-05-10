@@ -23,5 +23,22 @@
                 Margin="0,10,10,0" 
                 Click="normalScreenButton_Click"
         />
+
+        <Button x:Name="prevButton"
+                Content="←"
+                Height="100"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Click="prevButton_Click"
+        />
+
+        <Button x:Name="nextButton"
+                Content="→"
+                Height="100"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Click="nextButton_Click"
+        />
+        
     </Grid>
 </Window>

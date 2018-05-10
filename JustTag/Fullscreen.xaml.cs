@@ -44,6 +44,9 @@ namespace JustTag
             videoPlayer.ShowFilePreview(files[currentFileIndex]);
         }
 
+
+        // Event handlers
+
         private void normalScreenButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -53,6 +56,22 @@ namespace JustTag
         {
             if (e.Key == Key.Escape)
                 Close();
+        }
+
+        private void prevButton_Click(object sender, RoutedEventArgs e)
+        {
+            currentFileIndex--;
+            currentFileIndex = Utils.WrapIndex(currentFileIndex, files.Length);
+
+            videoPlayer.ShowFilePreview(files[currentFileIndex]);
+        }
+
+        private void nextButton_Click(object sender, RoutedEventArgs e)
+        {
+            currentFileIndex++;
+            currentFileIndex = Utils.WrapIndex(currentFileIndex, files.Length);
+
+            videoPlayer.ShowFilePreview(files[currentFileIndex]);
         }
     }
 }
