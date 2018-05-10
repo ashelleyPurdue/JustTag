@@ -20,28 +20,40 @@ namespace JustTag
     /// </summary>
     public partial class Fullscreen : Window
     {
-        private FileInfo[] files;
+        public static FileInfo[] browsableFiles;
+
         private int currentFileIndex = 0;
+        private VideoPlayer videoPlayer;
+
+        private Grid oldVideoPlayerParent;
+        private int oldVideoPlayerParentIndex;  // The index of videoPlayer in oldVideoPlayerParent.Children.
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="files"> All of the files that the user can flip between with the arrow buttons</param>
+        /// <param name="videoPlayer"> We pass the video player object in from MainWindow so it will have the same state</param>
+        /// <param name="browsableFiles"> All of the files that the user can flip between with the arrow buttons</param>
         /// <param name="currentFile"> The file start with showing</param>
-        public Fullscreen(FileInfo[] files, FileInfo currentFile)
+        public Fullscreen(VideoPlayer videoPlayer, FileInfo currentFile)
         {
             InitializeComponent();
-            this.files = files;
 
             // Open the starting file
-            currentFileIndex = Array.IndexOf(files, currentFile);
+            currentFileIndex = Array.IndexOf(browsableFiles, currentFile);
 
             // If there is no such file(eg: if it is a folder), just default to the first
             if (currentFileIndex < 0)
                 currentFileIndex = 0;
 
-            // Show the file
-            videoPlayer.ShowFilePreview(files[currentFileIndex]);
+            // HACK: Embed the video player in this window
+            // This way it will have the same state(time, volume, etc.)
+            this.videoPlayer = videoPlayer;
+
+            oldVideoPlayerParent = videoPlayer.Parent as Grid;
+            oldVideoPlayerParentIndex = oldVideoPlayerParent.Children.IndexOf(videoPlayer);
+            oldVideoPlayerParent.Children.Remove(videoPlayer);
+
+            grid.Children.Insert(0, videoPlayer);
         }
 
 
@@ -49,16 +61,18 @@ namespace JustTag
 
         private void UpdateUI()
         {
-            currentFileIndex = Utils.WrapIndex(currentFileIndex, files.Length); // Wrap the index around
-            videoPlayer.ShowFilePreview(files[currentFileIndex]);               // Show the file
+            currentFileIndex = Utils.WrapIndex(currentFileIndex, browsableFiles.Length); // Wrap the index around
+            videoPlayer.ShowFilePreview(browsableFiles[currentFileIndex]);               // Show the file
         }
 
 
         // Event handlers
 
-        private void normalScreenButton_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Close();
+            // HACK: Restore the video player to its old parent
+            grid.Children.Remove(videoPlayer);
+            oldVideoPlayerParent.Children.Insert(oldVideoPlayerParentIndex, videoPlayer);
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)

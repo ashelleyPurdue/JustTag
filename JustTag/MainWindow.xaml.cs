@@ -71,6 +71,11 @@ namespace JustTag
 
             folderContentsBox.ItemsSource = fileSource;
 
+            // Put them in the list of all files you can flip through in full-screen mode
+            Fullscreen.browsableFiles = (from f in fileSource
+                                         where f is FileInfo
+                                         select (FileInfo)f).ToArray();
+
             // Record all encountered tags in the "all known tags" list.
             foreach (FileSystemInfo file in files)
             {
@@ -344,29 +349,6 @@ namespace JustTag
                 tagsBox.Text += '\n';
 
             tagsBox.Text += tag;
-        }
-
-        /// <summary>
-        /// Opens fullscreen mode
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void fullscreenButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Get all the files(not folders) in the current folder
-            IEnumerable<FileInfo> files = from FileSystemInfo file in folderContentsBox.ItemsSource
-                                                where file is FileInfo
-                                                select file as FileInfo;
-
-            FileInfo currentFile = folderContentsBox.SelectedItem as FileInfo;
-
-            // Show the fullscreen window
-            this.Visibility = Visibility.Hidden;
-
-            Fullscreen fullscreen = new Fullscreen(files.ToArray(), currentFile);
-            fullscreen.ShowDialog();
-
-            this.Visibility = Visibility.Visible;
         }
     }
 }
