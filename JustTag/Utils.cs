@@ -62,6 +62,31 @@ namespace JustTag
         }
 
         /// <summary>
+        /// Returns if the given tag is valid.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static bool IsTagValid(string tag)
+        {
+            char[] forbiddenChars = new char[]
+            {
+                '[',    // Used to denote the start of the tags list
+                ']',    // Used to denote the end of the tags list
+                ':',    // Used as part of the ":untagged:" command.  Also it's not valid in a file name.
+                '-',    // Used to exclude tags in filters
+                ' ',    // Used to separate tags
+            };
+
+            foreach (char c in tag)
+            {
+                if (forbiddenChars.Contains(c))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Returns an ImageSource with the given file's icon
         /// </summary>
         /// <param name="file"></param>
