@@ -168,11 +168,12 @@ namespace JustTag
         /// <returns></returns>
         public static string[] GetFileTags(string fileName)
         {
-            // This horrible regex just extracts everything in between '[' and ']'.
-            string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
+            // TODO: Replace this method with the use of the class
+            var tags = new TaggedFileName(fileName).tags;
+            if (tags == null)
+                return new string[] { };
 
-            // Split them by space
-            return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return tags.ToArray();
         }
 
         /// <summary>
@@ -182,8 +183,12 @@ namespace JustTag
         /// <param name="newTags"></param>
         public static void ChangeFileTags(FileSystemInfo file, string[] newTags)
         {
+            // TODO: Replace this method with the use of TaggedFileName
+
             // Find the new name
-            string newName = ChangeTagsInFileName(file.Name, newTags);
+            TaggedFileName taggedFileName = new TaggedFileName(file.Name);
+            taggedFileName.tags = new List<string>(newTags);
+            string newName = taggedFileName.ToString();
 
             // Find the full path and move it there.
             // Frustratingly, FileInfo and DirectoryInfo both have
@@ -209,42 +214,6 @@ namespace JustTag
             }
 
         }
-
-        /// <summary>
-        /// Changes the given file name so it has the given tags
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="newTags"></param>
-        private static string ChangeTagsInFileName(string fileName, string[] newTags)
-        {
-            // Get the stuff before and after the existing tags, if there are any
-            string beforeTags = fileName.Split('[', '.')[0];
-            string extension = System.IO.Path.GetExtension(fileName);
-
-            // If the new tags list is empty, don't even bother
-            // with the brackets.
-            if (newTags.Length == 0)
-                return beforeTags + extension;
-
-            // Make a new tag string from the array
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("[");
-            for (int i = 0; i < newTags.Length; i++)
-            {
-                // Add a space if this isn't the first
-                if (i != 0)
-                    builder.Append(" ");
-
-                // Add the tag
-                builder.Append(newTags[i]);
-            }
-            builder.Append("]");
-
-            // Jam them together to make the new filename
-            return beforeTags + builder.ToString() + extension;
-        }
-
 
     }
 }
