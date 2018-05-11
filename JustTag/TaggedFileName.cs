@@ -42,5 +42,38 @@ namespace JustTag
 
             tags = new List<string>(withoutBrackets.Split(' '));
         }
+
+        /// <summary>
+        /// Returns the final filename, with the tags included.
+        /// </summary>
+        /// <returns></returns>
+        public string ToString()
+        {
+            // If there is no tag area, then just return beforeTags
+            if (tags == null)
+                return beforeTags;
+
+            StringBuilder builder = new StringBuilder();
+
+            // Append the before tags stuff
+            builder.Append(beforeTags);
+            builder.Append('[');
+
+            for (int i = 0; i < tags.Count; i++)
+            {
+                // Append the tag
+                builder.Append(tags[i]);
+
+                // If this isn't the last tag, append space
+                if (i < tags.Count - 1)
+                    builder.Append(' ');
+            }
+
+            // Append the after tags stuff
+            builder.Append(']');
+            builder.Append(afterTags);
+
+            return builder.ToString();
+        }
     }
 }
