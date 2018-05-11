@@ -17,3 +17,11 @@ than one, only the first will be looked at.  For example:
 
 In this example, "foo" is the only tag, and the rest of the name is
 "multiple_tag_areas[bar].txt".
+
+If multiple opening brackets occur before a closing bracket, only the first
+opening bracket is considered.  For example:
+
+    double_brackets[[what now].txt
+
+In this example, the tags are "[what" and "now".  Yes, the second bracket becomes
+part of the tag.
