@@ -52,12 +52,12 @@ namespace JustTag
         /// <summary>
         /// Unloads the currently-loaded video.
         /// </summary>
-        public void UnloadVideo()
+        public Task UnloadVideo()
         {
-            videoPlayer.Source = null;
+            return videoPlayer.Close();
         }
 
-        private async void PlayOrPause(bool play)
+        private async Task PlayOrPause(bool play)
         {
             // Play/pause the video
             if (play)
