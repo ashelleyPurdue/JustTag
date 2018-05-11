@@ -16,7 +16,14 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        public bool IsVideo { get { return GetCurrentVideoDuration() > 0; } }
+        public bool IsVideo
+        {
+            get
+            {
+                // It's a video if it has more than one frame.
+                return GetCurrentVideoDuration() > videoPlayer.VideoFrameLength;
+            }
+        }
 
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
