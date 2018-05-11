@@ -16,7 +16,14 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        public bool IsVideo { get { return GetCurrentVideoDuration() > 0; } }
+        public bool IsVideo
+        {
+            get
+            {
+                // It's a video if it has more than one frame.
+                return GetCurrentVideoDuration() > videoPlayer.VideoFrameLength;
+            }
+        }
 
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
@@ -39,25 +46,29 @@ namespace JustTag
         /// Opens the given file in the video player.
         /// </summary>
         /// <param name="selectedFile"></param>
-        public void ShowFilePreview(FileInfo selectedFile)
+        public async Task Open(FileInfo selectedFile)
         {
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
 
-            // Put it in the media element
-            videoPlayer.Open(new Uri(selectedFile.FullName));
+            // Open the file and autoplay it
+            await videoPlayer.Open(new Uri(selectedFile.FullName));
+            await videoPlayer.Play();
+
+            UpdateControls();
+            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
 
         /// <summary>
         /// Unloads the currently-loaded video.
         /// </summary>
-        public void UnloadVideo()
+        public Task UnloadVideo()
         {
-            videoPlayer.Source = null;
+            return videoPlayer.Close();
         }
 
-        private async void PlayOrPause(bool play)
+        private async Task PlayOrPause(bool play)
         {
             // Play/pause the video
             if (play)
@@ -139,15 +150,6 @@ namespace JustTag
 
 
         // Event handlers
-
-        private async void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
-        {
-            // Autoplay the video
-            await videoPlayer.Play();
-
-            UpdateControls();
-            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
-        }
 
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {

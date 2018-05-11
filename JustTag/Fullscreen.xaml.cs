@@ -62,7 +62,7 @@ namespace JustTag
         private void UpdateUI()
         {
             currentFileIndex = Utils.WrapIndex(currentFileIndex, browsableFiles.Length); // Wrap the index around
-            videoPlayer.ShowFilePreview(browsableFiles[currentFileIndex]);               // Show the file
+            videoPlayer.Open(browsableFiles[currentFileIndex]);               // Show the file
         }
 
 

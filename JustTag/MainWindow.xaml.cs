@@ -185,7 +185,7 @@ namespace JustTag
             // Show the file preview
             // If it's a directory instead of a file, it'll just show up as blank
             if (selectedItem is FileInfo)
-                videoPlayer.ShowFilePreview(selectedItem as FileInfo);
+                videoPlayer.Open(selectedItem as FileInfo);
             else
                 videoPlayer.UnloadVideo();
 
@@ -242,30 +242,15 @@ namespace JustTag
             int selectedIndex = folderContentsBox.SelectedIndex;
 
             // Rename the file
-            // We may need to wait for the file to be closed, since MediaElement doesn't close 
-            bool success = false;
-            for (int tryCount = 0; tryCount < 10; tryCount++)
+            try
             {
-                try
-                {
-                    Utils.ChangeFileTags(selectedItem, tags);
-                    success = true;
-                    break;
-                }
-                catch (IOException)
-                {
-                    // Close the file so we can rename it.
-                    videoPlayer.videoPlayer.Stop();
-                    videoPlayer.videoPlayer.Source = null;
-
-                    // Wait and try again
-                    await System.Threading.Tasks.Task.Delay(100);
-                }
+                await videoPlayer.UnloadVideo();
+                Utils.ChangeFileTags(selectedItem, tags);
             }
-
-            // If we failed, inform the user.
-            if (!success)
-                MessageBox.Show("ERROR: Could not rename file.  Is it already open?");
+            catch (IOException err)
+            {
+                MessageBox.Show("ERROR: Could not rename file." + err.Message);
+            }
             
             UpdateCurrentDirectory();
 
@@ -299,10 +284,10 @@ namespace JustTag
             w.ShowDialog();
         }
 
-        private void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
+        private async void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
         {
             // Close the currently open file in case it needs to be renamed
-            videoPlayer.UnloadVideo();
+            await videoPlayer.UnloadVideo();
 
             // Show a window for finding/replacing
             var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
