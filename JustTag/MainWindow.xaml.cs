@@ -185,7 +185,7 @@ namespace JustTag
             // Show the file preview
             // If it's a directory instead of a file, it'll just show up as blank
             if (selectedItem is FileInfo)
-                videoPlayer.ShowFilePreview(selectedItem as FileInfo);
+                videoPlayer.Open(selectedItem as FileInfo);
             else
                 videoPlayer.UnloadVideo();
 

@@ -30,7 +30,6 @@
             <ffme:MediaElement Name="videoPlayer"
                 LoadedBehavior="Manual"
                 ScrubbingEnabled="True"
-                MediaOpened="videoPlayer_MediaOpened"
                 MediaFailed="videoPlayer_MediaFailed"
                 PositionChanged="videoPlayer_PositionChanged"
              />

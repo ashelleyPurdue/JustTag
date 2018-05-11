@@ -39,14 +39,18 @@ namespace JustTag
         /// Opens the given file in the video player.
         /// </summary>
         /// <param name="selectedFile"></param>
-        public void ShowFilePreview(FileInfo selectedFile)
+        public async Task Open(FileInfo selectedFile)
         {
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
 
-            // Put it in the media element
-            videoPlayer.Open(new Uri(selectedFile.FullName));
+            // Open the file and autoplay it
+            await videoPlayer.Open(new Uri(selectedFile.FullName));
+            await videoPlayer.Play();
+
+            UpdateControls();
+            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
 
         /// <summary>
@@ -139,15 +143,6 @@ namespace JustTag
 
 
         // Event handlers
-
-        private async void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
-        {
-            // Autoplay the video
-            await videoPlayer.Play();
-
-            UpdateControls();
-            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
-        }
 
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
