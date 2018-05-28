@@ -82,6 +82,9 @@
     <Compile Include="FileListItem.xaml.cs">
       <DependentUpon>FileListItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FilePreviewer.xaml.cs">
+      <DependentUpon>FilePreviewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FindReplaceTagsWindow.xaml.cs">
       <DependentUpon>FindReplaceTagsWindow.xaml</DependentUpon>
     </Compile>
@@ -105,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FileListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FilePreviewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
