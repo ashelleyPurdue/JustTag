@@ -23,6 +23,8 @@ namespace JustTag
     {
         public bool IsOpening { get; private set; }
 
+        private Control activePreviewControl = null;    // The control being used to preview the current file
+
         public FilePreviewer()
         {
             InitializeComponent();
@@ -35,9 +37,16 @@ namespace JustTag
         /// <returns></returns>
         public async Task OpenPreview(FileInfo selectedFile)
         {
-            // TODO: Preview different file types using different controls
             IsOpening = true;
+
+            // Close the previously open file
+            await ClosePreview();
+
+            // TODO: Choose a different control based on the file type
+            activePreviewControl = videoPlayer;
+            activePreviewControl.Visibility = Visibility.Visible;
             await videoPlayer.Open(selectedFile);
+
             IsOpening = false;
         }
 
@@ -45,10 +54,18 @@ namespace JustTag
         /// Closes the currently-open file preview
         /// </summary>
         /// <returns></returns>
-        public Task ClosePreview()
+        public async Task ClosePreview()
         {
+            // Don't do anything if already closed
+            if (activePreviewControl == null)
+                return;
+
+            // Hide the old control
+            activePreviewControl.Visibility = Visibility.Collapsed;
+            activePreviewControl = null;
+
             // TODO: Different closing behavior for different file types
-            return videoPlayer.UnloadVideo();
+            await videoPlayer.UnloadVideo();
         }
     }
 }
