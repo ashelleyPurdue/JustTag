@@ -33,14 +33,30 @@ namespace JustTag
         /// <summary>
         /// Shows a preview for the given file
         /// </summary>
-        /// <param name="selectedFile"></param>
+        /// <param name="selectedItem"></param>
         /// <returns></returns>
-        public async Task OpenPreview(FileInfo selectedFile)
+        public async Task OpenPreview(FileSystemInfo selectedItem)
         {
             IsOpening = true;
 
             // Close the previously open file
             await ClosePreview();
+
+            // If it's a folder, show the folder preview
+            if (selectedItem is DirectoryInfo)
+            {
+                DirectoryInfo dir = selectedItem as DirectoryInfo;
+
+                activePreviewControl = folderPreviewer;
+                activePreviewControl.Visibility = Visibility.Visible;
+                folderPreviewer.ItemsSource = dir.EnumerateFileSystemInfos();
+
+                IsOpening = false;
+                return;
+            }
+
+            // It's a file
+            FileInfo selectedFile = selectedItem as FileInfo;
 
             // TODO: Choose a different control based on the file type
             activePreviewControl = videoPlayer;
