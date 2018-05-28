@@ -16,13 +16,22 @@ namespace JustTag
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        public bool IsVideo { get { return GetCurrentVideoDuration() > 0; } }
+        public bool IsVideo
+        {
+            get
+            {
+                // It's a video if it has more than one frame.
+                return GetCurrentVideoDuration() > videoPlayer.VideoFrameLength;
+            }
+        }
 
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
 
         private bool shouldBeMuted = true;          // FFME doesn't let us mute it if there is no sound, so we need to keep
                                                     // track of this ourselves.
+           
+        private bool isFullscreen = false;
 
         public VideoPlayer()
         {
@@ -37,25 +46,29 @@ namespace JustTag
         /// Opens the given file in the video player.
         /// </summary>
         /// <param name="selectedFile"></param>
-        public void ShowFilePreview(FileInfo selectedFile)
+        public async Task Open(FileInfo selectedFile)
         {
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
 
-            // Put it in the media element
-            videoPlayer.Open(new Uri(selectedFile.FullName));
+            // Open the file and autoplay it
+            await videoPlayer.Open(new Uri(selectedFile.FullName));
+            await videoPlayer.Play();
+
+            UpdateControls();
+            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
         }
 
         /// <summary>
         /// Unloads the currently-loaded video.
         /// </summary>
-        public void UnloadVideo()
+        public Task UnloadVideo()
         {
-            videoPlayer.Source = null;
+            return videoPlayer.Close();
         }
 
-        private async void PlayOrPause(bool play)
+        private async Task PlayOrPause(bool play)
         {
             // Play/pause the video
             if (play)
@@ -111,30 +124,32 @@ namespace JustTag
 
         private void UpdateControls()
         {
-            // Enable/disable video controls
-            videoControls.IsEnabled = IsVideo;
-            videoControls.Visibility = (IsVideo && IsMouseOver) ? Visibility.Visible : Visibility.Hidden;
+            // Only show the controls if the mouse is over
+            videoControls.Visibility = IsMouseOver ? Visibility.Visible : Visibility.Hidden;
+
+            // Hide all video-specific controls(play button, slider, etc) if it's not a video
+            Visibility v = IsVideo ? Visibility.Visible : Visibility.Hidden;
+            playButton.Visibility = v;
+            videoTimeSlider.Visibility = v;
+            volumeControls.Visibility = v;
 
             // Update the play button
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
+            playButton.Visibility = IsVideo ? Visibility.Visible : Visibility.Hidden;
 
             // Update the volume controls
             videoPlayer.IsMuted = shouldBeMuted;
             volumeSlider.IsEnabled = !shouldBeMuted;
             volumeIcon.Visibility = shouldBeMuted ? Visibility.Hidden : Visibility.Visible;
             volumeMutedIcon.Visibility = shouldBeMuted ? Visibility.Visible : Visibility.Hidden;
+
+            // Update the full screen button
+            fullScreenButton.IsEnabled = videoPlayer.Source != null;
+            fullScreenButton.Content = isFullscreen ? "Normal size" : "Fullscreen";
         }
+
 
         // Event handlers
-
-        private async void videoPlayer_MediaOpened(object sender, RoutedEventArgs e)
-        {
-            // Autoplay the video
-            await videoPlayer.Play();
-
-            UpdateControls();
-            volumeSlider.Value = volumeSlider.Maximum * videoPlayer.Volume;
-        }
 
         private void videoPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
@@ -212,6 +227,34 @@ namespace JustTag
         {
             e.Handled = false;
             UpdateControls();
+        }
+
+        private void fullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window currentWindow = Window.GetWindow(this);
+
+            // If we're already in fullscreen mode, leave it.
+            if (isFullscreen)
+            {
+                currentWindow.Close();
+                return;
+            }
+
+            // Hide the current window
+            currentWindow.Visibility = Visibility.Hidden;
+
+            // Show the fullscreen window
+            isFullscreen = true;
+            UpdateControls();
+
+            FileInfo currentFile = new FileInfo(videoPlayer.Source.AbsolutePath);
+            Fullscreen fullscreen = new Fullscreen(this, currentFile);
+            fullscreen.ShowDialog();
+
+            // Fullscreen was closed, so switch back to the old window
+            isFullscreen = false;
+            UpdateControls();
+            currentWindow.Visibility = Visibility.Visible;
         }
     }
 }

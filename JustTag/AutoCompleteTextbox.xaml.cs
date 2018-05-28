@@ -39,6 +39,18 @@ namespace JustTag
             set { textbox.Text = value; }
         }
 
+        public new Brush Background
+        {
+            get { return textbox.Background; }
+            set { textbox.Background = value; }
+        }
+
+        public new Brush Foreground
+        {
+            get { return textbox.Foreground; }
+            set { textbox.Foreground = value; }
+        }
+
         public IEnumerable<string> autoCompletionSource;
 
 
@@ -247,10 +259,7 @@ namespace JustTag
             }
 
             // Make the selected index loop around
-            while (selectedIndex < 0)
-                selectedIndex += suggestionList.Items.Count;
-
-            selectedIndex %= suggestionList.Items.Count;
+            selectedIndex = Utils.WrapIndex(selectedIndex, suggestionList.Items.Count);
 
             // Apply the selection change
             suggestionList.SelectedIndex = selectedIndex;

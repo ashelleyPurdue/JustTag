@@ -19,6 +19,25 @@ namespace JustTag
         private static Dictionary<string, ImageSource> fileIconCache = new Dictionary<string, ImageSource>();
 
         /// <summary>
+        /// Like modulo, except it works with negative numbers
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static int WrapIndex(int index, int max)
+        {
+            // Positive numbers are easy
+            if (index >= 0)
+                return index % max;
+
+            int output = index;
+            while (output < 0)
+                output += max;
+
+            return output;
+        }
+
+        /// <summary>
         /// Follows a shortcut and returns the FileSystemInfo that it points to.
         /// </summary>
         /// <param name="shortcut"></param>
@@ -59,6 +78,31 @@ namespace JustTag
             }
 
             return outputList;
+        }
+
+        /// <summary>
+        /// Returns if the given tag is valid.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public static bool IsTagValid(string tag)
+        {
+            char[] forbiddenChars = new char[]
+            {
+                '[',    // Used to denote the start of the tags list
+                ']',    // Used to denote the end of the tags list
+                ':',    // Used as part of the ":untagged:" command.  Also it's not valid in a file name.
+                '-',    // Used to exclude tags in filters
+                ' ',    // Used to separate tags
+            };
+
+            foreach (char c in tag)
+            {
+                if (forbiddenChars.Contains(c))
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -136,9 +180,44 @@ namespace JustTag
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="newTags"></param>
-        public static string ChangeFileTags(string fileName, string[] newTags)
+        public static void ChangeFileTags(FileSystemInfo file, string[] newTags)
         {
-            // Get the stuff before and after the tags
+            // Find the new name
+            string newName = ChangeTagsInFileName(file.Name, newTags);
+
+            // Find the full path and move it there.
+            // Frustratingly, FileInfo and DirectoryInfo both have
+            // different names for the "parent" object, hence the
+            // repetition.
+            if (file is FileInfo)
+            {
+                FileInfo f = (FileInfo)file;
+
+                string parentPath = f.Directory.FullName;
+                string newPath = System.IO.Path.Combine(parentPath, newName);
+
+                f.MoveTo(newPath);
+            }
+            else
+            {
+                DirectoryInfo f = (DirectoryInfo)file;
+
+                string parentPath = f.Parent.FullName;
+                string newPath = System.IO.Path.Combine(parentPath, newName);
+
+                f.MoveTo(newPath);
+            }
+
+        }
+
+        /// <summary>
+        /// Changes the given file name so it has the given tags
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="newTags"></param>
+        private static string ChangeTagsInFileName(string fileName, string[] newTags)
+        {
+            // Get the stuff before and after the existing tags, if there are any
             string beforeTags = fileName.Split('[', '.')[0];
             string extension = System.IO.Path.GetExtension(fileName);
 
