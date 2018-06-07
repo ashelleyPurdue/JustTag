@@ -256,5 +256,15 @@ namespace JustTag
             UpdateControls();
             currentWindow.Visibility = Visibility.Visible;
         }
+
+        private async void videoPlayer_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            // If it's a video, loop it.
+            if (IsVideo)
+            {
+                await videoPlayer.Stop();
+                await PlayOrPause(true);
+            }
+        }
     }
 }
