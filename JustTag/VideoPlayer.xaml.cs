@@ -25,6 +25,8 @@ namespace JustTag
             }
         }
 
+        private FileInfo currentFile;
+
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
                                                     // to calculate it ourselves when we load it.
 
@@ -48,6 +50,8 @@ namespace JustTag
         /// <param name="selectedFile"></param>
         public async Task Open(FileInfo selectedFile)
         {
+            currentFile = selectedFile;
+
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
@@ -247,7 +251,6 @@ namespace JustTag
             isFullscreen = true;
             UpdateControls();
 
-            FileInfo currentFile = new FileInfo(videoPlayer.Source.AbsolutePath);
             Fullscreen fullscreen = new Fullscreen(this, currentFile);
             fullscreen.ShowDialog();
 
