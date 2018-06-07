@@ -81,9 +81,6 @@ namespace JustTag
             {
                 TaggedFileName fname = new TaggedFileName(file.Name);
 
-                if (fname.tags == null)
-                    continue;
-
                 foreach (string tag in fname.tags)
                     allKnownTags.Add(tag);
             }
@@ -194,8 +191,9 @@ namespace JustTag
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
-            string name = selectedItem.Name;
-            string[] tags = Utils.GetFileTags(name);
+            string[] tags = Utils.GetFileTags(selectedItem.Name);
+            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
+
 
             StringBuilder builder = new StringBuilder();
             foreach (string t in tags)

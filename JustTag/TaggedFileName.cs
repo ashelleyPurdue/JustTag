@@ -11,7 +11,7 @@ namespace JustTag
     {
         public string beforeTags;   // The part of the filename before the tags
         public string afterTags;    // The part of the filename after the tags
-        public List<string> tags;   // The tags.  Will be null if no tag area is found
+        public readonly List<string> tags;
 
         /// <summary>
         /// Parses the given file name(NOT the full path, just the name!)
@@ -27,7 +27,7 @@ namespace JustTag
             {
                 beforeTags = fileName;
                 afterTags = "";
-                tags = null;
+                tags = new List<string>();
 
                 return;
             }
@@ -49,8 +49,8 @@ namespace JustTag
         /// <returns></returns>
         public override string ToString()
         {
-            // If there is no tag area, then just return beforeTags
-            if (tags == null)
+            // If there are no tags, then just return the normal name
+            if (tags.Count == 0)
                 return beforeTags;
 
             StringBuilder builder = new StringBuilder();
