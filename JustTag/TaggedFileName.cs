@@ -9,9 +9,23 @@ namespace JustTag
 {
     public class TaggedFileName
     {
+        private static Regex tagAreaRegex;
+
         public string beforeTags;   // The part of the filename before the tags
         public string afterTags;    // The part of the filename after the tags
         public readonly List<string> tags;
+
+        static TaggedFileName()
+        {
+            // Build the tag area regex
+            string openBracket = @"\[";
+            string closeBracket = @"\]";
+            string validTagChar = @"[^\]]";
+
+            string pattern = openBracket + validTagChar + "*" + closeBracket;
+
+            tagAreaRegex = new Regex(pattern, RegexOptions.Compiled);
+        }
 
         /// <summary>
         /// Parses the given file name(NOT the full path, just the name!)
@@ -19,15 +33,8 @@ namespace JustTag
         /// <param name="fileName"></param>
         public TaggedFileName(string fileName)
         {
-            // Construct the regex
-            const string OPEN_BRACKET = @"\[";
-            const string CLOSE_BRACKET = @"\]";
-            const string VALID_TAG_CHAR = @"[^\]]";
-
-            const string TAG_AREA_REGEX = OPEN_BRACKET + VALID_TAG_CHAR + "*" + CLOSE_BRACKET;
-
             // Search for the tag area.
-            Match tagArea = Regex.Match(fileName, TAG_AREA_REGEX);
+            Match tagArea = tagAreaRegex.Match(fileName);
 
             // If no tag area was found, use default values
             if (!tagArea.Success)
