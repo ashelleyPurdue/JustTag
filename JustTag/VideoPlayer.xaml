@@ -31,7 +31,7 @@
                 LoadedBehavior="Manual"
                 ScrubbingEnabled="True"
                 MediaFailed="videoPlayer_MediaFailed"
-                PositionChanged="videoPlayer_PositionChanged"
+                PositionChanged="videoPlayer_PositionChanged" MediaEnded="videoPlayer_MediaEnded"
              />
         </paz:ZoomBorder>
 

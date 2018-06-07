@@ -79,9 +79,9 @@ namespace JustTag
             // Record all encountered tags in the "all known tags" list.
             foreach (FileSystemInfo file in files)
             {
-                string[] tags = Utils.GetFileTags(file.Name);
+                TaggedFileName fname = new TaggedFileName(file.Name);
 
-                foreach (string tag in tags)
+                foreach (string tag in fname.tags)
                     allKnownTags.Add(tag);
             }
 
@@ -187,11 +187,10 @@ namespace JustTag
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
-            string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
-            string[] tags = Utils.GetFileTags(name);
+            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
 
             StringBuilder builder = new StringBuilder();
-            foreach (string t in tags)
+            foreach (string t in fname.tags)
                 builder.AppendLine(t);
 
             tagsBox.IsEnabled = true;
@@ -229,9 +228,14 @@ namespace JustTag
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
             FileSystemInfo selectedItem = folderContentsBox.SelectedItem;
+            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Change the tags
+            fname.tags.Clear();
+            fname.tags.AddRange(tags);
 
             // Remember the selected index so we can scroll back to it
             // after saving
@@ -240,8 +244,8 @@ namespace JustTag
             // Rename the file
             try
             {
+                Utils.ChangeFileTags(selectedItem, fname);
                 await filePreviewer.ClosePreview();
-                Utils.ChangeFileTags(selectedItem, tags);
             }
             catch (IOException err)
             {
