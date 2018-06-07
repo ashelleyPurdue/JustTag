@@ -42,20 +42,20 @@ namespace JustTag
             foreach (FileSystemInfo f in files)
             {
                 // Get the tags
-                HashSet<string> tags = new HashSet<string>(Utils.GetFileTags(f.Name));
+                TaggedFileName fname = new TaggedFileName(f.Name);
 
                 // Skip this file if it doesn't have the find tag
-                if (!tags.Contains(findTag))
+                if (!fname.tags.Contains(findTag))
                     continue;
 
                 // Replace the tag
-                tags.Remove(findTag);
-                tags.Add(replaceTag);
+                fname.tags.Remove(findTag);
+                fname.tags.Add(replaceTag);
 
                 // Save the changes to the file system.
                 try
                 {
-                    Utils.ChangeFileTags(f, tags.ToArray());
+                    Utils.ChangeFileTags(f, fname);
                 }
                 catch (IOException e)
                 {

@@ -47,21 +47,21 @@ namespace JustTag
         public bool Matches(string fileName)
         {
             // Get all the tags from the filename
-            string[] tags = Utils.GetFileTags(fileName);
+            TaggedFileName fname = new TaggedFileName(fileName);
 
             // HACK: If we're searching for untagged files, then
             // return true if there are no tags
             if (untagged)
-                return tags.Length == 0;
+                return fname.tags.Count == 0;
 
             // Return false if any of the required tags are missing
             foreach (string t in requiredTags)
-                if (!tags.Contains(t))
+                if (!fname.tags.Contains(t))
                     return false;
 
             // Return false if any of the forbidden tags are present
             foreach (string t in forbiddenTags)
-                if (tags.Contains(t))
+                if (fname.tags.Contains(t))
                     return false;
 
             // It passed the filter

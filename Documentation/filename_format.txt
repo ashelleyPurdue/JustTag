@@ -1,0 +1,27 @@
+The general format is this: "FileName [tag1 tag2 tag3].extension"
+
+The area between '[' and ']' is called the tag area.  The rest of the filename
+is called the name.
+
+The tag area can appear anywhere in the filename, even in the middle!  For example:
+
+    hello[foo bar]world.txt
+
+This is a valid place for the tag area.  The tags are "foo" and "bar", and the
+name is "helloworld.txt"
+
+There can only be one tag area in any filename.  If there appears to be more
+than one, only the first will be looked at.  For example:
+
+    [foo]multiple_tag_areas[bar].txt
+
+In this example, "foo" is the only tag, and the rest of the name is
+"multiple_tag_areas[bar].txt".
+
+If multiple opening brackets occur before a closing bracket, only the first
+opening bracket is considered.  For example:
+
+    double_brackets[[what now].txt
+
+In this example, the tags are "[what" and "now".  Yes, the second bracket becomes
+part of the tag.
