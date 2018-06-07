@@ -19,8 +19,15 @@ namespace JustTag
         /// <param name="fileName"></param>
         public TaggedFileName(string fileName)
         {
+            // Construct the regex
+            const string OPEN_BRACKET = @"\[";
+            const string CLOSE_BRACKET = @"\]";
+            const string VALID_TAG_CHAR = @"[^\]]";
+
+            const string TAG_AREA_REGEX = OPEN_BRACKET + VALID_TAG_CHAR + "*" + CLOSE_BRACKET;
+
             // Search for the tag area.
-            Match tagArea = Regex.Match(fileName, @"\[.*\]");
+            Match tagArea = Regex.Match(fileName, TAG_AREA_REGEX);
 
             // If no tag area was found, use default values
             if (!tagArea.Success)
