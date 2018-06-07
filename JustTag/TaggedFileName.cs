@@ -47,7 +47,7 @@ namespace JustTag
         /// Returns the final filename, with the tags included.
         /// </summary>
         /// <returns></returns>
-        public string ToString()
+        public override string ToString()
         {
             // If there is no tag area, then just return beforeTags
             if (tags == null)
