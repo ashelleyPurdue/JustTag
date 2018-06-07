@@ -170,7 +170,7 @@ namespace JustTag
         private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Don't do anything if the last preview hasn't loaded yet
-            if (videoPlayer.videoPlayer.IsOpening)
+            if (filePreviewer.IsOpening)
                 return;
 
             // Don't do anything if selection is null
@@ -185,9 +185,9 @@ namespace JustTag
             // Show the file preview
             // If it's a directory instead of a file, it'll just show up as blank
             if (selectedItem is FileInfo)
-                videoPlayer.Open(selectedItem as FileInfo);
+                filePreviewer.OpenPreview(selectedItem as FileInfo);
             else
-                videoPlayer.UnloadVideo();
+                filePreviewer.ClosePreview();
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
@@ -248,8 +248,8 @@ namespace JustTag
             // Rename the file
             try
             {
-                await videoPlayer.UnloadVideo();
                 Utils.ChangeFileTags(selectedItem, fname);
+                await filePreviewer.ClosePreview();
             }
             catch (IOException err)
             {
@@ -291,7 +291,7 @@ namespace JustTag
         private async void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
         {
             // Close the currently open file in case it needs to be renamed
-            await videoPlayer.UnloadVideo();
+            await filePreviewer.ClosePreview();
 
             // Show a window for finding/replacing
             var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
