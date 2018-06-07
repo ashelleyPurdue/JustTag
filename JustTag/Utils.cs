@@ -219,7 +219,7 @@ namespace JustTag
         {
             // Get the stuff before and after the existing tags, if there are any
             string beforeTags = fileName.Split('[', '.')[0];
-            string extension = System.IO.Path.GetExtension(fileName);
+            string extension = Path.GetExtension(fileName);
 
             // If the new tags list is empty, don't even bother
             // with the brackets.
@@ -233,7 +233,7 @@ namespace JustTag
             for (int i = 0; i < newTags.Length; i++)
             {
                 // Add a space if this isn't the first
-                if (i != 0)
+                if (i != 0 && newTags[i] != "")
                     builder.Append(" ");
 
                 // Add the tag
