@@ -162,22 +162,6 @@ namespace JustTag
         }
 
         /// <summary>
-        /// Extracts all the tags from the given file name
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        [Obsolete("Use TaggedFileName class instead.")]
-        public static string[] GetFileTags(string fileName)
-        {
-            // TODO: Replace this method with the use of the class
-            var tags = new TaggedFileName(fileName).tags;
-            if (tags == null)
-                return new string[] { };
-
-            return tags.ToArray();
-        }
-
-        /// <summary>
         /// Renames the given file so it has the given tags
         /// </summary>
         /// <param name="fileName"></param>

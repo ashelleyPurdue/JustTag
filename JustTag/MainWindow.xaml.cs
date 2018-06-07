@@ -191,12 +191,10 @@ namespace JustTag
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
-            string[] tags = Utils.GetFileTags(selectedItem.Name);
             TaggedFileName fname = new TaggedFileName(selectedItem.Name);
 
-
             StringBuilder builder = new StringBuilder();
-            foreach (string t in tags)
+            foreach (string t in fname.tags)
                 builder.AppendLine(t);
 
             tagsBox.IsEnabled = true;
