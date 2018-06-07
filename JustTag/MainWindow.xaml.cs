@@ -79,9 +79,12 @@ namespace JustTag
             // Record all encountered tags in the "all known tags" list.
             foreach (FileSystemInfo file in files)
             {
-                string[] tags = Utils.GetFileTags(file.Name);
+                TaggedFileName fname = new TaggedFileName(file.Name);
 
-                foreach (string tag in tags)
+                if (fname.tags == null)
+                    continue;
+
+                foreach (string tag in fname.tags)
                     allKnownTags.Add(tag);
             }
 
@@ -191,7 +194,7 @@ namespace JustTag
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
-            string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
+            string name = selectedItem.Name;
             string[] tags = Utils.GetFileTags(name);
 
             StringBuilder builder = new StringBuilder();
@@ -233,9 +236,14 @@ namespace JustTag
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
             FileSystemInfo selectedItem = folderContentsBox.SelectedItem;
+            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Change the tags
+            fname.tags.Clear();
+            fname.tags.AddRange(tags);
 
             // Remember the selected index so we can scroll back to it
             // after saving
@@ -245,7 +253,7 @@ namespace JustTag
             try
             {
                 await videoPlayer.UnloadVideo();
-                Utils.ChangeFileTags(selectedItem, tags);
+                Utils.ChangeFileTags(selectedItem, fname);
             }
             catch (IOException err)
             {

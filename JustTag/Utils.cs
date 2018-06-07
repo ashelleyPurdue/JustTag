@@ -166,6 +166,7 @@ namespace JustTag
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
+        [Obsolete("Use TaggedFileName class instead.")]
         public static string[] GetFileTags(string fileName)
         {
             // TODO: Replace this method with the use of the class
@@ -181,14 +182,10 @@ namespace JustTag
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="newTags"></param>
-        public static void ChangeFileTags(FileSystemInfo file, string[] newTags)
+        public static void ChangeFileTags(FileSystemInfo file, TaggedFileName fname)
         {
-            // TODO: Replace this method with the use of TaggedFileName
-
             // Find the new name
-            TaggedFileName taggedFileName = new TaggedFileName(file.Name);
-            taggedFileName.tags = new List<string>(newTags);
-            string newName = taggedFileName.ToString();
+            string newName = fname.ToString();
 
             // Find the full path and move it there.
             // Frustratingly, FileInfo and DirectoryInfo both have
