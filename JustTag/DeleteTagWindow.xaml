@@ -34,6 +34,7 @@
         </Grid>
         <Button x:Name="goButton"
                     Content="Go"
+                    IsEnabled="False"
                     IsDefault="True"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
