@@ -20,6 +20,7 @@ namespace JustTag
     /// </summary>
     public partial class DeleteTagWindow : Window
     {
+        // TODO: Refactor this copy/pasted code
         private string directory;
 
         public DeleteTagWindow(string directory, IEnumerable<string> autoCompleteTags)
@@ -78,6 +79,7 @@ namespace JustTag
 
         private void deleteTextbox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // TODO: Refactor this copy/pasted code
             bool valid = Utils.IsTagValid(deleteTextbox.Text);
 
             // Turn this box red if it's invalid

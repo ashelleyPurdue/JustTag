@@ -207,7 +207,7 @@ namespace JustTag
         private void tagsBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Make the background red and disable the save button if any of the tags are invalid
-            string[] tags = tagsBox.Text.Split(' ', '\r', '\n');
+            string[] tags = tagsBox.Text.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tag in tags)
             {
                 if (!Utils.IsTagValid(tag))

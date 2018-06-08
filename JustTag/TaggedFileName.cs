@@ -54,7 +54,7 @@ namespace JustTag
             string withBrackets = tagArea.Value;
             string withoutBrackets = withBrackets.Substring(1, withBrackets.Length - 2);
 
-            tags = new List<string>(withoutBrackets.Split(' '));
+            tags = new List<string>(withoutBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
         /// <summary>
