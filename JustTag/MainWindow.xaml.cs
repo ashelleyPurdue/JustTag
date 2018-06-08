@@ -248,8 +248,8 @@ namespace JustTag
             // Rename the file
             try
             {
-                Utils.ChangeFileTags(selectedItem, fname);
                 await filePreviewer.ClosePreview();
+                Utils.ChangeFileTags(selectedItem, fname);
             }
             catch (IOException err)
             {
