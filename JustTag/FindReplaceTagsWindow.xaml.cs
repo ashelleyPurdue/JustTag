@@ -83,5 +83,23 @@ namespace JustTag
             // Close this window
             Close();
         }
+
+        private void textbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            replaceButton.IsEnabled = true;
+
+            AutoCompleteTextbox[] boxes = { findTextbox, replaceTextbox };
+            foreach (AutoCompleteTextbox tb in boxes)
+            {
+                bool valid = Utils.IsTagValid(tb.Text);
+
+                // Turn this box red if it's invalid
+                tb.Background = valid ? Brushes.White : Brushes.Red;
+
+                // Disable the button if it's invalid
+                if (!valid)
+                    replaceButton.IsEnabled = false;
+            }
+        }
     }
 }

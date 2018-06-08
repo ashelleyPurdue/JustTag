@@ -29,6 +29,7 @@
             <local:AutoCompleteTextbox x:Name="findTextbox"
                                        Grid.Column="1"
                                        Grid.Row="0"
+                                       TextChanged="textbox_TextChanged"
             />
 
             <Label Content="Replace"
@@ -38,6 +39,7 @@
             <local:AutoCompleteTextbox x:Name="replaceTextbox"
                                        Grid.Column="1"
                                        Grid.Row="2"
+                                       TextChanged="textbox_TextChanged"
             />
         </Grid>
         <Button x:Name="replaceButton"
