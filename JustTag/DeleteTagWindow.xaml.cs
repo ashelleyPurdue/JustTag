@@ -27,6 +27,7 @@ namespace JustTag
         {
             InitializeComponent();
             this.directory = directory;
+            deleteTextbox.autoCompletionSource = autoCompleteTags;
         }
 
         // Misc methods
@@ -63,6 +64,8 @@ namespace JustTag
         // Events
         private async void goButton_Click(object sender, RoutedEventArgs e)
         {
+            string tag = deleteTextbox.Text;
+
             // Disable the controls while we wait
             IsEnabled = false;
             progressBar.Visibility = Visibility.Visible;
@@ -70,7 +73,7 @@ namespace JustTag
             // Replace the tags asynchronously
             await Task.Run(() =>
             {
-                DeleteTag(deleteTextbox.Text);
+                DeleteTag(tag);
             });
 
             // Close this window
