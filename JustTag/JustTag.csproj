@@ -76,6 +76,9 @@
     <Compile Include="AutoCompleteTextbox.xaml.cs">
       <DependentUpon>AutoCompleteTextbox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DeleteTagWindow.xaml.cs">
+      <DependentUpon>DeleteTagWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileList.xaml.cs">
       <DependentUpon>FileList.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,10 @@
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
     <Page Include="AutoCompleteTextbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeleteTagWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

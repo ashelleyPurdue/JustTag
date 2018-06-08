@@ -54,7 +54,7 @@ namespace JustTag
             string withBrackets = tagArea.Value;
             string withoutBrackets = withBrackets.Substring(1, withBrackets.Length - 2);
 
-            tags = new List<string>(withoutBrackets.Split(' '));
+            tags = new List<string>(withoutBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace JustTag
 
             for (int i = 0; i < tags.Count; i++)
             {
-                // Append the tag
+                // Append the tag fi it's not blank
                 builder.Append(tags[i]);
 
                 // If this isn't the last tag, append space

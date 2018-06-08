@@ -28,6 +28,10 @@
                           Header="Find and replace tags"
                           Click="findReplaceTagsButton_Click"
                 />
+                <MenuItem x:Name="deleteTagButton"
+                          Header="Delete all occurences of a tag"
+                          Click="deleteTagButton_Click"
+                />
             </MenuItem>
         </Menu>
 
