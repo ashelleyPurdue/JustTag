@@ -301,6 +301,19 @@ namespace JustTag
             UpdateCurrentDirectory();
         }
 
+        private async void deleteTagButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Close the currently open file in case it needs to be renamed
+            await filePreviewer.ClosePreview();
+
+            // Show the window
+            var toolWindow = new DeleteTagWindow(Directory.GetCurrentDirectory(), allKnownTags);
+            toolWindow.ShowDialog();
+
+            // Refresh the UI
+            UpdateCurrentDirectory();
+        }
+
         private void allTagsListbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Add the selected tag to the filter, if it isn't there already
