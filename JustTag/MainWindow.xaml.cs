@@ -207,7 +207,7 @@ namespace JustTag
         private void tagsBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Make the background red and disable the save button if any of the tags are invalid
-            string[] tags = tagsBox.Text.Split(' ', '\r', '\n');
+            string[] tags = tagsBox.Text.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tag in tags)
             {
                 if (!Utils.IsTagValid(tag))
@@ -296,6 +296,19 @@ namespace JustTag
             // Show a window for finding/replacing
             var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
             findReplaceWindow.ShowDialog();
+
+            // Refresh the UI
+            UpdateCurrentDirectory();
+        }
+
+        private async void deleteTagButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Close the currently open file in case it needs to be renamed
+            await filePreviewer.ClosePreview();
+
+            // Show the window
+            var toolWindow = new DeleteTagWindow(Directory.GetCurrentDirectory(), allKnownTags);
+            toolWindow.ShowDialog();
 
             // Refresh the UI
             UpdateCurrentDirectory();

@@ -96,6 +96,10 @@ namespace JustTag
                 ' ',    // Used to separate tags
             };
 
+            // The empty string is not a valid tag.
+            if (tag == "")
+                return false;
+
             foreach (char c in tag)
             {
                 if (forbiddenChars.Contains(c))

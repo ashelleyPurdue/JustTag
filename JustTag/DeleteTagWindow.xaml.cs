@@ -16,24 +16,22 @@ using System.IO;
 namespace JustTag
 {
     /// <summary>
-    /// Interaction logic for FindReplaceTagsWindow.xaml
+    /// Interaction logic for DeleteTagWindow.xaml
     /// </summary>
-    public partial class FindReplaceTagsWindow : Window
+    public partial class DeleteTagWindow : Window
     {
+        // TODO: Refactor this copy/pasted code
         private string directory;
 
-        public FindReplaceTagsWindow(string directory, IEnumerable<string> autoCompleteTags)
+        public DeleteTagWindow(string directory, IEnumerable<string> autoCompleteTags)
         {
             InitializeComponent();
-
             this.directory = directory;
-
-            // Set the autocomplete sources
-            findTextbox.autoCompletionSource = autoCompleteTags;
-            replaceTextbox.autoCompletionSource = autoCompleteTags;
+            deleteTextbox.autoCompletionSource = autoCompleteTags;
         }
 
-        private void ReplaceTags(string findTag, string replaceTag)
+        // Misc methods
+        private void DeleteTag(string tag)
         {
             // Loop over all files in the directory
             DirectoryInfo dir = new DirectoryInfo(directory);
@@ -45,12 +43,11 @@ namespace JustTag
                 TaggedFileName fname = new TaggedFileName(f.Name);
 
                 // Skip this file if it doesn't have the find tag
-                if (!fname.tags.Contains(findTag))
+                if (!fname.tags.Contains(tag))
                     continue;
 
-                // Replace the tag
-                fname.tags.Remove(findTag);
-                fname.tags.Add(replaceTag);
+                // Remove the tag
+                fname.tags.Remove(tag);
 
                 // Save the changes to the file system.
                 try
@@ -64,10 +61,10 @@ namespace JustTag
             }
         }
 
-        private async void replaceButton_Click(object sender, RoutedEventArgs e)
+        // Events
+        private async void goButton_Click(object sender, RoutedEventArgs e)
         {
-            string findTag = findTextbox.Text;
-            string replaceTag = replaceTextbox.Text;
+            string tag = deleteTextbox.Text;
 
             // Disable the controls while we wait
             IsEnabled = false;
@@ -76,29 +73,24 @@ namespace JustTag
             // Replace the tags asynchronously
             await Task.Run(() =>
             {
-                ReplaceTags(findTag, replaceTag);
+                DeleteTag(tag);
             });
 
             // Close this window
             Close();
         }
 
-        private void textbox_TextChanged(object sender, TextChangedEventArgs e)
+        private void deleteTextbox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            replaceButton.IsEnabled = true;
+            // TODO: Refactor this copy/pasted code
+            bool valid = Utils.IsTagValid(deleteTextbox.Text);
 
-            AutoCompleteTextbox[] boxes = { findTextbox, replaceTextbox };
-            foreach (AutoCompleteTextbox tb in boxes)
-            {
-                bool valid = Utils.IsTagValid(tb.Text);
+            // Turn this box red if it's invalid
+            deleteTextbox.Background = valid ? Brushes.White : Brushes.Red;
 
-                // Turn this box red if it's invalid
-                tb.Background = valid ? Brushes.White : Brushes.Red;
-
-                // Disable the button if it's invalid
-                if (!valid)
-                    replaceButton.IsEnabled = false;
-            }
+            // Disable the button if it's invalid
+            if (!valid)
+                goButton.IsEnabled = false;
         }
     }
 }
