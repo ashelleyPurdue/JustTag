@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:JustTag"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel x:Name="stackPanel">
-    </StackPanel>
+    <StackPanel x:Name="stackPanel"
+                VerticalAlignment="Center"
+                LayoutUpdated="stackPanel_LayoutUpdated"
+    />
+
 </UserControl>

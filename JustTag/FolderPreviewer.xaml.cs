@@ -70,5 +70,22 @@ namespace JustTag
             for (int i = 0; i < selectedIcons.Length; i++)
                 previewIcons[i].Source = selectedIcons[i];
         }
+
+        private void stackPanel_LayoutUpdated(object sender, EventArgs e)
+        {
+            // Update all the icons' heights and positions
+            double iconHeight = ActualHeight * 0.5;
+            double offset = -iconHeight * SEPARATION_PERCENTAGE;
+
+            previewIcons[0].Height = iconHeight;
+            previewIcons[0].Margin = new Thickness(0);
+
+            for (int i = 1; i < MAX_ICONS; i++)
+            {
+                previewIcons[i].Height = iconHeight;
+                previewIcons[i].Margin = new Thickness(0, offset, 0, 0);
+            }
+
+        }
     }
 }
