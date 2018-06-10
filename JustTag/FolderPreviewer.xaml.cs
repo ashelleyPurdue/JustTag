@@ -31,22 +31,13 @@ namespace JustTag
         {
             InitializeComponent();
 
-            // Create the first icon
-            CreateIcon(0);
-
-            // Create the rest of the icons
-            for (int i = 1; i < MAX_ICONS; i++)
-                CreateIcon(-previewIcons[i - 1].Height * SEPARATION_PERCENTAGE);
-        }
-
-        private void CreateIcon(double offset)
-        {
-            Image image = new Image();
-            image.Margin = new Thickness(0, offset, 0, 0);
-            image.Height = IMAGE_HEIGHT;
-
-            previewIcons.Add(image);
-            stackPanel.Children.Add(image);
+            // Create the icons
+            for (int i = 0; i < MAX_ICONS; i++)
+            {
+                Image image = new Image();
+                previewIcons.Add(image);
+                stackPanel.Children.Add(image);
+            }
         }
 
         public async Task Open(DirectoryInfo dir)
