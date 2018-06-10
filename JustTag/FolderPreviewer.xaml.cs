@@ -40,7 +40,7 @@ namespace JustTag
             }
         }
 
-        public async Task Open(DirectoryInfo dir)
+        public void Open(DirectoryInfo dir)
         {
             // Clear all existing icons
             foreach (Image image in previewIcons)
@@ -48,18 +48,30 @@ namespace JustTag
 
             // Get the icons of the first few files
             ImageSource[] selectedIcons = null;
-            await Task.Run(() =>
-            {
-                var allIcons = from FileSystemInfo file in dir.EnumerateFileSystemInfos()
-                               where file is FileInfo
-                               orderby file.Name
-                               select Utils.GetFileIcon(file);
 
-                selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
-            });
+            var allIcons = from FileSystemInfo file in dir.EnumerateFileSystemInfos()
+                            where file is FileInfo
+                            orderby file.Name
+                            select GetThumbnail(file);
+
+            selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
 
             for (int i = 0; i < selectedIcons.Length; i++)
                 previewIcons[i].Source = selectedIcons[i];
+        }
+
+        private ImageSource GetThumbnail(FileSystemInfo file)
+        {
+            // TODO: If it's a directory, return a picture of a folder
+            if (file is DirectoryInfo)
+                return null;
+
+            // If the file is an image, then it serves as its own thumbnail
+            if (Utils.IsImageFile(file))
+                return new BitmapImage(new Uri(file.FullName));
+
+            // Fall back to the file's icon
+            return Utils.GetFileIcon(file);
         }
 
         private void stackPanel_LayoutUpdated(object sender, EventArgs e)

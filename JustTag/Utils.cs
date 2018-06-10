@@ -110,6 +110,33 @@ namespace JustTag
         }
 
         /// <summary>
+        /// Returns if the given file is an image
+        /// Just does a naive check of the file extention :(
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static bool IsImageFile(FileSystemInfo file)
+        {
+            if (!(file is FileInfo))
+                return false;
+
+            // Is this all of them?  I have this tingling
+            // feeling I'm missing one.
+            string[] formats = new string[]
+            {
+                ".jpg",
+                ".jpeg",
+                ".bmp",
+                ".png",
+                ".tiff",
+                ".gif"
+            };
+
+            string ex = file.Extension.ToLower();
+            return formats.Contains(ex);
+        }
+
+        /// <summary>
         /// Returns an ImageSource with the given file's icon
         /// </summary>
         /// <param name="file"></param>

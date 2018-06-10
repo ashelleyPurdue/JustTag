@@ -49,7 +49,7 @@ namespace JustTag
 
                 activePreviewControl = folderPreviewer;
                 activePreviewControl.Visibility = Visibility.Visible;
-                await folderPreviewer.Open(dir);
+                folderPreviewer.Open(dir);
 
                 IsOpening = false;
                 return;
