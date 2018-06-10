@@ -36,25 +36,30 @@ namespace JustTag
                 Image image = new Image();
 
                 previewIcons.Add(image);
-                image.Margin = new Thickness(0, -IMAGE_HEIGHT * SEPARATION_PERCENTAGE, 0, 0);
+                image.Margin = new Thickness(0, 0, 0, 0);
                 image.Height = IMAGE_HEIGHT;
 
                 stackPanel.Children.Add(image);
             }
         }
 
-        public void Open(DirectoryInfo dir)
+        public async Task Open(DirectoryInfo dir)
         {
             // Clear all existing icons
             foreach (Image image in previewIcons)
                 image.Source = null;
 
-            // Replace the icons with those from the directory
-            var allIcons =  from FileSystemInfo file in dir.EnumerateFileSystemInfos()
-                            orderby file.Name
-                            select Utils.GetFileIcon(file);
+            // Get the icons of the first few files
+            ImageSource[] selectedIcons = null;
+            await Task.Run(() =>
+            {
+                var allIcons = from FileSystemInfo file in dir.EnumerateFileSystemInfos()
+                               where file is FileInfo
+                               orderby file.Name
+                               select Utils.GetFileIcon(file);
 
-            ImageSource[] selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
+                selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
+            });
 
             for (int i = 0; i < selectedIcons.Length; i++)
                 previewIcons[i].Source = selectedIcons[i];
