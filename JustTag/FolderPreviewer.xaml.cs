@@ -35,6 +35,8 @@ namespace JustTag
             for (int i = 0; i < MAX_ICONS; i++)
             {
                 Image image = new Image();
+                image.Stretch = Stretch.Fill;
+
                 previewIcons.Add(image);
                 stackPanel.Children.Add(image);
             }
@@ -81,11 +83,13 @@ namespace JustTag
             double offset = -iconHeight * SEPARATION_PERCENTAGE;
 
             previewIcons[0].Height = iconHeight;
+            previewIcons[0].Width = iconHeight;
             previewIcons[0].Margin = new Thickness(0);
 
             for (int i = 1; i < MAX_ICONS; i++)
             {
                 previewIcons[i].Height = iconHeight;
+                previewIcons[i].Width = iconHeight;
                 previewIcons[i].Margin = new Thickness(0, offset, 0, 0);
             }
 
