@@ -183,11 +183,7 @@ namespace JustTag
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // Show the file preview
-            // If it's a directory instead of a file, it'll just show up as blank
-            if (selectedItem is FileInfo)
-                filePreviewer.OpenPreview(selectedItem as FileInfo);
-            else
-                filePreviewer.ClosePreview();
+            filePreviewer.OpenPreview(selectedItem);
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
