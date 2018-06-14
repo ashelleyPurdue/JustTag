@@ -52,6 +52,9 @@ namespace JustTag
         {
             currentFile = selectedFile;
 
+            // Reset the panning and zooming
+            zoomBorder.Reset();
+
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
