@@ -42,20 +42,20 @@ namespace JustTag
             foreach (FileSystemInfo f in files)
             {
                 // Get the tags
-                HashSet<string> tags = new HashSet<string>(Utils.GetFileTags(f.Name));
+                TaggedFileName fname = new TaggedFileName(f.Name);
 
                 // Skip this file if it doesn't have the find tag
-                if (!tags.Contains(findTag))
+                if (!fname.tags.Contains(findTag))
                     continue;
 
                 // Replace the tag
-                tags.Remove(findTag);
-                tags.Add(replaceTag);
+                fname.tags.Remove(findTag);
+                fname.tags.Add(replaceTag);
 
                 // Save the changes to the file system.
                 try
                 {
-                    Utils.ChangeFileTags(f, tags.ToArray());
+                    Utils.ChangeFileTags(f, fname);
                 }
                 catch (IOException e)
                 {
@@ -66,7 +66,6 @@ namespace JustTag
 
         private async void replaceButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Error checking on the input
             string findTag = findTextbox.Text;
             string replaceTag = replaceTextbox.Text;
 
@@ -82,6 +81,24 @@ namespace JustTag
 
             // Close this window
             Close();
+        }
+
+        private void textbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            replaceButton.IsEnabled = true;
+
+            AutoCompleteTextbox[] boxes = { findTextbox, replaceTextbox };
+            foreach (AutoCompleteTextbox tb in boxes)
+            {
+                bool valid = Utils.IsTagValid(tb.Text);
+
+                // Turn this box red if it's invalid
+                tb.Background = valid ? Brushes.White : Brushes.Red;
+
+                // Disable the button if it's invalid
+                if (!valid)
+                    replaceButton.IsEnabled = false;
+            }
         }
     }
 }

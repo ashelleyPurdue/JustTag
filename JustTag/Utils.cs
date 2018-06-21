@@ -96,6 +96,10 @@ namespace JustTag
                 ' ',    // Used to separate tags
             };
 
+            // The empty string is not a valid tag.
+            if (tag == "")
+                return false;
+
             foreach (char c in tag)
             {
                 if (forbiddenChars.Contains(c))
@@ -103,6 +107,33 @@ namespace JustTag
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Returns if the given file is an image
+        /// Just does a naive check of the file extention :(
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static bool IsImageFile(FileSystemInfo file)
+        {
+            if (!(file is FileInfo))
+                return false;
+
+            // Is this all of them?  I have this tingling
+            // feeling I'm missing one.
+            string[] formats = new string[]
+            {
+                ".jpg",
+                ".jpeg",
+                ".bmp",
+                ".png",
+                ".tiff",
+                ".gif"
+            };
+
+            string ex = file.Extension.ToLower();
+            return formats.Contains(ex);
         }
 
         /// <summary>
@@ -162,28 +193,14 @@ namespace JustTag
         }
 
         /// <summary>
-        /// Extracts all the tags from the given file name
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static string[] GetFileTags(string fileName)
-        {
-            // This horrible regex just extracts everything in between '[' and ']'.
-            string betweenBrackets = Regex.Match(fileName, @"\[([^)]*)\]").Groups[1].Value;
-
-            // Split them by space
-            return betweenBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        /// <summary>
         /// Renames the given file so it has the given tags
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="newTags"></param>
-        public static void ChangeFileTags(FileSystemInfo file, string[] newTags)
+        public static void ChangeFileTags(FileSystemInfo file, TaggedFileName fname)
         {
             // Find the new name
-            string newName = ChangeTagsInFileName(file.Name, newTags);
+            string newName = fname.ToString();
 
             // Find the full path and move it there.
             // Frustratingly, FileInfo and DirectoryInfo both have
@@ -209,42 +226,5 @@ namespace JustTag
             }
 
         }
-
-        /// <summary>
-        /// Changes the given file name so it has the given tags
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="newTags"></param>
-        private static string ChangeTagsInFileName(string fileName, string[] newTags)
-        {
-            // Get the stuff before and after the existing tags, if there are any
-            string beforeTags = fileName.Split('[', '.')[0];
-            string extension = System.IO.Path.GetExtension(fileName);
-
-            // If the new tags list is empty, don't even bother
-            // with the brackets.
-            if (newTags.Length == 0)
-                return beforeTags + extension;
-
-            // Make a new tag string from the array
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("[");
-            for (int i = 0; i < newTags.Length; i++)
-            {
-                // Add a space if this isn't the first
-                if (i != 0)
-                    builder.Append(" ");
-
-                // Add the tag
-                builder.Append(newTags[i]);
-            }
-            builder.Append("]");
-
-            // Jam them together to make the new filename
-            return beforeTags + builder.ToString() + extension;
-        }
-
-
     }
 }

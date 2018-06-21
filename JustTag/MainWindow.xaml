@@ -28,10 +28,14 @@
                           Header="Find and replace tags"
                           Click="findReplaceTagsButton_Click"
                 />
+                <MenuItem x:Name="deleteTagButton"
+                          Header="Delete all occurences of a tag"
+                          Click="deleteTagButton_Click"
+                />
             </MenuItem>
         </Menu>
 
-        <local:VideoPlayer x:Name="videoPlayer"
+        <local:FilePreviewer x:Name="filePreviewer"
             Grid.ColumnSpan="1"
             Grid.Column="2"
             Grid.Row="2"

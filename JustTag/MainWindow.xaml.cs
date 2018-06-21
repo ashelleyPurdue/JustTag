@@ -79,9 +79,9 @@ namespace JustTag
             // Record all encountered tags in the "all known tags" list.
             foreach (FileSystemInfo file in files)
             {
-                string[] tags = Utils.GetFileTags(file.Name);
+                TaggedFileName fname = new TaggedFileName(file.Name);
 
-                foreach (string tag in tags)
+                foreach (string tag in fname.tags)
                     allKnownTags.Add(tag);
             }
 
@@ -170,7 +170,7 @@ namespace JustTag
         private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Don't do anything if the last preview hasn't loaded yet
-            if (videoPlayer.videoPlayer.IsOpening)
+            if (filePreviewer.IsOpening)
                 return;
 
             // Don't do anything if selection is null
@@ -183,19 +183,14 @@ namespace JustTag
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // Show the file preview
-            // If it's a directory instead of a file, it'll just show up as blank
-            if (selectedItem is FileInfo)
-                videoPlayer.Open(selectedItem as FileInfo);
-            else
-                videoPlayer.UnloadVideo();
+            filePreviewer.OpenPreview(selectedItem);
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
-            string name = ((FileSystemInfo)folderContentsBox.SelectedItem).Name;
-            string[] tags = Utils.GetFileTags(name);
+            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
 
             StringBuilder builder = new StringBuilder();
-            foreach (string t in tags)
+            foreach (string t in fname.tags)
                 builder.AppendLine(t);
 
             tagsBox.IsEnabled = true;
@@ -208,7 +203,7 @@ namespace JustTag
         private void tagsBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Make the background red and disable the save button if any of the tags are invalid
-            string[] tags = tagsBox.Text.Split(' ', '\r', '\n');
+            string[] tags = tagsBox.Text.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tag in tags)
             {
                 if (!Utils.IsTagValid(tag))
@@ -233,9 +228,14 @@ namespace JustTag
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
             FileSystemInfo selectedItem = folderContentsBox.SelectedItem;
+            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Change the tags
+            fname.tags.Clear();
+            fname.tags.AddRange(tags);
 
             // Remember the selected index so we can scroll back to it
             // after saving
@@ -244,8 +244,8 @@ namespace JustTag
             // Rename the file
             try
             {
-                await videoPlayer.UnloadVideo();
-                Utils.ChangeFileTags(selectedItem, tags);
+                await filePreviewer.ClosePreview();
+                Utils.ChangeFileTags(selectedItem, fname);
             }
             catch (IOException err)
             {
@@ -287,11 +287,24 @@ namespace JustTag
         private async void findReplaceTagsButton_Click(object sender, RoutedEventArgs e)
         {
             // Close the currently open file in case it needs to be renamed
-            await videoPlayer.UnloadVideo();
+            await filePreviewer.ClosePreview();
 
             // Show a window for finding/replacing
             var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
             findReplaceWindow.ShowDialog();
+
+            // Refresh the UI
+            UpdateCurrentDirectory();
+        }
+
+        private async void deleteTagButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Close the currently open file in case it needs to be renamed
+            await filePreviewer.ClosePreview();
+
+            // Show the window
+            var toolWindow = new DeleteTagWindow(Directory.GetCurrentDirectory(), allKnownTags);
+            toolWindow.ShowDialog();
 
             // Refresh the UI
             UpdateCurrentDirectory();

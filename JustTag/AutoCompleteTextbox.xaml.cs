@@ -162,7 +162,7 @@ namespace JustTag
             }
 
             // Fill the suggestion box with the words that complete it
-            Regex wordRegex = new Regex("^" + currentWord + ".+");
+            Regex wordRegex = new Regex("^" + Regex.Escape(currentWord) + ".+");
 
             var matchingWords = from word in autoCompletionSource
                                 where wordRegex.IsMatch(word)

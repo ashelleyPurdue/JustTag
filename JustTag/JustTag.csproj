@@ -76,14 +76,23 @@
     <Compile Include="AutoCompleteTextbox.xaml.cs">
       <DependentUpon>AutoCompleteTextbox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DeleteTagWindow.xaml.cs">
+      <DependentUpon>DeleteTagWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileList.xaml.cs">
       <DependentUpon>FileList.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileListItem.xaml.cs">
       <DependentUpon>FileListItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FilePreviewer.xaml.cs">
+      <DependentUpon>FilePreviewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FindReplaceTagsWindow.xaml.cs">
       <DependentUpon>FindReplaceTagsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FolderPreviewer.xaml.cs">
+      <DependentUpon>FolderPreviewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Fullscreen.xaml.cs">
       <DependentUpon>Fullscreen.xaml</DependentUpon>
@@ -92,11 +101,16 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TagFilter.cs" />
+    <Compile Include="TaggedFileName.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
     <Page Include="AutoCompleteTextbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeleteTagWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,7 +122,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FilePreviewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FindReplaceTagsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FolderPreviewer.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Fullscreen.xaml">
