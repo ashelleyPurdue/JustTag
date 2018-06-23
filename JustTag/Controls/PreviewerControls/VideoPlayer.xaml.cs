@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
-namespace JustTag
+namespace JustTag.Controls.PreviewerControls
 {
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
