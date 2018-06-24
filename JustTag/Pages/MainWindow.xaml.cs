@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace JustTag
+namespace JustTag.Pages
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

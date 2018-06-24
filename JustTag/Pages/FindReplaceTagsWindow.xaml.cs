@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 
-namespace JustTag
+namespace JustTag.Pages
 {
     /// <summary>
     /// Interaction logic for FindReplaceTagsWindow.xaml

@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using System.IO;
 using JustTag.Controls.PreviewerControls;
 
-namespace JustTag
+namespace JustTag.Pages
 {
     /// <summary>
     /// Interaction logic for Fullscreen.xaml
