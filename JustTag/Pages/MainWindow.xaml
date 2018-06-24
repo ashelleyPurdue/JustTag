@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JustTag.Pages"
+        xmlns:controls="clr-namespace:JustTag.Controls"
         xmlns:previewControls="clr-namespace:JustTag.Controls.PreviewerControls"
         mc:Ignorable="d"
         Title="JustTag" Height="883" Width="1302.5" Background="#FFF0F0F0">
@@ -113,7 +114,7 @@
             Margin="10,5,10,10"
          >
             <Grid>
-                <local:AutoCompleteTextbox x:Name="tagsBox"
+                <controls:AutoCompleteTextbox x:Name="tagsBox"
                          TextChanged="tagsBox_TextChanged"
                          PreviewKeyDown="tagsBox_PreviewKeyDown"
                          AcceptsReturn="True"
@@ -140,7 +141,7 @@
          >
             <DockPanel DockPanel.Dock="Top">
                 <Label Content="Filter:"/>
-                <local:AutoCompleteTextbox x:Name="tagFilterTextbox"
+                <controls:AutoCompleteTextbox x:Name="tagFilterTextbox"
                          HorizontalAlignment="Stretch"
                          KeyUp="textbox_KeyUp"
                 />
@@ -158,7 +159,7 @@
                 />
             </Grid>
 
-            <local:FileList x:Name="folderContentsBox"
+            <controls:FileList x:Name="folderContentsBox"
                 Margin="5"
                 MouseDoubleClick="folderContentsBox_MouseDoubleClick"
                 SelectionChanged="folderContentsBox_SelectionChanged"

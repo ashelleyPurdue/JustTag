@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JustTag.Pages"
+        xmlns:controls="clr-namespace:JustTag.Controls"
         mc:Ignorable="d"
         SizeToContent="Height"
         Title="FindReplaceTagsWindow" Width="240.549">
@@ -26,7 +27,7 @@
                    Grid.Column="0"
                    Grid.Row="0"
             />
-            <local:AutoCompleteTextbox x:Name="findTextbox"
+            <controls:AutoCompleteTextbox x:Name="findTextbox"
                                        Grid.Column="1"
                                        Grid.Row="0"
                                        TextChanged="textbox_TextChanged"
@@ -36,7 +37,7 @@
                    Grid.Column="0"
                    Grid.Row="2"
             />
-            <local:AutoCompleteTextbox x:Name="replaceTextbox"
+            <controls:AutoCompleteTextbox x:Name="replaceTextbox"
                                        Grid.Column="1"
                                        Grid.Row="2"
                                        TextChanged="textbox_TextChanged"
