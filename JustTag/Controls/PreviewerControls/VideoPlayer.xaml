@@ -71,8 +71,8 @@
                         Click="muteButton_Click"
                 >
                     <Grid>
-                        <Image x:Name="volumeIcon" Source="Resources/volumeIcon.png"/>
-                        <Image x:Name="volumeMutedIcon" Source="Resources/volumeMutedIcon.png"
+                        <Image x:Name="volumeIcon" Source="../../Resources/volumeIcon.png"/>
+                        <Image x:Name="volumeMutedIcon" Source="../../Resources/volumeMutedIcon.png"
                                Visibility="Hidden"
                         />
                     </Grid>
