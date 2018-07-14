@@ -65,15 +65,24 @@ namespace JustTag.Pages
             SortFunction sortFunction = SortMethodExtensions.GetSortFunction((SortMethod)sortByBox.SelectedValue);
 
             // Get all files/folders that match the filter
-            var files = from FileInfo f in currentDir.EnumerateFiles()
-                        where filter.Matches(f.Name)
-                        orderby sortFunction(f)
-                        select f;
+            IEnumerable<FileInfo> files =
+                from FileInfo f in currentDir.EnumerateFiles()
+                where filter.Matches(f.Name)
+                orderby sortFunction(f) ascending
+                select f;
 
-            var folders = from DirectoryInfo d in currentDir.EnumerateDirectories()
-                          where filter.Matches(d.Name)
-                          orderby sortFunction(d)
-                          select d;
+            IEnumerable<DirectoryInfo> folders =
+                from DirectoryInfo d in currentDir.EnumerateDirectories()
+                where filter.Matches(d.Name)
+                orderby sortFunction(d) ascending
+                select d;
+
+            // Sort them by descending, if the box is checked
+            if ((bool)descendingBox.IsChecked)
+            {
+                files = files.Reverse();
+                folders = folders.Reverse();
+            }
 
             // Combine the folders and files into the same list
             // Folders are added first for easy navigation
@@ -84,9 +93,7 @@ namespace JustTag.Pages
             folderContentsBox.ItemsSource = fileSource;
 
             // Put them in the list of all files you can flip through in full-screen mode
-            Fullscreen.browsableFiles = (from f in fileSource
-                                         where f is FileInfo
-                                         select (FileInfo)f).ToArray();
+            Fullscreen.browsableFiles = files.ToArray();
 
             // Record all encountered tags in the "all known tags" list.
             foreach (FileSystemInfo file in files)

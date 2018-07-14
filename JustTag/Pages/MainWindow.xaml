@@ -148,18 +148,15 @@
             </DockPanel>
 
             <Grid DockPanel.Dock="Top">
-                <Expander Visibility="Hidden">
-                    <StackPanel Margin="5">
-                        <RadioButton x:Name="nameSortCheckbox" Content="Name"/>
-                        <RadioButton x:Name="dateSortCheckbox" Content="Date"/>
-                        <RadioButton x:Name="shuffleCheckbox" Content="Shuffle"/>
-                    </StackPanel>
-
-                </Expander>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <Label>Sort by:</Label>
                     <ComboBox x:Name="sortByBox"/>
+                    <CheckBox x:Name="descendingBox"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              Content="Descending"
+                    />
                 </StackPanel>
 
                 <Button x:Name="searchButton"
