@@ -57,46 +57,22 @@ namespace JustTag.Pages
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
-        
-            // Parse the tag filter
+            // Get all the files and folders that match the filter
             TagFilter filter = new TagFilter(tagFilterTextbox.Text);
+            SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
 
-            // Decide which funciton will be used to sort the files in the list
-            SortFunction sortFunction = SortMethodExtensions.GetSortFunction((SortMethod)sortByBox.SelectedValue);
+            var matchingFiles = Utils.GetMatchingFiles(currentDir, filter, sortMethod, (bool)descendingBox.IsChecked);
 
-            // Get all files/folders that match the filter
-            IEnumerable<FileInfo> files =
-                from FileInfo f in currentDir.EnumerateFiles()
-                where filter.Matches(f.Name)
-                orderby sortFunction(f) ascending
-                select f;
+            // Add them all to the list view
+            folderContentsBox.ItemsSource = matchingFiles;
 
-            IEnumerable<DirectoryInfo> folders =
-                from DirectoryInfo d in currentDir.EnumerateDirectories()
-                where filter.Matches(d.Name)
-                orderby sortFunction(d) ascending
-                select d;
-
-            // Sort them by descending, if the box is checked
-            if ((bool)descendingBox.IsChecked)
-            {
-                files = files.Reverse();
-                folders = folders.Reverse();
-            }
-
-            // Combine the folders and files into the same list
-            // Folders are added first for easy navigation
-            List<FileSystemInfo> fileSource = new List<FileSystemInfo>();
-            fileSource.AddRange(folders);
-            fileSource.AddRange(files);
-
-            folderContentsBox.ItemsSource = fileSource;
-
-            // Put them in the list of all files you can flip through in full-screen mode
-            Fullscreen.browsableFiles = files.ToArray();
+            // Tell full screen mode which files are available
+            Fullscreen.browsableFiles = (from f in matchingFiles
+                                         where f is FileInfo
+                                         select f as FileInfo).ToArray();
 
             // Record all encountered tags in the "all known tags" list.
-            foreach (FileSystemInfo file in files)
+            foreach (FileSystemInfo file in matchingFiles)
             {
                 TaggedFileName fname = new TaggedFileName(file.Name);
 
@@ -116,6 +92,9 @@ namespace JustTag.Pages
 
         private void textbox_KeyUp(object sender, KeyEventArgs e)
         {
+            // Navigates to the directory in the address bar
+            // when the user presses "enter"
+
             if (e.Key != Key.Enter) return;     // Don't go on if it's not the enter key
 
             // Navigate to the place.

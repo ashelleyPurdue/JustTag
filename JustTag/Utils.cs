@@ -57,30 +57,6 @@ namespace JustTag
         }
 
         /// <summary>
-        /// Returns a shuffled version of the given list.
-        /// What'd you expect?
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        public static List<T> ShuffleList<T>(List<T> list)
-        {
-            Random randGen = new Random();
-            List<T> originalList = new List<T>();
-            List<T> outputList = new List<T>();
-
-            originalList.AddRange(list);
-            
-            while(originalList.Count > 0)
-            {
-                int index = randGen.Next(originalList.Count);
-                outputList.Add(originalList[index]);
-                originalList.RemoveAt(index);
-            }
-
-            return outputList;
-        }
-
-        /// <summary>
         /// Returns if the given tag is valid.
         /// </summary>
         /// <param name="tag"></param>
@@ -190,6 +166,46 @@ namespace JustTag
                 control.FontSize,
                 Brushes.Black
             );
+        }
+
+        /// <summary>
+        /// Returns all files/folders in the given directory that match the tag filter
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public static IEnumerable<FileSystemInfo> GetMatchingFiles(
+            DirectoryInfo   dir,
+            TagFilter       filter,
+            SortMethod      sortMethod = SortMethod.name,
+            bool            descending = false)
+        {
+            // Decide which funciton will be used to sort the files in the list
+            SortFunction sortFunction = SortMethodExtensions.GetSortFunction(sortMethod);
+
+            // Get all files/folders that match the filter
+            IEnumerable<FileSystemInfo> files =
+                from FileInfo f in dir.EnumerateFiles()
+                where filter.Matches(f.Name)
+                orderby sortFunction(f) ascending
+                select f;
+
+            IEnumerable<FileSystemInfo> folders =
+                from DirectoryInfo d in dir.EnumerateDirectories()
+                where filter.Matches(d.Name)
+                orderby sortFunction(d) ascending
+                select d;
+
+            // Sort them by descending, if the box is checked
+            if (descending)
+            {
+                files = files.Reverse();
+                folders = folders.Reverse();
+            }
+
+            // Combine the folders and files into the same list
+            // Folders are added first for easy navigation
+            return folders.Concat(files);
         }
 
         /// <summary>
