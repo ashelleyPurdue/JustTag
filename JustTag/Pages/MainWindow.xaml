@@ -18,12 +18,13 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="107*"/>
-            <ColumnDefinition Width="288*"/>
-            <ColumnDefinition Width="711*"/>
+            <ColumnDefinition Width="125*"/>
+            <ColumnDefinition Width="168*"/>
+            <ColumnDefinition Width="696*"/>
+            <ColumnDefinition Width="305*"/>
         </Grid.ColumnDefinitions>
 
-        <Menu Grid.Row="0" Grid.ColumnSpan="3">
+        <Menu Grid.Row="0" Grid.ColumnSpan="4">
             <MenuItem x:Name="settingsButton" Header="Settings" Click="settingsButton_Click"/>
             <MenuItem Header="Tools">
                 <MenuItem x:Name="findReplaceTagsButton"
@@ -38,7 +39,7 @@
         </Menu>
 
         <previewControls:FilePreviewer x:Name="filePreviewer"
-            Grid.ColumnSpan="1"
+            Grid.ColumnSpan="2"
             Grid.Column="2"
             Grid.Row="2"
             ClipToBounds="True"
@@ -48,25 +49,24 @@
         />
         <Button x:Name="fullScreenButton"
             Grid.ColumnSpan="1"
-            Grid.Column="2"
+            Grid.Column="3"
             Grid.Row="2"
             ClipToBounds="True"
             Focusable="True"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
-            Margin="32, 32, 24, 19"
+            Margin="0,0,24,19"
             Width="25"
             Background="{x:Null}"
-            Click="fullScreenButton_Click"
+            Click="fullScreenButton_Click" Height="25"
         >
             <Image Source="../Resources/fullscreen.png" />
         </Button>
 
-
         <TextBox x:Name="currentPathBox"
             Grid.Row="1"
-            Grid.Column="1"
-            Grid.ColumnSpan="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="4"
             TextWrapping="Wrap"
             VerticalAlignment="Stretch"
             KeyUp="textbox_KeyUp"
@@ -74,83 +74,9 @@
             Margin="83,0,5,0"
          />
 
-        <Grid 
-            Grid.Row="1"
-            Grid.Column="1"
-            HorizontalAlignment="Left" 
-            VerticalAlignment="Stretch"
-            Margin="5,0,0,0"
-            Width="73"
-        >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Name="backButton" Content="&lt;-" Click="backButton_Click" />
-            <Button Grid.Column="1" x:Name="upButton" Content="^" Click="upButton_Click"/>
-            <Button Grid.Column="2" x:Name="forwardButton" Content="-&gt;" Click="forwardButton_Click"/>
-        </Grid>
-
-        <GridSplitter
-            HorizontalAlignment="Left"
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Grid.Column="2"
-            Width="5"
-            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-            Margin="0,5,0,10"
-         />
-
-        <GridSplitter
-            HorizontalAlignment="Left"
-            Grid.Row="1"
-            Grid.RowSpan="3"
-            Grid.Column="1"
-            Width="5"
-            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-            Margin="0,0,0,10"
-         />
-
-        <GridSplitter
-            Grid.Row="2"
-            Grid.Column="2"
-            Grid.ColumnSpan="1"
-            ResizeDirection="Rows"
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Stretch"
-            Height="5"
-            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-            Margin="0,0,10,0" 
-         />
-
-        <GroupBox Header="Tags"
-            Grid.Row="3"
-            Grid.Column="2"
-            Margin="10,5,10,10"
-         >
-            <Grid>
-                <controls:AutoCompleteTextbox x:Name="tagsBox"
-                         TextChanged="tagsBox_TextChanged"
-                         PreviewKeyDown="tagsBox_PreviewKeyDown"
-                         AcceptsReturn="True"
-                         IsEnabled="False" 
-                         AllowDrop="True" 
-                         PreviewDrop="tagsBox_PreviewDrop"
-                />
-                <Button x:Name="tagSaveButton"
-                    Content="Save"
-                    Visibility="Hidden"
-                    HorizontalAlignment ="Right"
-                    VerticalAlignment="Bottom"
-                    Width="45"
-                    Margin="0,0,10,10" Click="tagSaveButton_Click"
-                />
-            </Grid>
-        </GroupBox>
-
         <DockPanel 
-            Grid.Column="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             Grid.Row="2"
             Grid.RowSpan="2"
             Margin="5,5,5,10"
@@ -190,16 +116,92 @@
             />
         </DockPanel>
 
+        <GroupBox Header="This file's tags"
+            Grid.Row="3"
+            Grid.Column="2"
+            Margin="10,5,10,10"
+         >
+            <Grid>
+                <controls:AutoCompleteTextbox x:Name="tagsBox"
+                         TextChanged="tagsBox_TextChanged"
+                         PreviewKeyDown="tagsBox_PreviewKeyDown"
+                         AcceptsReturn="True"
+                         IsEnabled="False" 
+                         AllowDrop="True" 
+                         PreviewDrop="tagsBox_PreviewDrop"
+                />
+                <Button x:Name="tagSaveButton"
+                    Content="Save"
+                    Visibility="Hidden"
+                    HorizontalAlignment ="Right"
+                    VerticalAlignment="Bottom"
+                    Width="45"
+                    Margin="0,0,10,10" Click="tagSaveButton_Click"
+                />
+            </Grid>
+        </GroupBox>
+
         <GroupBox Header="All Known Tags"
-            Grid.Column="0"
-            Grid.Row="1"
-            Grid.RowSpan="3"
+            Grid.Column="3"
+            Grid.Row="3"
+            Grid.RowSpan="1"
         >
             <ListBox x:Name="allTagsListbox"
                      Margin="10,10,10,10"
                      MouseDoubleClick="allTagsListbox_MouseDoubleClick"
                      MouseMove="allTagsListbox_MouseMove"/>
         </GroupBox>
+
+        <Grid 
+            Grid.Row="1"
+            Grid.Column="0"
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Stretch"
+            Margin="5,0,0,0"
+            Width="73"
+        >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" x:Name="backButton" Content="&lt;-" Click="backButton_Click" />
+            <Button Grid.Column="1" x:Name="upButton" Content="^" Click="upButton_Click"/>
+            <Button Grid.Column="2" x:Name="forwardButton" Content="-&gt;" Click="forwardButton_Click"/>
+        </Grid>
+
+        <GridSplitter
+            HorizontalAlignment="Left"
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            Width="5"
+            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            Margin="0,5,0,10"
+         />
+
+        <GridSplitter
+            Grid.Row="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            ResizeDirection="Rows"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Stretch"
+            Height="5"
+            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            Margin="0,0,10,0" 
+         />
+
+        <GridSplitter
+            Grid.Row="3"
+            Grid.Column="3"
+            ResizeDirection="Columns"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Left"
+            Width="5"
+            Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            Margin="0,0,0,10" 
+         />
     </Grid>
 
 </Window>
