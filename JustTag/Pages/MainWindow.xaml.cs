@@ -32,6 +32,10 @@ namespace JustTag.Pages
             // Set the filter textbox's autocomplete source to all the tags
             tagFilterTextbox.autoCompletionSource = allKnownTags;
             tagsBox.autoCompletionSource = allKnownTags;
+
+            // Populate the sort-by combo box
+            sortByBox.ItemsSource = Enum.GetValues(typeof(SortMethod));
+            sortByBox.SelectedIndex = 0;
         }
 
 
