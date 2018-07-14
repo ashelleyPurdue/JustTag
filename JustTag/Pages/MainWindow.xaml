@@ -54,10 +54,12 @@
             Focusable="True"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
-            Margin="5"
+            Margin="32, 32, 24, 19"
+            Width="25"
+            Background="{x:Null}"
             Click="fullScreenButton_Click"
         >
-            <Image Source="../Resources/fullscreen.png" Width="35"/>
+            <Image Source="../Resources/fullscreen.png" />
         </Button>
 
 
