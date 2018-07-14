@@ -23,9 +23,6 @@ namespace JustTag.Pages
         {
             InitializeComponent();
 
-            pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
-            UpdateCurrentDirectory();
-
             // Hook the listbox up to the list of known tags
             allTagsListbox.ItemsSource = allKnownTags;
 
@@ -36,6 +33,10 @@ namespace JustTag.Pages
             // Populate the sort-by combo box
             sortByBox.ItemsSource = Enum.GetValues(typeof(SortMethod));
             sortByBox.SelectedIndex = 0;
+
+            // Start out in the current directory
+            pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
+            UpdateCurrentDirectory();
         }
 
 
@@ -64,15 +65,10 @@ namespace JustTag.Pages
             var entries = currentDir.EnumerateFileSystemInfos();
             var files = from FileSystemInfo e in entries
                         where filter.Matches(e.Name)
-                        orderby (e is DirectoryInfo) descending    // Make folders appear first, for easier navigating
+                        orderby SortMethodExtensions.GetSortFunction((SortMethod)sortByBox.SelectedValue)(e)
                         select e;
 
             var fileSource = files.ToList();
-
-            // Shuffle the files if "shuffle" is ticked
-            if ((bool)shuffleCheckbox.IsChecked)
-                fileSource = Utils.ShuffleList(fileSource);
-
             folderContentsBox.ItemsSource = fileSource;
 
             // Put them in the list of all files you can flip through in full-screen mode
