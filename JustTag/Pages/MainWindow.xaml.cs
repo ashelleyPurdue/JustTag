@@ -66,11 +66,6 @@ namespace JustTag.Pages
             // Add them all to the list view
             folderContentsBox.ItemsSource = matchingFiles;
 
-            // Tell full screen mode which files are available
-            Fullscreen.browsableFiles = (from f in matchingFiles
-                                         where f is FileInfo
-                                         select f as FileInfo).ToArray();
-
             // Record all encountered tags in the "all known tags" list.
             foreach (FileSystemInfo file in matchingFiles)
             {
@@ -141,7 +136,8 @@ namespace JustTag.Pages
 
         private void fullScreenButton_Click(object sender, RoutedEventArgs e)
         {
-            Fullscreen fullscreen = new Fullscreen(filePreviewer, folderContentsBox.SelectedItem as FileInfo);
+            FileSystemInfo[] browsableFiles = folderContentsBox.ItemsSource.ToArray();
+            Fullscreen fullscreen = new Fullscreen(filePreviewer, browsableFiles, folderContentsBox.SelectedIndex);
             Hide();
             fullscreen.ShowDialog();
             Show();

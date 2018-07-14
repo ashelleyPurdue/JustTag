@@ -22,7 +22,7 @@ namespace JustTag.Pages
     /// </summary>
     public partial class Fullscreen : Window
     {
-        public static FileInfo[] browsableFiles;
+        private FileSystemInfo[] browsableFiles;
 
         private int currentFileIndex = 0;
         private FilePreviewer filePreviewer;
@@ -36,16 +36,13 @@ namespace JustTag.Pages
         /// <param name="filePreviewer"> We pass the file previewer object in from MainWindow so it will have the same state</param>
         /// <param name="browsableFiles"> All of the files that the user can flip between with the arrow buttons</param>
         /// <param name="currentFile"> The file start with showing</param>
-        public Fullscreen(FilePreviewer filePreviewer, FileInfo currentFile)
+        public Fullscreen(FilePreviewer filePreviewer, FileSystemInfo[] browsableFiles, int currentFileIndex)
         {
             InitializeComponent();
 
             // Open the starting file
-            currentFileIndex = Array.IndexOf(browsableFiles, currentFile);
-
-            // If there is no such file(eg: if it is a folder), just default to the first
-            if (currentFileIndex < 0)
-                currentFileIndex = 0;
+            this.browsableFiles = browsableFiles;
+            this.currentFileIndex = currentFileIndex;
 
             // HACK: Embed the file previewer in this window
             // This way it will have the same state(time, volume, etc.)
@@ -75,6 +72,11 @@ namespace JustTag.Pages
             // HACK: Restore the video player to its old parent
             grid.Children.Remove(filePreviewer);
             oldPreviewerParent.Children.Insert(oldPreviewerParentIndex, filePreviewer);
+        }
+
+        private void normalScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -109,11 +111,6 @@ namespace JustTag.Pages
         {
             currentFileIndex++;
             UpdateUI();
-        }
-
-        private void normalScreenButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
     }
 }
