@@ -31,7 +31,8 @@
                 LoadedBehavior="Manual"
                 ScrubbingEnabled="True"
                 MediaFailed="videoPlayer_MediaFailed"
-                PositionChanged="videoPlayer_PositionChanged" MediaEnded="videoPlayer_MediaEnded"
+                PositionChanged="videoPlayer_PositionChanged"
+                MediaEnded="videoPlayer_MediaEnded"
              />
         </paz:ZoomBorder>
 
@@ -90,14 +91,6 @@
                         ValueChanged="volumeSlider_ValueChanged"
                 />
             </DockPanel>
-
-            <Button x:Name="fullScreenButton"
-                    Content="fullscreen"
-                    FontSize="6"
-                    Grid.Column="3"
-                    Margin="5" 
-                    Click="fullScreenButton_Click"
-            />
 
             <Slider x:Name="videoTimeSlider"
                     Grid.Column="1"
