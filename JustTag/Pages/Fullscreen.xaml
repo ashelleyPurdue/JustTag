@@ -33,6 +33,15 @@
                 VerticalAlignment="Center"
                 Click="nextButton_Click"
         />
-        
+
+        <Button x:Name="normalScreenButton"
+                Content="Normal Screen" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Width="Auto"
+                Height="Auto"
+                Click="normalScreenButton_Click"
+        />
+
     </Grid>
 </Window>

@@ -110,5 +110,10 @@ namespace JustTag.Pages
             currentFileIndex++;
             UpdateUI();
         }
+
+        private void normalScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

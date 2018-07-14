@@ -139,6 +139,14 @@ namespace JustTag.Pages
             UpdateCurrentDirectory();
         }
 
+        private void fullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            Fullscreen fullscreen = new Fullscreen(filePreviewer, folderContentsBox.SelectedItem as FileInfo);
+            Hide();
+            fullscreen.ShowDialog();
+            Show();
+        }
+
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
@@ -358,5 +366,7 @@ namespace JustTag.Pages
 
             tagsBox.Text += tag;
         }
+
+
     }
 }
