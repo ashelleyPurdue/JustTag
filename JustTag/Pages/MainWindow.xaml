@@ -54,12 +54,11 @@
             Focusable="True"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
-            Width="Auto"
-            Height="Auto"
             Margin="5"
-            Content="Fullscreen"
             Click="fullScreenButton_Click"
-        />
+        >
+            <Image Source="../Resources/fullscreen.png" Width="35"/>
+        </Button>
 
 
         <TextBox x:Name="currentPathBox"
