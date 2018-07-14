@@ -14,9 +14,9 @@ namespace JustTag
         shuffle
     }
 
+    public delegate IComparable SortFunction(FileSystemInfo f);
     public static class SortMethodExtensions
     {
-        public delegate IComparable SortFunction(FileSystemInfo f);
         private static Dictionary<SortMethod, SortFunction> sorters = new Dictionary<SortMethod, SortFunction>();
 
         private static Random randGen = new Random();

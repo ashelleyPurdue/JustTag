@@ -57,18 +57,30 @@ namespace JustTag.Pages
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
-
+        
             // Parse the tag filter
             TagFilter filter = new TagFilter(tagFilterTextbox.Text);
 
-            // Get all files/folders that match the filter
-            var entries = currentDir.EnumerateFileSystemInfos();
-            var files = from FileSystemInfo e in entries
-                        where filter.Matches(e.Name)
-                        orderby SortMethodExtensions.GetSortFunction((SortMethod)sortByBox.SelectedValue)(e)
-                        select e;
+            // Decide which funciton will be used to sort the files in the list
+            SortFunction sortFunction = SortMethodExtensions.GetSortFunction((SortMethod)sortByBox.SelectedValue);
 
-            var fileSource = files.ToList();
+            // Get all files/folders that match the filter
+            var files = from FileInfo f in currentDir.EnumerateFiles()
+                        where filter.Matches(f.Name)
+                        orderby sortFunction(f)
+                        select f;
+
+            var folders = from DirectoryInfo d in currentDir.EnumerateDirectories()
+                          where filter.Matches(d.Name)
+                          orderby sortFunction(d)
+                          select d;
+
+            // Combine the folders and files into the same list
+            // Folders are added first for easy navigation
+            List<FileSystemInfo> fileSource = new List<FileSystemInfo>();
+            fileSource.AddRange(folders);
+            fileSource.AddRange(files);
+
             folderContentsBox.ItemsSource = fileSource;
 
             // Put them in the list of all files you can flip through in full-screen mode
