@@ -18,43 +18,41 @@ namespace JustTag.Pages
 {
     /// <summary>
     /// Interaction logic for Fullscreen.xaml
+    /// This whole thing is one giant hack
     /// </summary>
     public partial class Fullscreen : Window
     {
-        public static FileInfo[] browsableFiles;
+        private FileSystemInfo[] browsableFiles;
 
         private int currentFileIndex = 0;
-        private VideoPlayer videoPlayer;
+        private FilePreviewer filePreviewer;
 
-        private Grid oldVideoPlayerParent;
-        private int oldVideoPlayerParentIndex;  // The index of videoPlayer in oldVideoPlayerParent.Children.
+        private Grid oldPreviewerParent;
+        private int oldPreviewerParentIndex;  // The index of videoPlayer in oldPreviewerParent.Children.
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="videoPlayer"> We pass the video player object in from MainWindow so it will have the same state</param>
+        /// <param name="filePreviewer"> We pass the file previewer object in from MainWindow so it will have the same state</param>
         /// <param name="browsableFiles"> All of the files that the user can flip between with the arrow buttons</param>
         /// <param name="currentFile"> The file start with showing</param>
-        public Fullscreen(VideoPlayer videoPlayer, FileInfo currentFile)
+        public Fullscreen(FilePreviewer filePreviewer, FileSystemInfo[] browsableFiles, int currentFileIndex)
         {
             InitializeComponent();
 
             // Open the starting file
-            currentFileIndex = Array.IndexOf(browsableFiles, currentFile);
+            this.browsableFiles = browsableFiles;
+            this.currentFileIndex = currentFileIndex;
 
-            // If there is no such file(eg: if it is a folder), just default to the first
-            if (currentFileIndex < 0)
-                currentFileIndex = 0;
-
-            // HACK: Embed the video player in this window
+            // HACK: Embed the file previewer in this window
             // This way it will have the same state(time, volume, etc.)
-            this.videoPlayer = videoPlayer;
+            this.filePreviewer = filePreviewer;
 
-            oldVideoPlayerParent = videoPlayer.Parent as Grid;
-            oldVideoPlayerParentIndex = oldVideoPlayerParent.Children.IndexOf(videoPlayer);
-            oldVideoPlayerParent.Children.Remove(videoPlayer);
+            oldPreviewerParent = filePreviewer.Parent as Grid;
+            oldPreviewerParentIndex = oldPreviewerParent.Children.IndexOf(filePreviewer);
+            oldPreviewerParent.Children.Remove(filePreviewer);
 
-            grid.Children.Insert(0, videoPlayer);
+            grid.Children.Insert(0, filePreviewer);
         }
 
 
@@ -63,7 +61,7 @@ namespace JustTag.Pages
         private void UpdateUI()
         {
             currentFileIndex = Utils.WrapIndex(currentFileIndex, browsableFiles.Length); // Wrap the index around
-            videoPlayer.Open(browsableFiles[currentFileIndex]);               // Show the file
+            filePreviewer.OpenPreview(browsableFiles[currentFileIndex]);                 // Show the file
         }
 
 
@@ -72,8 +70,13 @@ namespace JustTag.Pages
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // HACK: Restore the video player to its old parent
-            grid.Children.Remove(videoPlayer);
-            oldVideoPlayerParent.Children.Insert(oldVideoPlayerParentIndex, videoPlayer);
+            grid.Children.Remove(filePreviewer);
+            oldPreviewerParent.Children.Insert(oldPreviewerParentIndex, filePreviewer);
+        }
+
+        private void normalScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
