@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Security.Principal;
 
-namespace JustTag
+namespace JustTag.Pages
 {
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml

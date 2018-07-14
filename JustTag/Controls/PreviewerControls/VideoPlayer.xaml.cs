@@ -8,8 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using JustTag.Pages;
 
-namespace JustTag
+namespace JustTag.Controls.PreviewerControls
 {
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
@@ -149,10 +150,6 @@ namespace JustTag
             volumeSlider.IsEnabled = !shouldBeMuted;
             volumeIcon.Visibility = shouldBeMuted ? Visibility.Hidden : Visibility.Visible;
             volumeMutedIcon.Visibility = shouldBeMuted ? Visibility.Visible : Visibility.Hidden;
-
-            // Update the full screen button
-            fullScreenButton.IsEnabled = videoPlayer.Source != null;
-            fullScreenButton.Content = isFullscreen ? "Normal size" : "Fullscreen";
         }
 
 
@@ -234,33 +231,6 @@ namespace JustTag
         {
             e.Handled = false;
             UpdateControls();
-        }
-
-        private void fullScreenButton_Click(object sender, RoutedEventArgs e)
-        {
-            Window currentWindow = Window.GetWindow(this);
-
-            // If we're already in fullscreen mode, leave it.
-            if (isFullscreen)
-            {
-                currentWindow.Close();
-                return;
-            }
-
-            // Hide the current window
-            currentWindow.Visibility = Visibility.Hidden;
-
-            // Show the fullscreen window
-            isFullscreen = true;
-            UpdateControls();
-
-            Fullscreen fullscreen = new Fullscreen(this, currentFile);
-            fullscreen.ShowDialog();
-
-            // Fullscreen was closed, so switch back to the old window
-            isFullscreen = false;
-            UpdateControls();
-            currentWindow.Visibility = Visibility.Visible;
         }
 
         private async void videoPlayer_MediaEnded(object sender, RoutedEventArgs e)

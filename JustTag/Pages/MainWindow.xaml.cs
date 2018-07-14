@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace JustTag
+namespace JustTag.Pages
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,15 +23,20 @@ namespace JustTag
         {
             InitializeComponent();
 
-            pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
-            UpdateCurrentDirectory();
-
             // Hook the listbox up to the list of known tags
             allTagsListbox.ItemsSource = allKnownTags;
 
             // Set the filter textbox's autocomplete source to all the tags
             tagFilterTextbox.autoCompletionSource = allKnownTags;
             tagsBox.autoCompletionSource = allKnownTags;
+
+            // Populate the sort-by combo box
+            sortByBox.ItemsSource = Enum.GetValues(typeof(SortMethod));
+            sortByBox.SelectedIndex = 0;
+
+            // Start out in the current directory
+            pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
+            UpdateCurrentDirectory();
         }
 
 
@@ -52,32 +57,17 @@ namespace JustTag
 
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
-
-            // Parse the tag filter
+            // Get all the files and folders that match the filter
             TagFilter filter = new TagFilter(tagFilterTextbox.Text);
+            SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
 
-            // Get all files/folders that match the filter
-            var entries = currentDir.EnumerateFileSystemInfos();
-            var files = from FileSystemInfo e in entries
-                        where filter.Matches(e.Name)
-                        orderby (e is DirectoryInfo) descending    // Make folders appear first, for easier navigating
-                        select e;
+            var matchingFiles = Utils.GetMatchingFiles(currentDir, filter, sortMethod, (bool)descendingBox.IsChecked);
 
-            var fileSource = files.ToList();
-
-            // Shuffle the files if "shuffle" is ticked
-            if ((bool)shuffleCheckbox.IsChecked)
-                fileSource = Utils.ShuffleList(fileSource);
-
-            folderContentsBox.ItemsSource = fileSource;
-
-            // Put them in the list of all files you can flip through in full-screen mode
-            Fullscreen.browsableFiles = (from f in fileSource
-                                         where f is FileInfo
-                                         select (FileInfo)f).ToArray();
+            // Add them all to the list view
+            folderContentsBox.ItemsSource = matchingFiles;
 
             // Record all encountered tags in the "all known tags" list.
-            foreach (FileSystemInfo file in files)
+            foreach (FileSystemInfo file in matchingFiles)
             {
                 TaggedFileName fname = new TaggedFileName(file.Name);
 
@@ -97,6 +87,9 @@ namespace JustTag
 
         private void textbox_KeyUp(object sender, KeyEventArgs e)
         {
+            // Navigates to the directory in the address bar
+            // when the user presses "enter"
+
             if (e.Key != Key.Enter) return;     // Don't go on if it's not the enter key
 
             // Navigate to the place.
@@ -139,6 +132,15 @@ namespace JustTag
         {
             pathHistory.MoveForward();
             UpdateCurrentDirectory();
+        }
+
+        private void fullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            FileSystemInfo[] browsableFiles = folderContentsBox.ItemsSource.ToArray();
+            Fullscreen fullscreen = new Fullscreen(filePreviewer, browsableFiles, folderContentsBox.SelectedIndex);
+            Hide();
+            fullscreen.ShowDialog();
+            Show();
         }
 
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -360,5 +362,7 @@ namespace JustTag
 
             tagsBox.Text += tag;
         }
+
+
     }
 }

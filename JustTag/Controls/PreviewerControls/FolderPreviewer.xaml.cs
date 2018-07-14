@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 
-namespace JustTag
+namespace JustTag.Controls.PreviewerControls
 {
     /// <summary>
     /// Interaction logic for FolderPreviewer.xaml

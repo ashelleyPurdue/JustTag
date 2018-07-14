@@ -73,70 +73,71 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AutoCompleteTextbox.xaml.cs">
+    <Compile Include="Controls\AutoCompleteTextbox.xaml.cs">
       <DependentUpon>AutoCompleteTextbox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DeleteTagWindow.xaml.cs">
+    <Compile Include="Pages\DeleteTagWindow.xaml.cs">
       <DependentUpon>DeleteTagWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileList.xaml.cs">
+    <Compile Include="Controls\FileList.xaml.cs">
       <DependentUpon>FileList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileListItem.xaml.cs">
+    <Compile Include="Controls\FileListItem.xaml.cs">
       <DependentUpon>FileListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FilePreviewer.xaml.cs">
+    <Compile Include="Controls\PreviewerControls\FilePreviewer.xaml.cs">
       <DependentUpon>FilePreviewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FindReplaceTagsWindow.xaml.cs">
+    <Compile Include="Pages\FindReplaceTagsWindow.xaml.cs">
       <DependentUpon>FindReplaceTagsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FolderPreviewer.xaml.cs">
+    <Compile Include="Controls\PreviewerControls\FolderPreviewer.xaml.cs">
       <DependentUpon>FolderPreviewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Fullscreen.xaml.cs">
+    <Compile Include="Pages\Fullscreen.xaml.cs">
       <DependentUpon>Fullscreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsWindow.xaml.cs">
+    <Compile Include="Pages\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SortMethod.cs" />
     <Compile Include="TagFilter.cs" />
     <Compile Include="TaggedFileName.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="VideoPlayer.xaml.cs">
+    <Compile Include="Controls\PreviewerControls\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
-    <Page Include="AutoCompleteTextbox.xaml">
+    <Page Include="Controls\AutoCompleteTextbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DeleteTagWindow.xaml">
+    <Page Include="Pages\DeleteTagWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FileList.xaml">
+    <Page Include="Controls\FileList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FileListItem.xaml">
+    <Page Include="Controls\FileListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FilePreviewer.xaml">
+    <Page Include="Controls\PreviewerControls\FilePreviewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FindReplaceTagsWindow.xaml">
+    <Page Include="Pages\FindReplaceTagsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FolderPreviewer.xaml">
+    <Page Include="Controls\PreviewerControls\FolderPreviewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Fullscreen.xaml">
+    <Page Include="Pages\Fullscreen.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Pages\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -144,15 +145,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Pages\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="Pages\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="VideoPlayer.xaml">
+    <Page Include="Controls\PreviewerControls\VideoPlayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -175,6 +176,7 @@
     <Content Include="ffmpeg\FFMPEG_LICENSE.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\fullscreen.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
