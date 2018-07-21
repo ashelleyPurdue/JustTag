@@ -76,6 +76,7 @@
     <Compile Include="Controls\AutoCompleteTextbox.xaml.cs">
       <DependentUpon>AutoCompleteTextbox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PreviewerControls\IPreviewerControl.cs" />
     <Compile Include="Pages\DeleteTagWindow.xaml.cs">
       <DependentUpon>DeleteTagWindow.xaml</DependentUpon>
     </Compile>

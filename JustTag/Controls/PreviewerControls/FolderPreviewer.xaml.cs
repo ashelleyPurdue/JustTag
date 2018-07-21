@@ -19,7 +19,7 @@ namespace JustTag.Controls.PreviewerControls
     /// <summary>
     /// Interaction logic for FolderPreviewer.xaml
     /// </summary>
-    public partial class FolderPreviewer : UserControl
+    public partial class FolderPreviewer : UserControl, IPreviewerControl
     {
         private const int MAX_ICONS = 5;
         private const double IMAGE_HEIGHT = 100;
@@ -42,11 +42,14 @@ namespace JustTag.Controls.PreviewerControls
             }
         }
 
-        public void Open(DirectoryInfo dir)
+        public bool CanOpen(FileSystemInfo file) => file is DirectoryInfo;
+
+        public async Task OpenPreview(FileSystemInfo fsInfo)
         {
-            // Clear all existing icons
-            foreach (Image image in previewIcons)
-                image.Source = null;
+            DirectoryInfo dir = (DirectoryInfo)fsInfo;
+
+            // Close the previous folder
+            await ClosePreview();
 
             // Get the icons of the first few files
             ImageSource[] selectedIcons = null;
@@ -58,8 +61,18 @@ namespace JustTag.Controls.PreviewerControls
 
             selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
 
+            // Display them stacked on top of each other.
             for (int i = 0; i < selectedIcons.Length; i++)
                 previewIcons[i].Source = selectedIcons[i];
+        }
+
+        public async Task ClosePreview()
+        {
+            // Close all of the images
+            foreach (Image previewIcon in previewIcons)
+            {
+                previewIcon.Source = null;
+            }
         }
 
         private ImageSource GetThumbnail(FileSystemInfo file)
@@ -68,12 +81,20 @@ namespace JustTag.Controls.PreviewerControls
             if (file is DirectoryInfo)
                 return null;
 
-            // If the file is an image, then it serves as its own thumbnail
-            if (Utils.IsImageFile(file))
-                return new BitmapImage(new Uri(file.FullName));
+            // If the file isn't an image, then just use its icon as the thumbnail
+            // TODO: Let the thumnail for videos be the first frame
+            if (!Utils.IsImageFile(file))
+                return Utils.GetFileIcon(file);
 
-            // Fall back to the file's icon
-            return Utils.GetFileIcon(file);
+            // The file is an image, so it serves as its own thumbnail
+            // Load the image into a bitmap and return it.
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(file.FullName);
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;  // Ensures that the file will be closed immediately
+            bitmap.EndInit();
+
+            return new BitmapImage(new Uri(file.FullName));
         }
 
         private void stackPanel_LayoutUpdated(object sender, EventArgs e)
