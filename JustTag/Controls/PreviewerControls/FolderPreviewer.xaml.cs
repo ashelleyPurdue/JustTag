@@ -19,7 +19,7 @@ namespace JustTag.Controls.PreviewerControls
     /// <summary>
     /// Interaction logic for FolderPreviewer.xaml
     /// </summary>
-    public partial class FolderPreviewer : UserControl
+    public partial class FolderPreviewer : UserControl, IPreviewerControl
     {
         private const int MAX_ICONS = 5;
         private const double IMAGE_HEIGHT = 100;
@@ -42,8 +42,12 @@ namespace JustTag.Controls.PreviewerControls
             }
         }
 
-        public void Open(DirectoryInfo dir)
+        public bool CanOpen(FileSystemInfo file) => file is DirectoryInfo;
+
+        public async Task OpenPreview(FileSystemInfo fsInfo)
         {
+            DirectoryInfo dir = (DirectoryInfo)fsInfo;
+
             // Clear all existing icons
             foreach (Image image in previewIcons)
                 image.Source = null;
@@ -58,8 +62,18 @@ namespace JustTag.Controls.PreviewerControls
 
             selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
 
+            // Display them stacked on top of each other.
             for (int i = 0; i < selectedIcons.Length; i++)
                 previewIcons[i].Source = selectedIcons[i];
+        }
+
+        public async Task ClosePreview()
+        {
+            // Close all of the images
+            foreach (Image previewIcon in previewIcons)
+            {
+                previewIcon.Source = null;
+            }
         }
 
         private ImageSource GetThumbnail(FileSystemInfo file)
