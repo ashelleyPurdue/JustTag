@@ -23,11 +23,19 @@ namespace JustTag.Controls.PreviewerControls
     {
         public bool IsOpening { get; private set; }
 
-        private Control activePreviewControl = null;    // The control being used to preview the current file
+        private IPreviewerControl[] previewControls;
+        private IPreviewerControl activePreviewControl = null;    // The control being used to preview the current file
 
         public FilePreviewer()
         {
             InitializeComponent();
+
+            // Populate the list of controls
+            previewControls = new IPreviewerControl[]
+            {
+                videoPlayer,
+                folderPreviewer
+            };
         }
 
         /// <summary>
@@ -42,26 +50,12 @@ namespace JustTag.Controls.PreviewerControls
             // Close the previously open file
             await ClosePreview();
 
-            // If it's a folder, show the folder preview
-            if (selectedItem is DirectoryInfo)
-            {
-                DirectoryInfo dir = selectedItem as DirectoryInfo;
+            // Pick the first control that's capable of opening this file
+            activePreviewControl = previewControls.First(c => c.CanOpen(selectedItem));
 
-                activePreviewControl = folderPreviewer;
-                activePreviewControl.Visibility = Visibility.Visible;
-                folderPreviewer.Open(dir);
-
-                IsOpening = false;
-                return;
-            }
-
-            // It's a file
-            FileInfo selectedFile = selectedItem as FileInfo;
-
-            // TODO: Choose a different control based on the file type
-            activePreviewControl = videoPlayer;
+            // Show the file
             activePreviewControl.Visibility = Visibility.Visible;
-            await videoPlayer.Open(selectedFile);
+            await activePreviewControl.OpenPreview(selectedItem);
 
             IsOpening = false;
         }
@@ -76,12 +70,10 @@ namespace JustTag.Controls.PreviewerControls
             if (activePreviewControl == null)
                 return;
 
-            // Hide the old control
+            // Close the old control
             activePreviewControl.Visibility = Visibility.Collapsed;
+            await activePreviewControl.ClosePreview();
             activePreviewControl = null;
-
-            // TODO: Different closing behavior for different file types
-            await videoPlayer.UnloadVideo();
         }
     }
 }

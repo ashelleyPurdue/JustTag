@@ -15,7 +15,7 @@ namespace JustTag.Controls.PreviewerControls
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
     /// </summary>
-    public partial class VideoPlayer : UserControl
+    public partial class VideoPlayer : UserControl, IPreviewerControl
     {
         public bool IsVideo
         {
@@ -33,8 +33,6 @@ namespace JustTag.Controls.PreviewerControls
 
         private bool shouldBeMuted = true;          // FFME doesn't let us mute it if there is no sound, so we need to keep
                                                     // track of this ourselves.
-           
-        private bool isFullscreen = false;
 
         public VideoPlayer()
         {
@@ -45,13 +43,15 @@ namespace JustTag.Controls.PreviewerControls
 
         // Misc methods
 
+        public bool CanOpen(FileSystemInfo file) => file is FileInfo;   // TODO: Only return true if it's a video file.
+
         /// <summary>
         /// Opens the given file in the video player.
         /// </summary>
         /// <param name="selectedFile"></param>
-        public async Task Open(FileInfo selectedFile)
+        public async Task OpenPreview(FileSystemInfo selectedFile)
         {
-            currentFile = selectedFile;
+            currentFile = (FileInfo)selectedFile;
 
             // Reset the panning and zooming
             zoomBorder.Reset();
@@ -71,10 +71,7 @@ namespace JustTag.Controls.PreviewerControls
         /// <summary>
         /// Unloads the currently-loaded video.
         /// </summary>
-        public Task UnloadVideo()
-        {
-            return videoPlayer.Close();
-        }
+        public Task ClosePreview() => videoPlayer.Close();
 
         private async Task PlayOrPause(bool play)
         {
