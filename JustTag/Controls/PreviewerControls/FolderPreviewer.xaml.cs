@@ -48,9 +48,8 @@ namespace JustTag.Controls.PreviewerControls
         {
             DirectoryInfo dir = (DirectoryInfo)fsInfo;
 
-            // Clear all existing icons
-            foreach (Image image in previewIcons)
-                image.Source = null;
+            // Close the previous folder
+            await ClosePreview();
 
             // Get the icons of the first few files
             ImageSource[] selectedIcons = null;
@@ -82,12 +81,20 @@ namespace JustTag.Controls.PreviewerControls
             if (file is DirectoryInfo)
                 return null;
 
-            // If the file is an image, then it serves as its own thumbnail
-            if (Utils.IsImageFile(file))
-                return new BitmapImage(new Uri(file.FullName));
+            // If the file isn't an image, then just use its icon as the thumbnail
+            // TODO: Let the thumnail for videos be the first frame
+            if (!Utils.IsImageFile(file))
+                return Utils.GetFileIcon(file);
 
-            // Fall back to the file's icon
-            return Utils.GetFileIcon(file);
+            // The file is an image, so it serves as its own thumbnail
+            // Load the image into a bitmap and return it.
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(file.FullName);
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;  // Ensures that the file will be closed immediately
+            bitmap.EndInit();
+
+            return new BitmapImage(new Uri(file.FullName));
         }
 
         private void stackPanel_LayoutUpdated(object sender, EventArgs e)
