@@ -169,7 +169,7 @@ namespace JustTag.Pages
             }
         }
 
-        private void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Don't do anything if the last preview hasn't loaded yet
             if (filePreviewer.IsOpening)
@@ -185,7 +185,7 @@ namespace JustTag.Pages
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // Show the file preview
-            filePreviewer.OpenPreview(selectedItem);
+            await filePreviewer.OpenPreview(selectedItem);
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
