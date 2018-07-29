@@ -13,6 +13,7 @@ namespace JustTag
 
         public string beforeTags;   // The part of the filename before the tags
         public string afterTags;    // The part of the filename after the tags
+        public string extension;    // The extension, WITH the dot!  Will be empty string if there is no extension
         public readonly List<string> tags;
 
         static TaggedFileName()
@@ -33,6 +34,18 @@ namespace JustTag
         /// <param name="fileName"></param>
         public TaggedFileName(string fileName)
         {
+            // Get the extension and the part before the extension.
+            // If there are multiple dots, only the last dot counts.
+            extension = "";
+
+            int extensionPos = fileName.LastIndexOf('.');
+
+            if (extensionPos != -1)
+            {
+                extension = fileName.Substring(extensionPos);
+                fileName = fileName.Substring(0, extensionPos);
+            }
+            
             // Search for the tag area.
             Match tagArea = tagAreaRegex.Match(fileName);
 
@@ -65,7 +78,7 @@ namespace JustTag
         {
             // If there are no tags, then just return the normal name
             if (tags.Count == 0)
-                return beforeTags;
+                return beforeTags + extension;
 
             StringBuilder builder = new StringBuilder();
 
@@ -86,6 +99,9 @@ namespace JustTag
             // Append the after tags stuff
             builder.Append(']');
             builder.Append(afterTags);
+
+            // Append the extension
+            builder.Append(extension);
 
             return builder.ToString();
         }
