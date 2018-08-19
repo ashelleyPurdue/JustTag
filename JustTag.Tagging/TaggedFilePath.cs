@@ -77,7 +77,33 @@ namespace JustTag.Tagging
         }
 
         /// <summary>
-        /// Constructs the full path to this 
+        /// Used internally for creating mutated versions of this file path
+        /// </summary>
+        private TaggedFilePath(string name, IEnumerable<string> tags, string parentFolder, string extension, bool isFolder)
+        {
+            this.name = name;
+            this.tags = tags;
+            this.parentFolder = parentFolder;
+            this.extension = extension;
+            this.isFolder = isFolder;
+        }
+
+        /// <summary>
+        /// Creates a duplicate, but with the tags set to the given array.
+        /// </summary>
+        /// <param name="newTags"></param>
+        /// <returns></returns>
+        public TaggedFilePath SetTags(string[] newTags) => new TaggedFilePath
+        (
+            name,
+            newTags,
+            parentFolder,
+            extension,
+            isFolder
+        );
+
+        /// <summary>
+        /// Constructs the full path to this file
         /// </summary>
         /// <returns></returns>
         public string GetFullPath() => throw new NotImplementedException();

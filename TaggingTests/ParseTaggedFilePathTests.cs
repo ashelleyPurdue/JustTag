@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TaggingTests
 {
     [TestClass]
-    public class TaggedFilePathTests
+    public class ParseTaggedFilePathTests
     {
         private static void AssertTags(string fileName, params string[] expectedTags)
         {
