@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
 using System.Text.RegularExpressions;
+using JustTag.Controls;
 
 namespace JustTag.Pages
 {
@@ -17,22 +18,20 @@ namespace JustTag.Pages
     public partial class MainWindow : Window
     {
         private NavigationStack<string> pathHistory;
-        private HashSet<string> allKnownTags = new HashSet<string>();
+
+        // Temporary redirects while refactoring
+        private AutoCompleteTextbox tagFilterTextbox => fileBrowser.FilterTextbox;
 
         public MainWindow()
         {
             InitializeComponent();
 
             // Hook the listbox up to the list of known tags
-            allTagsListbox.ItemsSource = allKnownTags;
+            allTagsListbox.ItemsSource = Utils.allKnownTags;
 
             // Set the filter textbox's autocomplete source to all the tags
-            tagFilterTextbox.autoCompletionSource = allKnownTags;
-            tagsBox.autoCompletionSource = allKnownTags;
-
-            // Populate the sort-by combo box
-            sortByBox.ItemsSource = Enum.GetValues(typeof(SortMethod));
-            sortByBox.SelectedIndex = 0;
+            tagFilterTextbox.autoCompletionSource = Utils.allKnownTags;
+            tagsBox.autoCompletionSource = Utils.allKnownTags;
 
             // Start out in the current directory
             pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
@@ -44,143 +43,33 @@ namespace JustTag.Pages
 
         private void UpdateCurrentDirectory()
         {
-            // Move to the directory
-            Directory.SetCurrentDirectory(pathHistory.Current);
-            DirectoryInfo currentDir = new DirectoryInfo(pathHistory.Current);
-
-            // Set the textbox to the working directory
-            currentPathBox.Text = pathHistory.Current;
-
-            // Update the forward/back/up buttons
-            forwardButton.IsEnabled = pathHistory.HasNext;
-            backButton.IsEnabled = pathHistory.HasPrev;
-
-            upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
-
-            // Get all the files and folders that match the filter
-            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
-            SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
-
-            var matchingFiles = Utils.GetMatchingFiles(currentDir, filter, sortMethod, (bool)descendingBox.IsChecked);
-
-            // Add them all to the list view
-            folderContentsBox.ItemsSource = matchingFiles;
-
-            // Record all encountered tags in the "all known tags" list.
-            foreach (FileSystemInfo file in matchingFiles)
-            {
-                TaggedFileName fname = new TaggedFileName(file.Name);
-
-                foreach (string tag in fname.tags)
-                    allKnownTags.Add(tag);
-            }
-
-            // Update the known tags listbox
-            // Sort it in alphabetical order first
-            List<string> knownTagsList = allKnownTags.ToList();
-            knownTagsList.Sort();
-            allTagsListbox.ItemsSource = knownTagsList;
+            // TODO: Delegate this to FileBrowser
         }
 
 
         // Event handlers
 
-        private void textbox_KeyUp(object sender, KeyEventArgs e)
-        {
-            // Navigates to the directory in the address bar
-            // when the user presses "enter"
-
-            if (e.Key != Key.Enter) return;     // Don't go on if it's not the enter key
-
-            // Navigate to the place.
-            if (Directory.Exists(currentPathBox.Text))
-            {
-                pathHistory.Push(currentPathBox.Text);
-                UpdateCurrentDirectory();
-            }
-        }
-
-        private void searchButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Apply the filter in the filter textbox
-            UpdateCurrentDirectory();
-        }
-
-        private void currentPathBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            // Change to a red background if the text is not a valid path
-
-            bool valid = Directory.Exists(currentPathBox.Text);
-            currentPathBox.Background = valid ? Brushes.White : Brushes.Red;
-        }
-
-        private void backButton_Click(object sender, RoutedEventArgs e)
-        {
-            pathHistory.MoveBack();
-            UpdateCurrentDirectory();
-        }
-
-        private void upButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Move to the parent directory
-            string parent = Directory.GetParent(pathHistory.Current).FullName;
-            pathHistory.Push(parent);
-            UpdateCurrentDirectory();
-        }
-
-        private void forwardButton_Click(object sender, RoutedEventArgs e)
-        {
-            pathHistory.MoveForward();
-            UpdateCurrentDirectory();
-        }
-
         private void fullScreenButton_Click(object sender, RoutedEventArgs e)
         {
-            FileSystemInfo[] browsableFiles = folderContentsBox.ItemsSource.ToArray();
-            Fullscreen fullscreen = new Fullscreen(filePreviewer, browsableFiles, folderContentsBox.SelectedIndex);
+            FileSystemInfo[] browsableFiles = fileBrowser.VisibleFiles;
+            Fullscreen fullscreen = new Fullscreen(filePreviewer, browsableFiles, fileBrowser.SelectedIndex);
             Hide();
             fullscreen.ShowDialog();
             Show();
         }
 
-        private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
-
-            // If it's a shortcut, look up its target
-            if (selectedItem.Extension.ToLower() == ".lnk")
-                selectedItem = Utils.GetShortcutTarget(selectedItem);
-
-            // If the selected item is a folder, move to that folder.
-            DirectoryInfo dir = selectedItem as DirectoryInfo;
-            if (dir != null)
-            {
-                pathHistory.Push(dir.FullName);
-                UpdateCurrentDirectory();
-
-                return;
-            }
-
-            // If the selected item is a file, open that file.
-            FileInfo file = selectedItem as FileInfo;
-            if (file != null)
-            {
-                System.Diagnostics.Process.Start(file.FullName);
-            }
-        }
-
-        private async void folderContentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void fileBrowser_SelectedFileChanged(object sender, SelectionChangedEventArgs e)
         {
             // Don't do anything if the last preview hasn't loaded yet
             if (filePreviewer.IsOpening)
                 return;
 
             // Don't do anything if selection is null
-            if (folderContentsBox.SelectedItem == null)
+            if (fileBrowser.SelectedItem == null)
                 return;
 
             // If the selected item is a shortcut, resolve it.
-            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
+            FileSystemInfo selectedItem = fileBrowser.SelectedItem as FileSystemInfo;
             if (selectedItem.Extension.ToLower() == ".lnk")
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
@@ -229,7 +118,7 @@ namespace JustTag.Pages
         /// <param name="e"></param>
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
-            FileSystemInfo selectedItem = folderContentsBox.SelectedItem;
+            FileSystemInfo selectedItem = fileBrowser.SelectedItem;
             TaggedFileName fname = new TaggedFileName(selectedItem.Name);
 
             // Parse the tags into a list
@@ -238,10 +127,6 @@ namespace JustTag.Pages
             // Change the tags
             fname.tags.Clear();
             fname.tags.AddRange(tags);
-
-            // Remember the selected index so we can scroll back to it
-            // after saving
-            int selectedIndex = folderContentsBox.SelectedIndex;
 
             // Rename the file
             try
@@ -254,11 +139,8 @@ namespace JustTag.Pages
                 MessageBox.Show("ERROR: Could not rename file." + err.Message);
             }
             
+            // Refresh the file browser
             UpdateCurrentDirectory();
-
-            // Scroll back to the same selected index
-            folderContentsBox.SelectedIndex = selectedIndex;
-            folderContentsBox.ScrollIntoView(folderContentsBox.SelectedItem);
 
             // Hide the save button
             tagSaveButton.Visibility = Visibility.Hidden;
@@ -292,7 +174,7 @@ namespace JustTag.Pages
             await filePreviewer.ClosePreview();
 
             // Show a window for finding/replacing
-            var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), allKnownTags);
+            var findReplaceWindow = new FindReplaceTagsWindow(Directory.GetCurrentDirectory(), Utils.allKnownTags);
             findReplaceWindow.ShowDialog();
 
             // Refresh the UI
@@ -305,7 +187,7 @@ namespace JustTag.Pages
             await filePreviewer.ClosePreview();
 
             // Show the window
-            var toolWindow = new DeleteTagWindow(Directory.GetCurrentDirectory(), allKnownTags);
+            var toolWindow = new DeleteTagWindow(Directory.GetCurrentDirectory(), Utils.allKnownTags);
             toolWindow.ShowDialog();
 
             // Refresh the UI

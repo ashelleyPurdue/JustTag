@@ -15,6 +15,8 @@ namespace JustTag
 {
     public static class Utils
     {
+        public static HashSet<string> allKnownTags = new HashSet<string>();
+
         // Maps file extensions to icons
         private static Dictionary<string, ImageSource> fileIconCache = new Dictionary<string, ImageSource>();
 

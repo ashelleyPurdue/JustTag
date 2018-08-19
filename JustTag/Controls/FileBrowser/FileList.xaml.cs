@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using System.Collections;
 using System.IO;
 
-namespace JustTag.Controls
+namespace JustTag.Controls.FileBrowser
 {
     /// <summary>
     /// Interaction logic for FileList.xaml

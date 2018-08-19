@@ -77,14 +77,17 @@
     <Compile Include="Controls\AutoCompleteTextbox.xaml.cs">
       <DependentUpon>AutoCompleteTextbox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FileBrowser\FileBrowser.xaml.cs">
+      <DependentUpon>FileBrowser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PreviewerControls\IPreviewerControl.cs" />
     <Compile Include="Pages\DeleteTagWindow.xaml.cs">
       <DependentUpon>DeleteTagWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileList.xaml.cs">
+    <Compile Include="Controls\FileBrowser\FileList.xaml.cs">
       <DependentUpon>FileList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileListItem.xaml.cs">
+    <Compile Include="Controls\FileBrowser\FileListItem.xaml.cs">
       <DependentUpon>FileListItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PreviewerControls\FilePreviewer.xaml.cs">
@@ -113,15 +116,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\FileBrowser\FileBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\DeleteTagWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\FileList.xaml">
+    <Page Include="Controls\FileBrowser\FileList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\FileListItem.xaml">
+    <Page Include="Controls\FileBrowser\FileListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
