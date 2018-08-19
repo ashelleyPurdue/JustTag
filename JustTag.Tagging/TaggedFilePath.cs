@@ -14,11 +14,11 @@ namespace JustTag.Tagging
     /// </summary>
     public class TaggedFilePath
     {
-        public readonly string name;        // The filename without any tags.  Does not include the extension.
-        public readonly string[] tags;      // All of the tags belonging to this file
-        public readonly string parentFolder;// The full path to the parent folder
-        public readonly string extension;   // The file extension(eg: .txt).  Includes the dot.
-                                            // If there is no extension, then it will be the empty string.
+        public readonly string name;                // The filename without any tags.  Does not include the extension.
+        public readonly IEnumerable<string> tags;   // All of the tags belonging to this file
+        public readonly string parentFolder;        // The full path to the parent folder
+        public readonly string extension;           // The file extension(eg: .txt).  Includes the dot.
+                                                    // If there is no extension, then it will be the empty string.
         public readonly bool isFolder;
 
         public TaggedFilePath(string filePath, bool isFolder)
