@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JustTag.Tagging;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TaggingTests
@@ -44,6 +45,20 @@ namespace TaggingTests
 
         [TestMethod]
         public void TagsInMiddle_Folder() => AssertTags("na[foo bar]me", "foo", "bar");
+
+        [TestMethod]
+        public void ParseLongPath()
+        {
+            // Check if we can correctly parse a long path.
+
+            // Create the long path
+            string bigName = new StringBuilder()
+                                        .Append('a', 200)
+                                        .ToString();
+            string bigPath = bigName + "\\" + bigName + "[foo bar baz].txt";
+
+            AssertTags(bigPath, "foo", "bar", "baz");
+        }
     }
 }
 
