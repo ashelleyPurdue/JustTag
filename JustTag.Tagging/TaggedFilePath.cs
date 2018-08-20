@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
+using Alphaleonis.Win32.Filesystem;
 using System.Text.RegularExpressions;
 
 namespace JustTag.Tagging
@@ -92,6 +92,12 @@ namespace JustTag.Tagging
         /// So we can use object intializer syntax
         /// </summary>
         internal TaggedFilePath() { }
+
+        /// <summary>
+        /// Whether or not this path leads to an actual item on the file system
+        /// </summary>
+        /// <returns></returns>
+        public bool Exists() => IsFolder ? Directory.Exists(FullPath) : File.Exists(FullPath);
 
         /// <summary>
         /// Creates a duplicate, but with the tags set to the given array.
