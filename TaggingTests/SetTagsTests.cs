@@ -14,7 +14,7 @@ namespace TaggingTests
             TaggedFilePath origPath = new TaggedFilePath(origName, false);
             TaggedFilePath changedPath = origPath.SetTags(tags);
 
-            Assert.AreEqual(expectedName, changedPath.name);
+            Assert.AreEqual(expectedName, changedPath.Name);
         }
 
         [TestMethod]

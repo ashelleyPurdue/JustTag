@@ -49,16 +49,16 @@ namespace JustTag.Tagging
             // HACK: If we're searching for untagged files, then
             // return true if there are no tags
             if (untagged)
-                return file.tags.Any();
+                return file.Tags.Any();
 
             // Return false if any of the required tags are missing
             foreach (string t in requiredTags)
-                if (!file.tags.Contains(t))
+                if (!file.Tags.Contains(t))
                     return false;
 
             // Return false if any of the forbidden tags are present
             foreach (string t in forbiddenTags)
-                if (file.tags.Contains(t))
+                if (file.Tags.Contains(t))
                     return false;
 
             // It passed the filter

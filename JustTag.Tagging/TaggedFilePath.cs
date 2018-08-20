@@ -17,12 +17,19 @@ namespace JustTag.Tagging
     {
         private static Regex tagAreaRegex;
 
-        public readonly string name;                // The filename, including the tags and the extension
-        public readonly IEnumerable<string> tags;   // All of the tags belonging to this file
-        public readonly string parentFolder;        // The full path to the parent folder
-        public readonly string extension;           // The file extension(eg: .txt).  Includes the dot.
-                                                    // If there is no extension, then it will be the empty string.
-        public readonly bool isFolder;
+        public string Name => beforeTags + GetTagArea() + afterTags;// The filename, including the tags and the extension
+        public string ParentFolder { get; private set; }            // The full path to the parent folder
+        public string Extension { get; private set; }               // The file extension(eg: .txt).  Includes the dot.
+                                                                    // If there is no extension, then it will be the empty string.
+        public bool IsFolder { get; private set; }                  // Whether or not this is a file or a folder.
+        public string FullPath => Path.Combine(ParentFolder, Name);
+
+        public IReadOnlyList<string> Tags => tags;  // All of the tags belonging to this file.
+
+        private string beforeTags;  // The portion of Name before the tag area
+        private string afterTags;   // The portion of Name after  the tag area.
+        private string[] tags;      // The array backing the Tags property.
+        private bool hasTagArea;    // Whether or not a pair of brackets [] was found in the file name
 
         static TaggedFilePath()
         {
@@ -40,11 +47,9 @@ namespace JustTag.Tagging
         /// <summary>
         /// Parses the given file path
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="isFolder"></param>
         internal TaggedFilePath(string filePath, bool isFolder)
         {
-            this.isFolder = isFolder;
+            IsFolder = isFolder;
 
             // Parse it into its parts using filesystem info
             FileSystemInfo parsed;
@@ -55,57 +60,76 @@ namespace JustTag.Tagging
                 parsed = new FileInfo(filePath);
 
             // Extract all the parts from the filesystem info
-            name = parsed.Name;
-            extension = parsed.Extension;
-            parentFolder = parsed.GetParent().FullName;
+            Extension = parsed.Extension;
+            ParentFolder = parsed.GetParent().FullName;
 
             // Search for the tag area so we can extract the tags
-            Match tagAreaMatch = tagAreaRegex.Match(name, 0);
+            Match match = tagAreaRegex.Match(parsed.Name, 0);
+            hasTagArea = match.Success;
 
             // If no tags were found, just set it to an empty array.
-            if (!tagAreaMatch.Success)
+            if (!hasTagArea)
             {
-                this.tags = new string[] { };
+                tags = new string[] { };
+                beforeTags = parsed.Name;
+                afterTags = "";
                 return;
             }
 
+            // Get the sections of the name before and after the
+            // tag area
+            string tagArea = match.Value;
+            beforeTags = parsed.Name.Substring(0, match.Index);
+            afterTags = parsed.Name.Substring(match.Index + tagArea.Length);
+
             // Get the tags from the tag area
-            string tagArea = tagAreaMatch.Value;
             string withoutBrackets = tagArea.Substring(1, tagArea.Length - 2);
 
-            this.tags = withoutBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            tags = withoutBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         /// <summary>
-        /// Used internally for creating mutated versions of this file path
+        /// So we can use object intializer syntax
         /// </summary>
-        private TaggedFilePath(string name, IEnumerable<string> tags, string parentFolder, string extension, bool isFolder)
-        {
-            this.name = name;
-            this.tags = tags;
-            this.parentFolder = parentFolder;
-            this.extension = extension;
-            this.isFolder = isFolder;
-        }
+        internal TaggedFilePath() { }
 
         /// <summary>
         /// Creates a duplicate, but with the tags set to the given array.
         /// </summary>
-        /// <param name="newTags"></param>
-        /// <returns></returns>
         public TaggedFilePath SetTags(string[] newTags) => new TaggedFilePath
-        (
-            name,
-            newTags,
-            parentFolder,
-            extension,
-            isFolder
-        );
+        {
+            beforeTags = beforeTags,
+            afterTags = afterTags,
+            hasTagArea = newTags.Length == 0? false : true,
+            tags = newTags,
+            ParentFolder = ParentFolder,
+            Extension = Extension,
+            IsFolder = IsFolder
+        };
 
-        /// <summary>
-        /// Constructs the full path to this file
-        /// </summary>
-        /// <returns></returns>
-        public string GetFullPath() => throw new NotImplementedException();
+        private string GetTagArea()
+        {
+            // If there is no tag area, we can just do the empty string
+            if (!hasTagArea)
+                return "";
+
+            var builder = new StringBuilder();
+
+            // Start with the opening bracket
+            builder.Append('[');
+
+            // Add all the tags, separated by a space
+            for (int i = 0; i < tags.Length; i++)
+            {
+                if (i != 0)
+                    builder.Append(' ');
+
+                builder.Append(tags[i]);
+            }
+
+            // Finish with the closing bracket
+            builder.Append(']');
+            return builder.ToString();
+        }
     }
 }

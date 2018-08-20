@@ -11,7 +11,7 @@ namespace TaggingTests
     {
         private static void AssertTags(string fileName, params string[] expectedTags)
         {
-            IEnumerable<string> actualTags = new TaggedFilePath(fileName, false).tags;
+            IEnumerable<string> actualTags = new TaggedFilePath(fileName, false).Tags;
             Assert.IsTrue(actualTags.SequenceEqual(expectedTags));
         }
 
