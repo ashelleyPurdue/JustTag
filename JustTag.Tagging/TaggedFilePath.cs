@@ -96,16 +96,32 @@ namespace JustTag.Tagging
         /// <summary>
         /// Creates a duplicate, but with the tags set to the given array.
         /// </summary>
-        public TaggedFilePath SetTags(string[] newTags) => new TaggedFilePath
+        public TaggedFilePath SetTags(string[] newTags)
         {
-            beforeTags = beforeTags,
-            afterTags = afterTags,
-            hasTagArea = newTags.Length == 0? false : true,
-            tags = newTags,
-            ParentFolder = ParentFolder,
-            Extension = Extension,
-            IsFolder = IsFolder
-        };
+            // Create a duplicate, but with the tags set to newTags.
+            TaggedFilePath output = new TaggedFilePath
+            {
+                beforeTags = beforeTags,
+                afterTags = afterTags,
+                hasTagArea = newTags.Length == 0 ? false : true,
+                tags = newTags,
+                ParentFolder = ParentFolder,
+                Extension = Extension,
+                IsFolder = IsFolder
+            };
+
+            // If there isn't already a tag area, then we need to insert
+            // one before the extension.
+            if (!hasTagArea && Extension != "")
+            {
+                int lengthWithoutExt = beforeTags.Length - Extension.Length;
+                output.beforeTags = beforeTags.Substring(0, lengthWithoutExt);
+                output.afterTags = Extension;
+            }
+
+            // Return it
+            return output;
+        }
 
         private string GetTagArea()
         {
