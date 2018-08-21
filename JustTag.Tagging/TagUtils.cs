@@ -95,5 +95,80 @@ namespace JustTag.Tagging
             // Folders are added first for easy navigation
             return folders.Concat(files);
         }
+
+        /// <summary>
+        /// Repalces all instances of originalTag with newTag
+        /// inside the specified folder
+        /// </summary>
+        /// <param name="folderPath">A path to a folder(NOT a file)</param>
+        /// <param name="originalTag">The tag to be renamed</param>
+        /// <param name="newTag">What the tag should be renamed to</param>
+        public static void RenameTag(string folderPath, string originalTag, string newTag)
+        {
+            // Don't change anything if the original tag is the same as the new one
+            if (originalTag == newTag)
+                return;
+
+            // Search for all the files with the original tag
+            var filter = new TagFilter(originalTag);
+            DirectoryInfo folder = new DirectoryInfo(folderPath);
+
+            var files = folder.EnumerateFileSystemInfos()
+                                .Select(f => new TaggedFilePath(f.FullName, f is DirectoryInfo))
+                                .Where(f => filter.Matches(f));
+
+            // Replace the original tag on each file that has it
+            foreach (TaggedFilePath file in files)
+            {
+                List<string> tags = file.Tags.ToList();
+
+                // We don't want files to end up with two of the same tag.
+                // If the new tag is already present, then just delete
+                // the old one.
+                if (tags.Contains(newTag))
+                {
+                    tags.Remove(originalTag);
+                    ChangeTagsAndSave(file, tags.ToArray());
+                    continue;
+                }
+
+                // Replace the original tag with the new one, since we know
+                // it won't produce a duplicate now.
+                for (int i = 0; i < tags.Count; i++)
+                {
+                    if (tags[i] == originalTag)
+                        tags[i] = newTag;
+                }
+
+                ChangeTagsAndSave(file, tags.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Removes all instances of the specified tag from
+        /// the specified folder
+        /// </summary>
+        /// <param name="folderPath">A path to a folder(NOT a file)</param>
+        /// <param name="tag">The tag to delete</param>
+        public static void DeleteTag(string folderPath, string tag)
+        {
+            DirectoryInfo folder = new DirectoryInfo(folderPath);
+
+            var filter = new TagFilter(tag);
+            var filesToChange = folder.EnumerateFileSystemInfos()
+                                    .Select(f => new TaggedFilePath(f.FullName, f is DirectoryInfo))
+                                    .Where(f => filter.Matches(f));
+
+            // Look at each file that has the tag
+            foreach (TaggedFilePath file in filesToChange)
+            {
+                // Remove the tag from this file's list
+                List<string> tags = file.Tags.ToList();
+                tags.RemoveAll(t => t == tag);
+
+                // Apply it to the disk
+                ChangeTagsAndSave(file, tags.ToArray());
+            }
+        }
     }
 }
