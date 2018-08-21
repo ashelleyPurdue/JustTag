@@ -209,40 +209,5 @@ namespace JustTag
             // Folders are added first for easy navigation
             return folders.Concat(files);
         }
-
-        /// <summary>
-        /// Renames the given file so it has the given tags
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="newTags"></param>
-        public static void ChangeFileTags(FileSystemInfo file, TaggedFileName fname)
-        {
-            // Find the new name
-            string newName = fname.ToString();
-
-            // Find the full path and move it there.
-            // Frustratingly, FileInfo and DirectoryInfo both have
-            // different names for the "parent" object, hence the
-            // repetition.
-            if (file is FileInfo)
-            {
-                FileInfo f = (FileInfo)file;
-
-                string parentPath = f.Directory.FullName;
-                string newPath = System.IO.Path.Combine(parentPath, newName);
-
-                f.MoveTo(newPath);
-            }
-            else
-            {
-                DirectoryInfo f = (DirectoryInfo)file;
-
-                string parentPath = f.Parent.FullName;
-                string newPath = System.IO.Path.Combine(parentPath, newName);
-
-                f.MoveTo(newPath);
-            }
-
-        }
     }
 }
