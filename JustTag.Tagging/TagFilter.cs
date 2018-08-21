@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JustTag.Tagging
 {
-    internal class TagFilter
+    public class TagFilter
     {
         private List<string> requiredTags = new List<string>();
         private List<string> forbiddenTags = new List<string>();
