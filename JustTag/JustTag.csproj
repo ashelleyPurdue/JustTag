@@ -261,5 +261,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JustTag.Tagging\JustTag.Tagging.csproj">
+      <Project>{06fe18bf-672d-4f47-9056-573572918da0}</Project>
+      <Name>JustTag.Tagging</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

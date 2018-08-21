@@ -62,13 +62,13 @@ namespace JustTag.Controls.FileBrowser
 
             // Start out in the current directory
             pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
 
         // Misc methods
 
-        private void UpdateCurrentDirectory()
+        public void RefreshCurrentDirectory()
         {
             int selectedIndex = folderContentsBox.SelectedIndex;
             var selectedItem = folderContentsBox.SelectedItem;
@@ -123,14 +123,14 @@ namespace JustTag.Controls.FileBrowser
             if (Directory.Exists(currentPathBox.Text))
             {
                 pathHistory.Push(currentPathBox.Text);
-                UpdateCurrentDirectory();
+                RefreshCurrentDirectory();
             }
         }
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
             // Apply the filter in the filter textbox
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void currentPathBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -144,7 +144,7 @@ namespace JustTag.Controls.FileBrowser
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
             pathHistory.MoveBack();
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void upButton_Click(object sender, RoutedEventArgs e)
@@ -152,13 +152,13 @@ namespace JustTag.Controls.FileBrowser
             // Move to the parent directory
             string parent = Directory.GetParent(pathHistory.Current).FullName;
             pathHistory.Push(parent);
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void forwardButton_Click(object sender, RoutedEventArgs e)
         {
             pathHistory.MoveForward();
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -174,7 +174,7 @@ namespace JustTag.Controls.FileBrowser
             if (dir != null)
             {
                 pathHistory.Push(dir.FullName);
-                UpdateCurrentDirectory();
+                RefreshCurrentDirectory();
 
                 return;
             }

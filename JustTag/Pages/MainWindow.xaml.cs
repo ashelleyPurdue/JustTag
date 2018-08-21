@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.IO;
 using System.Text.RegularExpressions;
 using JustTag.Controls;
+using JustTag.Tagging;
 
 namespace JustTag.Pages
 {
@@ -32,20 +33,7 @@ namespace JustTag.Pages
             // Set the filter textbox's autocomplete source to all the tags
             tagFilterTextbox.autoCompletionSource = Utils.allKnownTags;
             tagsBox.autoCompletionSource = Utils.allKnownTags;
-
-            // Start out in the current directory
-            pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
-            UpdateCurrentDirectory();
         }
-
-
-        // Misc methods
-
-        private void UpdateCurrentDirectory()
-        {
-            // TODO: Delegate this to FileBrowser
-        }
-
 
         // Event handlers
 
@@ -119,28 +107,24 @@ namespace JustTag.Pages
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
             FileSystemInfo selectedItem = fileBrowser.SelectedItem;
-            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
+            TaggedFilePath fname = new TaggedFilePath(selectedItem.FullName, selectedItem is DirectoryInfo);
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-
-            // Change the tags
-            fname.tags.Clear();
-            fname.tags.AddRange(tags);
 
             // Rename the file
             try
             {
                 await filePreviewer.ClosePreview();
-                Utils.ChangeFileTags(selectedItem, fname);
+                TagUtils.ChangeTagsAndSave(fname, tags);
             }
             catch (IOException err)
             {
                 MessageBox.Show("ERROR: Could not rename file." + err.Message);
             }
-            
+
             // Refresh the file browser
-            UpdateCurrentDirectory();
+            fileBrowser.RefreshCurrentDirectory();
 
             // Hide the save button
             tagSaveButton.Visibility = Visibility.Hidden;
@@ -178,7 +162,7 @@ namespace JustTag.Pages
             findReplaceWindow.ShowDialog();
 
             // Refresh the UI
-            UpdateCurrentDirectory();
+            fileBrowser.RefreshCurrentDirectory();
         }
 
         private async void deleteTagButton_Click(object sender, RoutedEventArgs e)
@@ -191,7 +175,7 @@ namespace JustTag.Pages
             toolWindow.ShowDialog();
 
             // Refresh the UI
-            UpdateCurrentDirectory();
+            fileBrowser.RefreshCurrentDirectory();
         }
 
         private void allTagsListbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)

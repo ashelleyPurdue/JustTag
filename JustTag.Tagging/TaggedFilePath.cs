@@ -47,7 +47,7 @@ namespace JustTag.Tagging
         /// <summary>
         /// Parses the given file path
         /// </summary>
-        internal TaggedFilePath(string filePath, bool isFolder)
+        public TaggedFilePath(string filePath, bool isFolder)
         {
             IsFolder = isFolder;
 
