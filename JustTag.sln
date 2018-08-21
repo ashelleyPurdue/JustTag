@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustTag", "JustTag\JustTag.csproj", "{B1022135-F3D7-4935-BBF1-1AEE3068FD06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustTag.Tagging", "JustTag.Tagging\JustTag.Tagging.csproj", "{06FE18BF-672D-4F47-9056-573572918DA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaggingTests", "TaggingTests\TaggingTests.csproj", "{C8A4CE4E-36AF-4D5D-80A4-78F721D294A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{B1022135-F3D7-4935-BBF1-1AEE3068FD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1022135-F3D7-4935-BBF1-1AEE3068FD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1022135-F3D7-4935-BBF1-1AEE3068FD06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06FE18BF-672D-4F47-9056-573572918DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06FE18BF-672D-4F47-9056-573572918DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06FE18BF-672D-4F47-9056-573572918DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06FE18BF-672D-4F47-9056-573572918DA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8A4CE4E-36AF-4D5D-80A4-78F721D294A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8A4CE4E-36AF-4D5D-80A4-78F721D294A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8A4CE4E-36AF-4D5D-80A4-78F721D294A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8A4CE4E-36AF-4D5D-80A4-78F721D294A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
