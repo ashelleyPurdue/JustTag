@@ -169,45 +169,5 @@ namespace JustTag
                 Brushes.Black
             );
         }
-
-        /// <summary>
-        /// Returns all files/folders in the given directory that match the tag filter
-        /// </summary>
-        /// <param name="dir"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public static IEnumerable<FileSystemInfo> GetMatchingFiles(
-            DirectoryInfo   dir,
-            TagFilter       filter,
-            SortMethod      sortMethod = SortMethod.name,
-            bool            descending = false)
-        {
-            // Decide which funciton will be used to sort the files in the list
-            SortFunction sortFunction = SortMethodExtensions.GetSortFunction(sortMethod);
-
-            // Get all files/folders that match the filter
-            IEnumerable<FileSystemInfo> files =
-                from FileInfo f in dir.EnumerateFiles()
-                where filter.Matches(f.Name)
-                orderby sortFunction(f) ascending
-                select f;
-
-            IEnumerable<FileSystemInfo> folders =
-                from DirectoryInfo d in dir.EnumerateDirectories()
-                where filter.Matches(d.Name)
-                orderby sortFunction(d) ascending
-                select d;
-
-            // Sort them by descending, if the box is checked
-            if (descending)
-            {
-                files = files.Reverse();
-                folders = folders.Reverse();
-            }
-
-            // Combine the folders and files into the same list
-            // Folders are added first for easy navigation
-            return folders.Concat(files);
-        }
     }
 }

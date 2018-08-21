@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
 using System.IO;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.FileBrowser
 {
@@ -86,25 +87,23 @@ namespace JustTag.Controls.FileBrowser
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
             // Get all the files and folders that match the filter
-            // TODO: Use TagUtils for this
-            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
             SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
 
-            var matchingFiles = Utils.GetMatchingFiles(currentDir, filter, sortMethod, (bool)descendingBox.IsChecked);
+            var matchingFiles = TagUtils.GetMatchingFiles(pathHistory.Current, tagFilterTextbox.Text);
 
             // Add them all to the list view
-            folderContentsBox.ItemsSource = matchingFiles;
+            // TODO: Remove this hacky select statement after we migrate FileList
+            folderContentsBox.ItemsSource = matchingFiles
+                .Select(f => f.IsFolder ? (new DirectoryInfo(f.FullPath) as FileSystemInfo) : new FileInfo(f.FullPath));
 
             // Scroll back to the old selected index
             folderContentsBox.SelectedIndex = selectedIndex;
             folderContentsBox.ScrollIntoView(selectedItem);
 
             // Record all encountered tags in the "all known tags" list.
-            foreach (FileSystemInfo file in matchingFiles)
+            foreach (TaggedFilePath file in matchingFiles)
             {
-                TaggedFileName fname = new TaggedFileName(file.Name);
-
-                foreach (string tag in fname.tags)
+                foreach (string tag in file.Tags)
                     Utils.allKnownTags.Add(tag);
             }
         }
