@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JustTag.Tagging
 {
-    internal class TagFilter
+    public class TagFilter
     {
         private List<string> requiredTags = new List<string>();
         private List<string> forbiddenTags = new List<string>();
@@ -49,7 +49,7 @@ namespace JustTag.Tagging
             // HACK: If we're searching for untagged files, then
             // return true if there are no tags
             if (untagged)
-                return file.Tags.Any();
+                return !file.Tags.Any();
 
             // Return false if any of the required tags are missing
             foreach (string t in requiredTags)
