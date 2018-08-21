@@ -65,7 +65,7 @@ namespace JustTag.Tagging
             bool descending = false)
         {
             // Decide which funciton will be used to sort the files in the list
-            SortFunction sortFunction = SortMethodExtensions.GetSortFunction(sortMethod);
+            SortFunction sortFunction = sortMethod.GetSortFunction();
 
             // Get all files/folders that match the filter
             DirectoryInfo folder = new DirectoryInfo(folderPath);
@@ -74,14 +74,14 @@ namespace JustTag.Tagging
                 from FileInfo fsInfo in folder.EnumerateFiles()
                 let path = new TaggedFilePath(fsInfo.FullName, false)
                 where filter.Matches(path)
-                orderby sortFunction(new System.IO.FileInfo(fsInfo.FullName)) ascending   // TODO: Replace this with a TaggedFileName
+                orderby sortFunction(path) ascending   // TODO: Replace this with a TaggedFileName
                 select path;
 
             IEnumerable<TaggedFilePath> folders =
                 from DirectoryInfo fsInfo in folder.EnumerateDirectories()
                 let path = new TaggedFilePath(fsInfo.FullName, true)
                 where filter.Matches(path)
-                orderby sortFunction(new System.IO.DirectoryInfo(fsInfo.FullName)) ascending   // TODO: Replace this with a TaggedFileName
+                orderby sortFunction(path) ascending   // TODO: Replace this with a TaggedFileName
                 select path;
 
             // Sort them by descending, if the box is checked
