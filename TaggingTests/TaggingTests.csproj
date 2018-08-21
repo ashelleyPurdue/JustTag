@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetTagsTests.cs" />
     <Compile Include="ParseTaggedFilePathTests.cs" />
+    <Compile Include="SortMethodTests.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
