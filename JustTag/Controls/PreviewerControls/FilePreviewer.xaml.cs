@@ -33,8 +33,9 @@ namespace JustTag.Controls.PreviewerControls
             // Populate the list of controls
             previewControls = new IPreviewerControl[]
             {
+                imagePreviewer,
                 videoPlayer,
-                folderPreviewer
+                folderPreviewer,
             };
         }
 

@@ -10,6 +10,8 @@ using System.Windows.Media.Imaging;
 using System.Globalization;
 using System.Windows;
 using System.Text.RegularExpressions;
+using JustTag.Tagging;
+using AlphaFS = Alphaleonis.Win32.Filesystem;
 
 namespace JustTag
 {
@@ -141,6 +143,41 @@ namespace JustTag
             // Add it to the cache and return it
             fileIconCache.Add(ext, imageSource);
             return imageSource;
+        }
+
+        /// <summary>
+        /// Loads a bitmap source containing the given image.
+        /// Supports long paths
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static ImageSource LoadImage(string filePath)
+        {
+            // If it's not a long path, we can just load it using a URI
+            const int MAX_PATH = 260;
+            if (filePath.Length < MAX_PATH)
+            {
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;     // Ensures that the file will be closed immediately
+                bmp.UriSource = new Uri(filePath);
+                bmp.EndInit();
+
+                return bmp;
+            }
+
+            // It's a long path.  Frustratingly, the Uri class doesn't
+            // support long paths, so we need to load the image manually.
+            using (FileStream fs = AlphaFS.File.Open(filePath, FileMode.Open))
+            {
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;     // Ensures that the file will be closed immediately
+                bmp.StreamSource = fs;
+                bmp.EndInit();
+
+                return bmp;
+            }
         }
 
         /// <summary>

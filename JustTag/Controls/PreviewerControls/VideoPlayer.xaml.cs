@@ -53,9 +53,6 @@ namespace JustTag.Controls.PreviewerControls
         {
             currentFile = (FileInfo)selectedFile;
 
-            // Reset the panning and zooming
-            zoomBorder.Reset();
-
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
                 cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
@@ -160,10 +157,10 @@ namespace JustTag.Controls.PreviewerControls
             # endif
         }
 
-        private void playButton_Click(object sender, RoutedEventArgs e)
+        private async void playButton_Click(object sender, RoutedEventArgs e)
         {
             // Play/pause the video
-            PlayOrPause(!videoPlayer.IsPlaying);
+            await PlayOrPause(!videoPlayer.IsPlaying);
         }
 
         private void videoTimeSlider_MouseMoved(object sender, MouseEventArgs e)
@@ -180,10 +177,10 @@ namespace JustTag.Controls.PreviewerControls
             videoPlayer.Position = TimeSpan.FromSeconds(time);
         }
 
-        private void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
         {
             // Don't let the slider move on its own while the user is dragging it
-            PlayOrPause(false);
+            await PlayOrPause(false);
         }
 
         private void videoPlayer_PositionChanged(object sender, Unosquare.FFME.Events.PositionChangedRoutedEventArgs e)

@@ -66,13 +66,15 @@ namespace JustTag.Controls.PreviewerControls
                 previewIcons[i].Source = selectedIcons[i];
         }
 
-        public async Task ClosePreview()
+        public Task ClosePreview()
         {
             // Close all of the images
             foreach (Image previewIcon in previewIcons)
             {
                 previewIcon.Source = null;
             }
+
+            return Task.CompletedTask;
         }
 
         private ImageSource GetThumbnail(FileSystemInfo file)
@@ -88,13 +90,7 @@ namespace JustTag.Controls.PreviewerControls
 
             // The file is an image, so it serves as its own thumbnail
             // Load the image into a bitmap and return it.
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(file.FullName);
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;  // Ensures that the file will be closed immediately
-            bitmap.EndInit();
-
-            return new BitmapImage(new Uri(file.FullName));
+            return Utils.LoadImage(file.FullName);
         }
 
         private void stackPanel_LayoutUpdated(object sender, EventArgs e)
