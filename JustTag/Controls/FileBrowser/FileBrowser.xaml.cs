@@ -89,7 +89,13 @@ namespace JustTag.Controls.FileBrowser
             // Get all the files and folders that match the filter
             SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
 
-            var matchingFiles = TagUtils.GetMatchingFiles(pathHistory.Current, tagFilterTextbox.Text);
+            var matchingFiles = TagUtils.GetMatchingFiles
+            (
+                pathHistory.Current,
+                tagFilterTextbox.Text,
+                (SortMethod)sortByBox.SelectedItem,
+                (bool)descendingBox.IsChecked
+            );
 
             // Add them all to the list view
             // TODO: Remove this hacky select statement after we migrate FileList

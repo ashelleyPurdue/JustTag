@@ -105,7 +105,6 @@
     <Compile Include="Pages\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SortMethod.cs" />
     <Compile Include="TagFilter.cs" />
     <Compile Include="TaggedFileName.cs" />
     <Compile Include="Utils.cs" />
