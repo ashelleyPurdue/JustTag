@@ -12,6 +12,9 @@ using JustTag.Tagging;
 
 namespace JustTag.Controls.PreviewerControls
 {
+    // TODO: Consider completely replacing this control with a different external library, because FFME
+    // has been more trouble than it's worth.  For this reason, I'm not going to bother migrating this
+    // class.
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
     /// </summary>
