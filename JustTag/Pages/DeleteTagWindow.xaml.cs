@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using JustTag.Tagging;
 
 namespace JustTag.Pages
 {
@@ -20,7 +21,6 @@ namespace JustTag.Pages
     /// </summary>
     public partial class DeleteTagWindow : Window
     {
-        // TODO: Refactor this copy/pasted code
         private string directory;
 
         public DeleteTagWindow(string directory, IEnumerable<string> autoCompleteTags)
@@ -28,37 +28,6 @@ namespace JustTag.Pages
             InitializeComponent();
             this.directory = directory;
             deleteTextbox.autoCompletionSource = autoCompleteTags;
-        }
-
-        // Misc methods
-        private void DeleteTag(string tag)
-        {
-            // Loop over all files in the directory
-            DirectoryInfo dir = new DirectoryInfo(directory);
-            var files = dir.EnumerateFileSystemInfos();
-
-            foreach (FileSystemInfo f in files)
-            {
-                // Get the tags
-                TaggedFileName fname = new TaggedFileName(f.Name);
-
-                // Skip this file if it doesn't have the find tag
-                if (!fname.tags.Contains(tag))
-                    continue;
-
-                // Remove the tag
-                fname.tags.Remove(tag);
-
-                // Save the changes to the file system.
-                try
-                {
-                    Utils.ChangeFileTags(f, fname);
-                }
-                catch (IOException e)
-                {
-                    MessageBox.Show(e.Message);
-                }
-            }
         }
 
         // Events
@@ -71,10 +40,7 @@ namespace JustTag.Pages
             progressBar.Visibility = Visibility.Visible;
 
             // Replace the tags asynchronously
-            await Task.Run(() =>
-            {
-                DeleteTag(tag);
-            });
+            await Task.Run(() => TagUtils.DeleteTag(directory, tag));
 
             // Close this window
             Close();

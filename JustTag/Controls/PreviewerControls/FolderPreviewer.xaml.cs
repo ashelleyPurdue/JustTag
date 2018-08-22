@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.PreviewerControls
 {
@@ -42,22 +43,19 @@ namespace JustTag.Controls.PreviewerControls
             }
         }
 
-        public bool CanOpen(FileSystemInfo file) => file is DirectoryInfo;
+        public bool CanOpen(TaggedFilePath file) => file.IsFolder;
 
-        public async Task OpenPreview(FileSystemInfo fsInfo)
+        public async Task OpenPreview(TaggedFilePath folder)
         {
-            DirectoryInfo dir = (DirectoryInfo)fsInfo;
-
             // Close the previous folder
             await ClosePreview();
 
-            // Get the icons of the first few files
+            // Get the thumbnails of the first few files
             ImageSource[] selectedIcons = null;
 
-            var allIcons = from FileSystemInfo file in dir.EnumerateFileSystemInfos()
-                            where file is FileInfo
-                            orderby file.Name
-                            select GetThumbnail(file);
+            var allIcons = from TaggedFilePath file in TagUtils.GetMatchingFiles(folder.FullPath, "")
+                           where !file.IsFolder
+                           select GetThumbnail(file);
 
             selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
 
@@ -66,35 +64,29 @@ namespace JustTag.Controls.PreviewerControls
                 previewIcons[i].Source = selectedIcons[i];
         }
 
-        public async Task ClosePreview()
+        public Task ClosePreview()
         {
             // Close all of the images
             foreach (Image previewIcon in previewIcons)
-            {
                 previewIcon.Source = null;
-            }
+
+            return Task.CompletedTask;
         }
 
-        private ImageSource GetThumbnail(FileSystemInfo file)
+        private ImageSource GetThumbnail(TaggedFilePath file)
         {
             // TODO: If it's a directory, return a picture of a folder
-            if (file is DirectoryInfo)
+            if (file.IsFolder)
                 return null;
 
             // If the file isn't an image, then just use its icon as the thumbnail
             // TODO: Let the thumnail for videos be the first frame
-            if (!Utils.IsImageFile(file))
-                return Utils.GetFileIcon(file);
+            if (!Utils.IsImageFile(file.FullPath))
+                return Utils.GetFileIcon(new FileInfo(file.FullPath));   // TODO: Make GetFileIcon take a string path instead.
 
             // The file is an image, so it serves as its own thumbnail
             // Load the image into a bitmap and return it.
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(file.FullName);
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;  // Ensures that the file will be closed immediately
-            bitmap.EndInit();
-
-            return new BitmapImage(new Uri(file.FullName));
+            return Utils.LoadImage(file.FullPath);
         }
 
         private void stackPanel_LayoutUpdated(object sender, EventArgs e)

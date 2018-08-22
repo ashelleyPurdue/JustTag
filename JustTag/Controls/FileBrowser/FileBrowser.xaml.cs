@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
 using System.IO;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.FileBrowser
 {
@@ -35,9 +36,8 @@ namespace JustTag.Controls.FileBrowser
             set => folderContentsBox.SelectedIndex = value;
         }
 
-        public FileSystemInfo SelectedItem => folderContentsBox.SelectedItem;   // TODO: Change this to a string
-
-        public FileSystemInfo[] VisibleFiles => folderContentsBox.ItemsSource.ToArray();    // TODO: Chnage this to a string[]
+        public TaggedFilePath SelectedItem => folderContentsBox.SelectedItem;
+        public TaggedFilePath[] VisibleFiles => folderContentsBox.ItemsSource.ToArray();
 
         public IList SelectedItems => folderContentsBox.SelectedItems;
 
@@ -62,13 +62,13 @@ namespace JustTag.Controls.FileBrowser
 
             // Start out in the current directory
             pathHistory = new NavigationStack<string>(Directory.GetCurrentDirectory());
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
 
         // Misc methods
 
-        private void UpdateCurrentDirectory()
+        public void RefreshCurrentDirectory()
         {
             int selectedIndex = folderContentsBox.SelectedIndex;
             var selectedItem = folderContentsBox.SelectedItem;
@@ -86,11 +86,15 @@ namespace JustTag.Controls.FileBrowser
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
             // Get all the files and folders that match the filter
-            // TODO: Use TagUtils for this
-            TagFilter filter = new TagFilter(tagFilterTextbox.Text);
             SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
 
-            var matchingFiles = Utils.GetMatchingFiles(currentDir, filter, sortMethod, (bool)descendingBox.IsChecked);
+            var matchingFiles = TagUtils.GetMatchingFiles
+            (
+                pathHistory.Current,
+                tagFilterTextbox.Text,
+                (SortMethod)sortByBox.SelectedItem,
+                (bool)descendingBox.IsChecked
+            );
 
             // Add them all to the list view
             folderContentsBox.ItemsSource = matchingFiles;
@@ -100,11 +104,9 @@ namespace JustTag.Controls.FileBrowser
             folderContentsBox.ScrollIntoView(selectedItem);
 
             // Record all encountered tags in the "all known tags" list.
-            foreach (FileSystemInfo file in matchingFiles)
+            foreach (TaggedFilePath file in matchingFiles)
             {
-                TaggedFileName fname = new TaggedFileName(file.Name);
-
-                foreach (string tag in fname.tags)
+                foreach (string tag in file.Tags)
                     Utils.allKnownTags.Add(tag);
             }
         }
@@ -123,14 +125,14 @@ namespace JustTag.Controls.FileBrowser
             if (Directory.Exists(currentPathBox.Text))
             {
                 pathHistory.Push(currentPathBox.Text);
-                UpdateCurrentDirectory();
+                RefreshCurrentDirectory();
             }
         }
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
             // Apply the filter in the filter textbox
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void currentPathBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -144,7 +146,7 @@ namespace JustTag.Controls.FileBrowser
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
             pathHistory.MoveBack();
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void upButton_Click(object sender, RoutedEventArgs e)
@@ -152,39 +154,34 @@ namespace JustTag.Controls.FileBrowser
             // Move to the parent directory
             string parent = Directory.GetParent(pathHistory.Current).FullName;
             pathHistory.Push(parent);
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void forwardButton_Click(object sender, RoutedEventArgs e)
         {
             pathHistory.MoveForward();
-            UpdateCurrentDirectory();
+            RefreshCurrentDirectory();
         }
 
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
+            TaggedFilePath selectedItem = folderContentsBox.SelectedItem;
 
             // If it's a shortcut, look up its target
             if (selectedItem.Extension.ToLower() == ".lnk")
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // If the selected item is a folder, move to that folder.
-            DirectoryInfo dir = selectedItem as DirectoryInfo;
-            if (dir != null)
+            if (selectedItem.IsFolder)
             {
-                pathHistory.Push(dir.FullName);
-                UpdateCurrentDirectory();
+                pathHistory.Push(selectedItem.FullPath);
+                RefreshCurrentDirectory();
 
                 return;
             }
 
-            // If the selected item is a file, open that file.
-            FileInfo file = selectedItem as FileInfo;
-            if (file != null)
-            {
-                System.Diagnostics.Process.Start(file.FullName);
-            }
+            // The selected item is a file, so open that file.
+            System.Diagnostics.Process.Start(selectedItem.FullPath);
         }
     }
 }

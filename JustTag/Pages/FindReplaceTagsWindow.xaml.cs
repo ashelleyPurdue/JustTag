@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using JustTag.Controls;
+using JustTag.Tagging;
 
 namespace JustTag.Pages
 {
@@ -34,37 +35,6 @@ namespace JustTag.Pages
             replaceTextbox.autoCompletionSource = autoCompleteTags;
         }
 
-        private void ReplaceTags(string findTag, string replaceTag)
-        {
-            // Loop over all files in the directory
-            DirectoryInfo dir = new DirectoryInfo(directory);
-            var files = dir.EnumerateFileSystemInfos();
-
-            foreach (FileSystemInfo f in files)
-            {
-                // Get the tags
-                TaggedFileName fname = new TaggedFileName(f.Name);
-
-                // Skip this file if it doesn't have the find tag
-                if (!fname.tags.Contains(findTag))
-                    continue;
-
-                // Replace the tag
-                fname.tags.Remove(findTag);
-                fname.tags.Add(replaceTag);
-
-                // Save the changes to the file system.
-                try
-                {
-                    Utils.ChangeFileTags(f, fname);
-                }
-                catch (IOException e)
-                {
-                    MessageBox.Show(e.Message);
-                }
-            }
-        }
-
         private async void replaceButton_Click(object sender, RoutedEventArgs e)
         {
             string findTag = findTextbox.Text;
@@ -75,10 +45,7 @@ namespace JustTag.Pages
             progressBar.Visibility = Visibility.Visible;
 
             // Replace the tags asynchronously
-            await Task.Run(() =>
-            {
-                ReplaceTags(findTag, replaceTag);
-            });
+            await Task.Run(() => TagUtils.RenameTag(directory, findTag, replaceTag));
 
             // Close this window
             Close();

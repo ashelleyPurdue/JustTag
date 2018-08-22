@@ -8,10 +8,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using JustTag.Pages;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.PreviewerControls
 {
+    // TODO: Consider completely replacing this control with a different external library, because FFME
+    // has been more trouble than it's worth.  For this reason, I'm not going to bother migrating this
+    // class.
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
     /// </summary>
@@ -43,25 +46,22 @@ namespace JustTag.Controls.PreviewerControls
 
         // Misc methods
 
-        public bool CanOpen(FileSystemInfo file) => file is FileInfo;   // TODO: Only return true if it's a video file.
+        public bool CanOpen(TaggedFilePath file) => !file.IsFolder;   // TODO: Only return true if it's a video file.
 
         /// <summary>
         /// Opens the given file in the video player.
         /// </summary>
         /// <param name="selectedFile"></param>
-        public async Task OpenPreview(FileSystemInfo selectedFile)
+        public async Task OpenPreview(TaggedFilePath selectedFile)
         {
-            currentFile = (FileInfo)selectedFile;
-
-            // Reset the panning and zooming
-            zoomBorder.Reset();
+            currentFile = selectedFile.ToFSInfo() as FileInfo;
 
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
-                cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
+                cachedGifDuration = CalculateGifDuration(currentFile.FullName);
 
             // Open the file and autoplay it
-            await videoPlayer.Open(new Uri(selectedFile.FullName));
+            await videoPlayer.Open(new Uri(currentFile.FullName));
             await videoPlayer.Play();
 
             UpdateControls();
@@ -160,10 +160,10 @@ namespace JustTag.Controls.PreviewerControls
             # endif
         }
 
-        private void playButton_Click(object sender, RoutedEventArgs e)
+        private async void playButton_Click(object sender, RoutedEventArgs e)
         {
             // Play/pause the video
-            PlayOrPause(!videoPlayer.IsPlaying);
+            await PlayOrPause(!videoPlayer.IsPlaying);
         }
 
         private void videoTimeSlider_MouseMoved(object sender, MouseEventArgs e)
@@ -180,10 +180,10 @@ namespace JustTag.Controls.PreviewerControls
             videoPlayer.Position = TimeSpan.FromSeconds(time);
         }
 
-        private void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void videoTimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
         {
             // Don't let the slider move on its own while the user is dragging it
-            PlayOrPause(false);
+            await PlayOrPause(false);
         }
 
         private void videoPlayer_PositionChanged(object sender, Unosquare.FFME.Events.PositionChangedRoutedEventArgs e)

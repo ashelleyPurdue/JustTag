@@ -10,6 +10,8 @@ using System.Windows.Media.Imaging;
 using System.Globalization;
 using System.Windows;
 using System.Text.RegularExpressions;
+using JustTag.Tagging;
+using AlphaFS = Alphaleonis.Win32.Filesystem;
 
 namespace JustTag
 {
@@ -44,18 +46,15 @@ namespace JustTag
         /// </summary>
         /// <param name="shortcut"></param>
         /// <returns></returns>
-        public static FileSystemInfo GetShortcutTarget(FileSystemInfo shortcut)
+        public static TaggedFilePath GetShortcutTarget(TaggedFilePath shortcut)
         {
             // Get the target path
             IWshShell shell = new WshShell();
-            IWshShortcut lnk = shell.CreateShortcut(shortcut.FullName);
+            IWshShortcut lnk = shell.CreateShortcut(shortcut.FullPath);
             string target = lnk.TargetPath;
 
-            // Put it in a FileSystemInfo of the correct type
-            if (Directory.Exists(target))
-                return new DirectoryInfo(target);
-
-            return new FileInfo(target);
+            // Put it in a TaggedFilePath
+            return new TaggedFilePath(target, Directory.Exists(target));
         }
 
         /// <summary>
@@ -91,11 +90,12 @@ namespace JustTag
         /// Returns if the given file is an image
         /// Just does a naive check of the file extention :(
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        public static bool IsImageFile(FileSystemInfo file)
+        public static bool IsImageFile(string filePath)
         {
-            if (!(file is FileInfo))
+            // If it's a directory, then it can't possibly be an image file.
+            if (AlphaFS.Directory.Exists(filePath))
                 return false;
 
             // Is this all of them?  I have this tingling
@@ -110,7 +110,7 @@ namespace JustTag
                 ".gif"
             };
 
-            string ex = file.Extension.ToLower();
+            string ex = AlphaFS.Path.GetExtension(filePath).ToLower();
             return formats.Contains(ex);
         }
 
@@ -144,6 +144,41 @@ namespace JustTag
         }
 
         /// <summary>
+        /// Loads a bitmap source containing the given image.
+        /// Supports long paths
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static ImageSource LoadImage(string filePath)
+        {
+            // If it's not a long path, we can just load it using a URI
+            const int MAX_PATH = 260;
+            if (filePath.Length < MAX_PATH)
+            {
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;     // Ensures that the file will be closed immediately
+                bmp.UriSource = new Uri(filePath);
+                bmp.EndInit();
+
+                return bmp;
+            }
+
+            // It's a long path.  Frustratingly, the Uri class doesn't
+            // support long paths, so we need to load the image manually.
+            using (FileStream fs = AlphaFS.File.Open(filePath, FileMode.Open))
+            {
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;     // Ensures that the file will be closed immediately
+                bmp.StreamSource = fs;
+                bmp.EndInit();
+
+                return bmp;
+            }
+        }
+
+        /// <summary>
         /// Shorthand for constructing a FormattedText object with the given control's font parameters
         /// </summary>
         /// <param name="text"></param>
@@ -168,81 +203,6 @@ namespace JustTag
                 control.FontSize,
                 Brushes.Black
             );
-        }
-
-        /// <summary>
-        /// Returns all files/folders in the given directory that match the tag filter
-        /// </summary>
-        /// <param name="dir"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public static IEnumerable<FileSystemInfo> GetMatchingFiles(
-            DirectoryInfo   dir,
-            TagFilter       filter,
-            SortMethod      sortMethod = SortMethod.name,
-            bool            descending = false)
-        {
-            // Decide which funciton will be used to sort the files in the list
-            SortFunction sortFunction = SortMethodExtensions.GetSortFunction(sortMethod);
-
-            // Get all files/folders that match the filter
-            IEnumerable<FileSystemInfo> files =
-                from FileInfo f in dir.EnumerateFiles()
-                where filter.Matches(f.Name)
-                orderby sortFunction(f) ascending
-                select f;
-
-            IEnumerable<FileSystemInfo> folders =
-                from DirectoryInfo d in dir.EnumerateDirectories()
-                where filter.Matches(d.Name)
-                orderby sortFunction(d) ascending
-                select d;
-
-            // Sort them by descending, if the box is checked
-            if (descending)
-            {
-                files = files.Reverse();
-                folders = folders.Reverse();
-            }
-
-            // Combine the folders and files into the same list
-            // Folders are added first for easy navigation
-            return folders.Concat(files);
-        }
-
-        /// <summary>
-        /// Renames the given file so it has the given tags
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="newTags"></param>
-        public static void ChangeFileTags(FileSystemInfo file, TaggedFileName fname)
-        {
-            // Find the new name
-            string newName = fname.ToString();
-
-            // Find the full path and move it there.
-            // Frustratingly, FileInfo and DirectoryInfo both have
-            // different names for the "parent" object, hence the
-            // repetition.
-            if (file is FileInfo)
-            {
-                FileInfo f = (FileInfo)file;
-
-                string parentPath = f.Directory.FullName;
-                string newPath = System.IO.Path.Combine(parentPath, newName);
-
-                f.MoveTo(newPath);
-            }
-            else
-            {
-                DirectoryInfo f = (DirectoryInfo)file;
-
-                string parentPath = f.Parent.FullName;
-                string newPath = System.IO.Path.Combine(parentPath, newName);
-
-                f.MoveTo(newPath);
-            }
-
         }
     }
 }

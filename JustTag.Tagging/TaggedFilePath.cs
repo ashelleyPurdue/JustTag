@@ -47,7 +47,7 @@ namespace JustTag.Tagging
         /// <summary>
         /// Parses the given file path
         /// </summary>
-        internal TaggedFilePath(string filePath, bool isFolder)
+        public TaggedFilePath(string filePath, bool isFolder)
         {
             IsFolder = isFolder;
 
@@ -88,6 +88,11 @@ namespace JustTag.Tagging
             tags = withoutBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        [Obsolete("This is supposed to only be used for migrating.  If you're seeing this, you still have some migrating to do!")]
+        public TaggedFilePath(System.IO.FileSystemInfo fsInfo)
+            : this(fsInfo.FullName, fsInfo is System.IO.DirectoryInfo)
+        { }
+
         /// <summary>
         /// So we can use object intializer syntax
         /// </summary>
@@ -127,6 +132,22 @@ namespace JustTag.Tagging
 
             // Return it
             return output;
+        }
+
+        [Obsolete("If you're seeing this warning, the migration isn't done yet.")]
+        /// <summary>
+        /// Converts it to a FileSystemInfo.
+        /// This is to help migrate the project to TaggedFilePath.
+        /// By the end of the migration, all uses of this should be
+        /// gone and this function should be deleted.
+        /// </summary>
+        /// <returns></returns>
+        public System.IO.FileSystemInfo ToFSInfo()
+        {
+            if (IsFolder)
+                return new System.IO.DirectoryInfo(FullPath);
+            else
+                return new System.IO.FileInfo(FullPath);
         }
 
         private string GetTagArea()
