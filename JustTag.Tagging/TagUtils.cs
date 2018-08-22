@@ -74,14 +74,14 @@ namespace JustTag.Tagging
                 from FileInfo fsInfo in folder.EnumerateFiles()
                 let path = new TaggedFilePath(fsInfo.FullName, false)
                 where filter.Matches(path)
-                orderby sortFunction(path) ascending   // TODO: Replace this with a TaggedFileName
+                orderby sortFunction(path) ascending
                 select path;
 
             IEnumerable<TaggedFilePath> folders =
                 from DirectoryInfo fsInfo in folder.EnumerateDirectories()
                 let path = new TaggedFilePath(fsInfo.FullName, true)
                 where filter.Matches(path)
-                orderby sortFunction(path) ascending   // TODO: Replace this with a TaggedFileName
+                orderby sortFunction(path) ascending
                 select path;
 
             // Sort them by descending, if the box is checked

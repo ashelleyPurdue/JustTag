@@ -54,7 +54,7 @@ namespace JustTag.Pages
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // Show the file preview
-            await filePreviewer.OpenPreview(selectedItem);  // TODO: Migrate file previewer
+            await filePreviewer.OpenPreview(selectedItem);
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
