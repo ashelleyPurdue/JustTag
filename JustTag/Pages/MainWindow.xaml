@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JustTag.Pages"
         xmlns:controls="clr-namespace:JustTag.Controls"
+        xmlns:filebrowser="clr-namespace:JustTag.Controls.FileBrowser"
         xmlns:previewControls="clr-namespace:JustTag.Controls.PreviewerControls"
         mc:Ignorable="d"
         Title="JustTag" Height="883" Width="1302.5" Background="#FFF0F0F0">
@@ -12,7 +13,6 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="26*"/>
-            <RowDefinition Height="23"/>
             <RowDefinition Height="610*"/>
             <RowDefinition Height="193*"/>
         </Grid.RowDefinitions>
@@ -41,7 +41,7 @@
         <previewControls:FilePreviewer x:Name="filePreviewer"
             Grid.ColumnSpan="2"
             Grid.Column="2"
-            Grid.Row="2"
+            Grid.Row="1"
             ClipToBounds="True"
             Focusable="True"
             VerticalAlignment="Stretch"
@@ -50,7 +50,7 @@
         <Button x:Name="fullScreenButton"
             Grid.ColumnSpan="1"
             Grid.Column="3"
-            Grid.Row="2"
+            Grid.Row="1"
             ClipToBounds="True"
             Focusable="True"
             VerticalAlignment="Bottom"
@@ -63,61 +63,17 @@
             <Image Source="../Resources/fullscreen.png" />
         </Button>
 
-        <TextBox x:Name="currentPathBox"
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="4"
-            TextWrapping="Wrap"
-            VerticalAlignment="Stretch"
-            KeyUp="textbox_KeyUp"
-            TextChanged="currentPathBox_TextChanged"
-            Margin="83,0,5,0"
-         />
-
-        <DockPanel 
+        <filebrowser:FileBrowser x:Name="fileBrowser"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.RowSpan="2"
             Margin="5,5,5,10"
-         >
-            <DockPanel DockPanel.Dock="Top">
-                <Label Content="Filter:"/>
-                <controls:AutoCompleteTextbox x:Name="tagFilterTextbox"
-                         HorizontalAlignment="Stretch"
-                         KeyUp="textbox_KeyUp"
-                />
-            </DockPanel>
-
-            <Grid DockPanel.Dock="Top">
-
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <Label>Sort by:</Label>
-                    <ComboBox x:Name="sortByBox"/>
-                    <CheckBox x:Name="descendingBox"
-                              Margin="5"
-                              VerticalAlignment="Center"
-                              Content="Descending"
-                    />
-                </StackPanel>
-
-                <Button x:Name="searchButton"
-                        Content="Search"
-                        Margin="5"
-                        HorizontalAlignment="Right"
-                        Click="searchButton_Click"
-                />
-            </Grid>
-
-            <controls:FileList x:Name="folderContentsBox"
-                Margin="5"
-                MouseDoubleClick="folderContentsBox_MouseDoubleClick"
-                SelectionChanged="folderContentsBox_SelectionChanged"
-            />
-        </DockPanel>
+            SelectedFileChanged="fileBrowser_SelectedFileChanged"
+        />
 
         <GroupBox Header="This file's tags"
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="2"
             Margin="10,5,10,10"
          >
@@ -143,7 +99,7 @@
 
         <GroupBox Header="All Known Tags"
             Grid.Column="3"
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.RowSpan="1"
         >
             <ListBox x:Name="allTagsListbox"
@@ -152,27 +108,9 @@
                      MouseMove="allTagsListbox_MouseMove"/>
         </GroupBox>
 
-        <Grid 
-            Grid.Row="1"
-            Grid.Column="0"
-            HorizontalAlignment="Left" 
-            VerticalAlignment="Stretch"
-            Margin="5,0,0,0"
-            Width="73"
-        >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Name="backButton" Content="&lt;-" Click="backButton_Click" />
-            <Button Grid.Column="1" x:Name="upButton" Content="^" Click="upButton_Click"/>
-            <Button Grid.Column="2" x:Name="forwardButton" Content="-&gt;" Click="forwardButton_Click"/>
-        </Grid>
-
         <GridSplitter
             HorizontalAlignment="Left"
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.RowSpan="2"
             Grid.Column="2"
             Width="5"
@@ -181,7 +119,7 @@
          />
 
         <GridSplitter
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="2"
             Grid.ColumnSpan="2"
             ResizeDirection="Rows"
@@ -193,7 +131,7 @@
          />
 
         <GridSplitter
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="3"
             ResizeDirection="Columns"
             VerticalAlignment="Stretch"

@@ -14,19 +14,20 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using System.IO;
+using JustTag.Tagging;
 
-namespace JustTag.Controls
+namespace JustTag.Controls.FileBrowser
 {
     /// <summary>
     /// Interaction logic for FileListItem.xaml
     /// </summary>
     public partial class FileListItem : UserControl
     {
-        public readonly FileSystemInfo file;
+        public readonly TaggedFilePath file;
 
         private static Dictionary<string, ImageSource> fileIconCache = new Dictionary<string, ImageSource>();
 
-        public FileListItem(FileSystemInfo file)
+        public FileListItem(TaggedFilePath file)
         {
             InitializeComponent();
             this.file = file;
@@ -34,8 +35,8 @@ namespace JustTag.Controls
             nameLabel.Content = file.Name;
 
             // Change the icon if it's not a folder
-            if (file is FileInfo)
-                iconImg.Source = Utils.GetFileIcon(file);
+            if (!file.IsFolder)
+                iconImg.Source = Utils.GetFileIcon(new FileInfo(file.FullPath));    // TODO: Chnage Utils.GetFileIcon to use a TaggedFilePath
         }
 
     }

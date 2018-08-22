@@ -17,33 +17,22 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-
-        <paz:ZoomBorder Name="zoomBorder"
-            Grid.Row="0"
-            Stretch="None"
-            ZoomSpeed="1.2" 
-            ClipToBounds="True"
-            Focusable="True"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-        >
-            <ffme:MediaElement Name="videoPlayer"
-                LoadedBehavior="Manual"
-                ScrubbingEnabled="True"
-                MediaFailed="videoPlayer_MediaFailed"
-                PositionChanged="videoPlayer_PositionChanged"
-                MediaEnded="videoPlayer_MediaEnded"
-             />
-        </paz:ZoomBorder>
+        <ffme:MediaElement Name="videoPlayer"
+            LoadedBehavior="Manual"
+            ScrubbingEnabled="True"
+            MediaFailed="videoPlayer_MediaFailed"
+            PositionChanged="videoPlayer_PositionChanged"
+            MediaEnded="videoPlayer_MediaEnded"
+        />
 
         <Grid x:Name="videoControls"
-              Height="38"
-              Grid.Row="0"
-              Margin="10"
-              VerticalAlignment="Bottom"
+            Height="38"
+            Grid.Row="0"
+            Margin="10"
+            VerticalAlignment="Bottom"
             
-              Visibility="Visible"
-              Background="#7F000000" 
+            Visibility="Visible"
+            Background="#7F000000" 
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
