@@ -31,7 +31,7 @@ namespace JustTag.Pages
 
         private void fullScreenButton_Click(object sender, RoutedEventArgs e)
         {
-            FileSystemInfo[] browsableFiles = fileBrowser.VisibleFiles;
+            TaggedFilePath[] browsableFiles = fileBrowser.VisibleFiles;
             Fullscreen fullscreen = new Fullscreen(filePreviewer, browsableFiles, fileBrowser.SelectedIndex);
             Hide();
             fullscreen.ShowDialog();

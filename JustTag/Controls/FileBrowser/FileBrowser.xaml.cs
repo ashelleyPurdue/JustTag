@@ -37,8 +37,7 @@ namespace JustTag.Controls.FileBrowser
         }
 
         public TaggedFilePath SelectedItem => folderContentsBox.SelectedItem;
-        public FileSystemInfo[] VisibleFiles => throw new NotImplementedException();
-        // public TaggedFilePath[] VisibleFiles => folderContentsBox.ItemsSource.ToArray(); // TODO: uncomment this when migrating fullscreen mode
+        public TaggedFilePath[] VisibleFiles => folderContentsBox.ItemsSource.ToArray();
 
         public IList SelectedItems => folderContentsBox.SelectedItems;
 
