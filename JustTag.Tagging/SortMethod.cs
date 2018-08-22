@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace JustTag
+namespace JustTag.Tagging
 {
     public enum SortMethod
     {
@@ -15,7 +15,7 @@ namespace JustTag
         shuffle
     }
 
-    public delegate IComparable SortFunction(FileSystemInfo f);
+    public delegate IComparable SortFunction(TaggedFilePath f);
     public static class SortMethodExtensions
     {
         private static Dictionary<SortMethod, SortFunction> sorters = new Dictionary<SortMethod, SortFunction>();
@@ -26,7 +26,7 @@ namespace JustTag
         {
             // Associate each value of the enum with a sort function
             sorters.Add(SortMethod.name, f => f.Name);
-            sorters.Add(SortMethod.date, f => f.CreationTime);
+            sorters.Add(SortMethod.date, f => File.GetCreationTime(f.FullPath));
             sorters.Add(SortMethod.comic, ComicSort);
             sorters.Add(SortMethod.shuffle, f => randGen.Next());
         }
@@ -36,7 +36,7 @@ namespace JustTag
         /// </summary>
         /// <param name="sortMethod"></param>
         /// <returns></returns>
-        public static SortFunction GetSortFunction(SortMethod sortMethod) => sorters[sortMethod];
+        public static SortFunction GetSortFunction(this SortMethod sortMethod) => sorters[sortMethod];
 
         /// <summary>
         /// A mode that sorts files by a number at the beginning of their name
@@ -44,7 +44,7 @@ namespace JustTag
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
-        private static IComparable ComicSort(FileSystemInfo f)
+        private static IComparable ComicSort(TaggedFilePath f)
         {
             // Extract the first number you can find out of the name
 

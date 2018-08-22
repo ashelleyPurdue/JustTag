@@ -5,13 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.IO;
+using JustTag.Tagging;
 using JustTag.Controls.PreviewerControls;
 
 namespace JustTag.Pages
@@ -22,7 +17,7 @@ namespace JustTag.Pages
     /// </summary>
     public partial class Fullscreen : Window
     {
-        private FileSystemInfo[] browsableFiles;
+        private TaggedFilePath[] browsableFiles;
 
         private int currentFileIndex = 0;
         private FilePreviewer filePreviewer;
@@ -36,7 +31,7 @@ namespace JustTag.Pages
         /// <param name="filePreviewer"> We pass the file previewer object in from MainWindow so it will have the same state</param>
         /// <param name="browsableFiles"> All of the files that the user can flip between with the arrow buttons</param>
         /// <param name="currentFile"> The file start with showing</param>
-        public Fullscreen(FilePreviewer filePreviewer, FileSystemInfo[] browsableFiles, int currentFileIndex)
+        public Fullscreen(FilePreviewer filePreviewer, TaggedFilePath[] browsableFiles, int currentFileIndex)
         {
             InitializeComponent();
 
@@ -60,8 +55,8 @@ namespace JustTag.Pages
 
         private void UpdateUI()
         {
-            currentFileIndex = Utils.WrapIndex(currentFileIndex, browsableFiles.Length); // Wrap the index around
-            filePreviewer.OpenPreview(browsableFiles[currentFileIndex]);                 // Show the file
+            currentFileIndex = Utils.WrapIndex(currentFileIndex, browsableFiles.Length);        // Wrap the index around
+            filePreviewer.OpenPreview(browsableFiles[currentFileIndex]);    // Show the file
         }
 
 

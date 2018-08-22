@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JustTag
+namespace JustTag.Tagging
 {
     public class TagFilter
     {
@@ -40,28 +40,25 @@ namespace JustTag
         }
 
         /// <summary>
-        /// Returns whether or not the given file name matches the tag filter
+        /// Returns whether or not the given file matches the tag filter
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="file"></param>
         /// <returns></returns>
-        public bool Matches(string fileName)
+        public bool Matches(TaggedFilePath file)
         {
-            // Get all the tags from the filename
-            TaggedFileName fname = new TaggedFileName(fileName);
-
             // HACK: If we're searching for untagged files, then
             // return true if there are no tags
             if (untagged)
-                return fname.tags.Count == 0;
+                return !file.Tags.Any();
 
             // Return false if any of the required tags are missing
             foreach (string t in requiredTags)
-                if (!fname.tags.Contains(t))
+                if (!file.Tags.Contains(t))
                     return false;
 
             // Return false if any of the forbidden tags are present
             foreach (string t in forbiddenTags)
-                if (fname.tags.Contains(t))
+                if (file.Tags.Contains(t))
                     return false;
 
             // It passed the filter

@@ -8,11 +8,12 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>JustTag</RootNamespace>
     <AssemblyName>JustTag</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,6 +38,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AlphaFS, Version=2.2.0.0, Culture=neutral, PublicKeyToken=4d31a58f7d7ad5c9, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll</HintPath>
+    </Reference>
     <Reference Include="ffme.common, Version=3.4.2.240, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FFME.Windows.3.4.240\lib\net461\ffme.common.dll</HintPath>
     </Reference>
@@ -52,6 +56,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -76,14 +81,20 @@
     <Compile Include="Controls\AutoCompleteTextbox.xaml.cs">
       <DependentUpon>AutoCompleteTextbox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FileBrowser\FileBrowser.xaml.cs">
+      <DependentUpon>FileBrowser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PreviewerControls\ImagePreviewer.xaml.cs">
+      <DependentUpon>ImagePreviewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PreviewerControls\IPreviewerControl.cs" />
     <Compile Include="Pages\DeleteTagWindow.xaml.cs">
       <DependentUpon>DeleteTagWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileList.xaml.cs">
+    <Compile Include="Controls\FileBrowser\FileList.xaml.cs">
       <DependentUpon>FileList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileListItem.xaml.cs">
+    <Compile Include="Controls\FileBrowser\FileListItem.xaml.cs">
       <DependentUpon>FileListItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PreviewerControls\FilePreviewer.xaml.cs">
@@ -101,9 +112,6 @@
     <Compile Include="Pages\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SortMethod.cs" />
-    <Compile Include="TagFilter.cs" />
-    <Compile Include="TaggedFileName.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Controls\PreviewerControls\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
@@ -112,15 +120,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\FileBrowser\FileBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PreviewerControls\ImagePreviewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\DeleteTagWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\FileList.xaml">
+    <Page Include="Controls\FileBrowser\FileList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\FileListItem.xaml">
+    <Page Include="Controls\FileBrowser\FileListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -252,6 +268,12 @@
     <Resource Include="Resources\volumeMutedIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JustTag.Tagging\JustTag.Tagging.csproj">
+      <Project>{06fe18bf-672d-4f47-9056-573572918da0}</Project>
+      <Name>JustTag.Tagging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
