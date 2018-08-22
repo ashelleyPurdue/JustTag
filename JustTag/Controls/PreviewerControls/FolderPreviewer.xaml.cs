@@ -47,18 +47,15 @@ namespace JustTag.Controls.PreviewerControls
 
         public async Task OpenPreview(TaggedFilePath folder)
         {
-            DirectoryInfo dir = new DirectoryInfo(folder.FullPath);
-
             // Close the previous folder
             await ClosePreview();
 
-            // Get the icons of the first few files
+            // Get the thumbnails of the first few files
             ImageSource[] selectedIcons = null;
 
-            var allIcons =  from FileSystemInfo file in dir.EnumerateFileSystemInfos()
-                            where file is FileInfo
-                            orderby file.Name
-                            select GetThumbnail(file);
+            var allIcons = from TaggedFilePath file in TagUtils.GetMatchingFiles(folder.FullPath, "")
+                           where !file.IsFolder
+                           select GetThumbnail(file);
 
             selectedIcons = allIcons.Take(MAX_ICONS).ToArray();
 
@@ -76,20 +73,20 @@ namespace JustTag.Controls.PreviewerControls
             return Task.CompletedTask;
         }
 
-        private ImageSource GetThumbnail(FileSystemInfo file)
+        private ImageSource GetThumbnail(TaggedFilePath file)
         {
             // TODO: If it's a directory, return a picture of a folder
-            if (file is DirectoryInfo)
+            if (file.IsFolder)
                 return null;
 
             // If the file isn't an image, then just use its icon as the thumbnail
             // TODO: Let the thumnail for videos be the first frame
-            if (!Utils.IsImageFile(file))
-                return Utils.GetFileIcon(file);
+            if (!Utils.IsImageFile(file.FullPath))
+                return Utils.GetFileIcon(new FileInfo(file.FullPath));   // TODO: Make GetFileIcon take a string path instead.
 
             // The file is an image, so it serves as its own thumbnail
             // Load the image into a bitmap and return it.
-            return Utils.LoadImage(file.FullName);
+            return Utils.LoadImage(file.FullPath);
         }
 
         private void stackPanel_LayoutUpdated(object sender, EventArgs e)

@@ -90,11 +90,12 @@ namespace JustTag
         /// Returns if the given file is an image
         /// Just does a naive check of the file extention :(
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        public static bool IsImageFile(FileSystemInfo file)
+        public static bool IsImageFile(string filePath)
         {
-            if (!(file is FileInfo))
+            // If it's a directory, then it can't possibly be an image file.
+            if (AlphaFS.Directory.Exists(filePath))
                 return false;
 
             // Is this all of them?  I have this tingling
@@ -109,7 +110,7 @@ namespace JustTag
                 ".gif"
             };
 
-            string ex = file.Extension.ToLower();
+            string ex = AlphaFS.Path.GetExtension(filePath).ToLower();
             return formats.Contains(ex);
         }
 

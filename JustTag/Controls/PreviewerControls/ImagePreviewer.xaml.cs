@@ -20,7 +20,7 @@ namespace JustTag.Controls.PreviewerControls
             InitializeComponent();
         }
 
-        public bool CanOpen(TaggedFilePath file) => Utils.IsImageFile(file.ToFSInfo());
+        public bool CanOpen(TaggedFilePath file) => Utils.IsImageFile(file.FullPath);
 
         public Task ClosePreview()
         {
