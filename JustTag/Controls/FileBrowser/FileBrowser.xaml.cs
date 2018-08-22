@@ -36,9 +36,9 @@ namespace JustTag.Controls.FileBrowser
             set => folderContentsBox.SelectedIndex = value;
         }
 
-        public FileSystemInfo SelectedItem => folderContentsBox.SelectedItem;   // TODO: Change this to a string
-
-        public FileSystemInfo[] VisibleFiles => folderContentsBox.ItemsSource.ToArray();    // TODO: Chnage this to a string[]
+        public TaggedFilePath SelectedItem => folderContentsBox.SelectedItem;
+        public FileSystemInfo[] VisibleFiles => throw new NotImplementedException();
+        // public TaggedFilePath[] VisibleFiles => folderContentsBox.ItemsSource.ToArray(); // TODO: uncomment this when migrating fullscreen mode
 
         public IList SelectedItems => folderContentsBox.SelectedItems;
 
@@ -98,9 +98,7 @@ namespace JustTag.Controls.FileBrowser
             );
 
             // Add them all to the list view
-            // TODO: Remove this hacky select statement after we migrate FileList
-            folderContentsBox.ItemsSource = matchingFiles
-                .Select(f => f.IsFolder ? (new DirectoryInfo(f.FullPath) as FileSystemInfo) : new FileInfo(f.FullPath));
+            folderContentsBox.ItemsSource = matchingFiles;
 
             // Scroll back to the old selected index
             folderContentsBox.SelectedIndex = selectedIndex;
@@ -168,28 +166,23 @@ namespace JustTag.Controls.FileBrowser
 
         private void folderContentsBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            FileSystemInfo selectedItem = folderContentsBox.SelectedItem as FileSystemInfo;
+            TaggedFilePath selectedItem = folderContentsBox.SelectedItem;
 
             // If it's a shortcut, look up its target
             if (selectedItem.Extension.ToLower() == ".lnk")
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // If the selected item is a folder, move to that folder.
-            DirectoryInfo dir = selectedItem as DirectoryInfo;
-            if (dir != null)
+            if (selectedItem.IsFolder)
             {
-                pathHistory.Push(dir.FullName);
+                pathHistory.Push(selectedItem.FullPath);
                 RefreshCurrentDirectory();
 
                 return;
             }
 
-            // If the selected item is a file, open that file.
-            FileInfo file = selectedItem as FileInfo;
-            if (file != null)
-            {
-                System.Diagnostics.Process.Start(file.FullName);
-            }
+            // The selected item is a file, so open that file.
+            System.Diagnostics.Process.Start(selectedItem.FullPath);
         }
     }
 }

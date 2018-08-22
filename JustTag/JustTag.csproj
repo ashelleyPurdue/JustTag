@@ -112,8 +112,6 @@
     <Compile Include="Pages\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TagFilter.cs" />
-    <Compile Include="TaggedFileName.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Controls\PreviewerControls\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>

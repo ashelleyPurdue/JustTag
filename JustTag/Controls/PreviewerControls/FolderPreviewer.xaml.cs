@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.PreviewerControls
 {
@@ -42,11 +43,11 @@ namespace JustTag.Controls.PreviewerControls
             }
         }
 
-        public bool CanOpen(FileSystemInfo file) => file is DirectoryInfo;
+        public bool CanOpen(TaggedFilePath file) => file.IsFolder;
 
-        public async Task OpenPreview(FileSystemInfo fsInfo)
+        public async Task OpenPreview(TaggedFilePath folder)
         {
-            DirectoryInfo dir = (DirectoryInfo)fsInfo;
+            DirectoryInfo dir = new DirectoryInfo(folder.FullPath);
 
             // Close the previous folder
             await ClosePreview();
@@ -54,7 +55,7 @@ namespace JustTag.Controls.PreviewerControls
             // Get the icons of the first few files
             ImageSource[] selectedIcons = null;
 
-            var allIcons = from FileSystemInfo file in dir.EnumerateFileSystemInfos()
+            var allIcons =  from FileSystemInfo file in dir.EnumerateFileSystemInfos()
                             where file is FileInfo
                             orderby file.Name
                             select GetThumbnail(file);
@@ -70,9 +71,7 @@ namespace JustTag.Controls.PreviewerControls
         {
             // Close all of the images
             foreach (Image previewIcon in previewIcons)
-            {
                 previewIcon.Source = null;
-            }
 
             return Task.CompletedTask;
         }

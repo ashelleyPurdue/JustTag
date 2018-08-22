@@ -6,13 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.PreviewerControls
 {
@@ -26,7 +20,7 @@ namespace JustTag.Controls.PreviewerControls
             InitializeComponent();
         }
 
-        public bool CanOpen(FileSystemInfo file) => Utils.IsImageFile(file);
+        public bool CanOpen(TaggedFilePath file) => Utils.IsImageFile(file.ToFSInfo());
 
         public Task ClosePreview()
         {
@@ -34,12 +28,12 @@ namespace JustTag.Controls.PreviewerControls
             return Task.CompletedTask;
         }
 
-        public Task OpenPreview(FileSystemInfo file)
+        public Task OpenPreview(TaggedFilePath file)
         {
             // Reset the panning/zooming
             zoomBorder.Reset();
 
-            image.Source = Utils.LoadImage(file.FullName);
+            image.Source = Utils.LoadImage(file.FullPath);
             return Task.CompletedTask;
         }
     }

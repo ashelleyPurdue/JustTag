@@ -18,20 +18,12 @@ namespace JustTag.Pages
     /// </summary>
     public partial class MainWindow : Window
     {
-        private NavigationStack<string> pathHistory;
-
-        // Temporary redirects while refactoring
-        private AutoCompleteTextbox tagFilterTextbox => fileBrowser.FilterTextbox;
-
         public MainWindow()
         {
             InitializeComponent();
 
             // Hook the listbox up to the list of known tags
-            allTagsListbox.ItemsSource = Utils.allKnownTags;
-
-            // Set the filter textbox's autocomplete source to all the tags
-            tagFilterTextbox.autoCompletionSource = Utils.allKnownTags;
+            allTagsListbox.ItemsSource   = Utils.allKnownTags;
             tagsBox.autoCompletionSource = Utils.allKnownTags;
         }
 
@@ -57,19 +49,17 @@ namespace JustTag.Pages
                 return;
 
             // If the selected item is a shortcut, resolve it.
-            FileSystemInfo selectedItem = fileBrowser.SelectedItem as FileSystemInfo;
+            TaggedFilePath selectedItem = fileBrowser.SelectedItem;
             if (selectedItem.Extension.ToLower() == ".lnk")
                 selectedItem = Utils.GetShortcutTarget(selectedItem);
 
             // Show the file preview
-            await filePreviewer.OpenPreview(selectedItem);
+            await filePreviewer.OpenPreview(selectedItem);  // TODO: Migrate file previewer
 
             // Enable the tag box and update it with this file's tags
             // NOTE: This affects the shortcut itself, not its target.  This is intentional.
-            TaggedFileName fname = new TaggedFileName(selectedItem.Name);
-
             StringBuilder builder = new StringBuilder();
-            foreach (string t in fname.tags)
+            foreach (string t in selectedItem.Tags)
                 builder.AppendLine(t);
 
             tagsBox.IsEnabled = true;
@@ -106,8 +96,7 @@ namespace JustTag.Pages
         /// <param name="e"></param>
         private async void tagSaveButton_Click(object sender, RoutedEventArgs e)
         {
-            FileSystemInfo selectedItem = fileBrowser.SelectedItem;
-            TaggedFilePath fname = new TaggedFilePath(selectedItem.FullName, selectedItem is DirectoryInfo);
+            TaggedFilePath selectedItem = fileBrowser.SelectedItem;
 
             // Parse the tags into a list
             string[] tags = tagsBox.Text.Split(new char[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
@@ -116,7 +105,7 @@ namespace JustTag.Pages
             try
             {
                 await filePreviewer.ClosePreview();
-                TagUtils.ChangeTagsAndSave(fname, tags);
+                TagUtils.ChangeTagsAndSave(selectedItem, tags);
             }
             catch (IOException err)
             {
@@ -182,10 +171,10 @@ namespace JustTag.Pages
         {
             // Add the selected tag to the filter, if it isn't there already
             string selectedTag = allTagsListbox.SelectedItem as string;
-            string[] filterTags = tagFilterTextbox.Text.Split(' ');
+            string[] filterTags = fileBrowser.tagFilterTextbox.Text.Split(' ');
 
             if (!filterTags.Contains(selectedTag))
-                tagFilterTextbox.Text += " " + selectedTag;
+                fileBrowser.tagFilterTextbox.Text += " " + selectedTag;
         }
 
         /// <summary>

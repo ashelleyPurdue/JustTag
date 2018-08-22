@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using JustTag.Tagging;
 using JustTag.Controls.PreviewerControls;
 
 namespace JustTag.Pages
@@ -60,8 +61,8 @@ namespace JustTag.Pages
 
         private void UpdateUI()
         {
-            currentFileIndex = Utils.WrapIndex(currentFileIndex, browsableFiles.Length); // Wrap the index around
-            filePreviewer.OpenPreview(browsableFiles[currentFileIndex]);                 // Show the file
+            currentFileIndex = Utils.WrapIndex(currentFileIndex, browsableFiles.Length);        // Wrap the index around
+            filePreviewer.OpenPreview(new TaggedFilePath(browsableFiles[currentFileIndex]));    // Show the file
         }
 
 

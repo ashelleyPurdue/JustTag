@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.PreviewerControls
 {
@@ -19,9 +20,9 @@ namespace JustTag.Controls.PreviewerControls
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        bool CanOpen(FileSystemInfo file);
+        bool CanOpen(TaggedFilePath file);
 
-        Task OpenPreview(FileSystemInfo file);
+        Task OpenPreview(TaggedFilePath file);
         Task ClosePreview();
     }
 }

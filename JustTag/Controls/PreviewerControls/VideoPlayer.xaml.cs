@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using JustTag.Pages;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.PreviewerControls
 {
@@ -43,22 +43,22 @@ namespace JustTag.Controls.PreviewerControls
 
         // Misc methods
 
-        public bool CanOpen(FileSystemInfo file) => file is FileInfo;   // TODO: Only return true if it's a video file.
+        public bool CanOpen(TaggedFilePath file) => !file.IsFolder;   // TODO: Only return true if it's a video file.
 
         /// <summary>
         /// Opens the given file in the video player.
         /// </summary>
         /// <param name="selectedFile"></param>
-        public async Task OpenPreview(FileSystemInfo selectedFile)
+        public async Task OpenPreview(TaggedFilePath selectedFile)
         {
-            currentFile = (FileInfo)selectedFile;
+            currentFile = selectedFile.ToFSInfo() as FileInfo;
 
             // If it's a gif, calculate its duration
             if (selectedFile.Extension.ToLower() == ".gif")
-                cachedGifDuration = CalculateGifDuration(selectedFile.FullName);
+                cachedGifDuration = CalculateGifDuration(currentFile.FullName);
 
             // Open the file and autoplay it
-            await videoPlayer.Open(new Uri(selectedFile.FullName));
+            await videoPlayer.Open(new Uri(currentFile.FullName));
             await videoPlayer.Play();
 
             UpdateControls();

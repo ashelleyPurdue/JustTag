@@ -46,18 +46,15 @@ namespace JustTag
         /// </summary>
         /// <param name="shortcut"></param>
         /// <returns></returns>
-        public static FileSystemInfo GetShortcutTarget(FileSystemInfo shortcut)
+        public static TaggedFilePath GetShortcutTarget(TaggedFilePath shortcut)
         {
             // Get the target path
             IWshShell shell = new WshShell();
-            IWshShortcut lnk = shell.CreateShortcut(shortcut.FullName);
+            IWshShortcut lnk = shell.CreateShortcut(shortcut.FullPath);
             string target = lnk.TargetPath;
 
-            // Put it in a FileSystemInfo of the correct type
-            if (Directory.Exists(target))
-                return new DirectoryInfo(target);
-
-            return new FileInfo(target);
+            // Put it in a TaggedFilePath
+            return new TaggedFilePath(target, Directory.Exists(target));
         }
 
         /// <summary>

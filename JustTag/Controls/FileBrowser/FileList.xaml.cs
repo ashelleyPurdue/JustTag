@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
 using System.IO;
+using JustTag.Tagging;
 
 namespace JustTag.Controls.FileBrowser
 {
@@ -29,38 +30,35 @@ namespace JustTag.Controls.FileBrowser
             remove { list.SelectionChanged -= value; }
         }
 
-        public FileSystemInfo SelectedItem
+        public TaggedFilePath SelectedItem
         {
-            set { list.SelectedItem = value; }
-            get
-            {
-                return ((FileListItem)list.SelectedItem)?.file;
-            }
+            set => list.SelectedItem = value;
+            get => ((FileListItem)list.SelectedItem)?.file;
         }
 
         public IList SelectedItems
         {
-            get { return list.SelectedItems; }
+            get => list.SelectedItems;
         }
 
         public int SelectedIndex
         {
-            set { list.SelectedIndex = value; }
-            get { return list.SelectedIndex; }
+            set => list.SelectedIndex = value;
+            get => list.SelectedIndex;
         }
 
         #endregion
 
-        public IEnumerable<FileSystemInfo> ItemsSource
+        public IEnumerable<TaggedFilePath> ItemsSource
         {
-            get { return m_itemsSource; }
+            get => m_itemsSource;
             set
             {
                 m_itemsSource = value;
                 UpdateItems();
             }
         }
-        private IEnumerable<FileSystemInfo> m_itemsSource;
+        private IEnumerable<TaggedFilePath> m_itemsSource;
 
 
         public FileList()
@@ -71,7 +69,7 @@ namespace JustTag.Controls.FileBrowser
 
         // Interface
 
-        public void ScrollIntoView(FileSystemInfo item)
+        public void ScrollIntoView(TaggedFilePath item)
         {
             list.ScrollIntoView(item);
         }
@@ -84,7 +82,7 @@ namespace JustTag.Controls.FileBrowser
             // Add all the items to the listbox as panels
             List<FileListItem> itemControls = new List<FileListItem>();
 
-            foreach (FileSystemInfo item in m_itemsSource)
+            foreach (TaggedFilePath item in m_itemsSource)
                 itemControls.Add(new FileListItem(item));
 
             // Put all the panels into the listbox
