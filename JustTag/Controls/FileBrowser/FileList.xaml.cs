@@ -36,10 +36,7 @@ namespace JustTag.Controls.FileBrowser
             get => ((FileListItem)list.SelectedItem)?.file;
         }
 
-        public IList SelectedItems
-        {
-            get => list.SelectedItems;
-        }
+        public IList SelectedItems => list.SelectedItems;
 
         public int SelectedIndex
         {

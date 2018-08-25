@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Collections;
 using System.IO;
 using JustTag.Tagging;
 
@@ -38,8 +30,6 @@ namespace JustTag.Controls.FileBrowser
 
         public TaggedFilePath SelectedItem => folderContentsBox.SelectedItem;
         public TaggedFilePath[] VisibleFiles => folderContentsBox.ItemsSource.ToArray();
-
-        public IList SelectedItems => folderContentsBox.SelectedItems;
 
         // Child control accessors
         public AutoCompleteTextbox FilterTextbox => tagFilterTextbox;
@@ -182,6 +172,16 @@ namespace JustTag.Controls.FileBrowser
 
             // The selected item is a file, so open that file.
             System.Diagnostics.Process.Start(selectedItem.FullPath);
+        }
+
+        private void copyPathToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            // Don't do anything if nothing is selected
+            if (SelectedItem == null)
+                return;
+
+            // Copy it to the clipboard
+            Clipboard.SetText(SelectedItem.FullPath);
         }
     }
 }

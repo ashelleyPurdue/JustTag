@@ -75,6 +75,13 @@
         <local:FileList x:Name="folderContentsBox"
             Margin="5"
             MouseDoubleClick="folderContentsBox_MouseDoubleClick"
-        />
+        >
+            <UserControl.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy path to clipboard" Click="copyPathToClipboard_Click"/>
+                </ContextMenu>
+            </UserControl.ContextMenu>
+        </local:FileList>
+
     </DockPanel>
 </UserControl>
