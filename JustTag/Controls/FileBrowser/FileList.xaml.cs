@@ -26,8 +26,8 @@ namespace JustTag.Controls.FileBrowser
         #region Things shared with ListBox
         public event SelectionChangedEventHandler SelectionChanged
         {
-            add { list.SelectionChanged += value; }
-            remove { list.SelectionChanged -= value; }
+            add => list.SelectionChanged += value;
+            remove => list.SelectionChanged -= value;
         }
 
         public TaggedFilePath SelectedItem

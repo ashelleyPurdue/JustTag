@@ -9,6 +9,14 @@ namespace JustTag.Pages
     /// </summary>
     public partial class SettingsWindow : Window
     {
+        private string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+        private string[] registryPaths = new string[]
+        {
+            @"*\shell\JustTag",                     // Right-click option on files
+            @"Directory\shell\JustTag",             // Right-click option on directories
+            @"Directory\Background\shell\JustTag"   // Right-click option on the background of the current directory
+        };
 
         public SettingsWindow()
         {
@@ -30,12 +38,8 @@ namespace JustTag.Pages
             if (!isElevated)
                 installContextMenuCheckbox.IsEnabled = false;
 
-            // Start the install checkbox as checked if it's already installed(and has the correct path)
-            string regVal = Registry.GetValue(@"HKEY_CLASSES_ROOT\*\shell\JustTag\command", "", null) as string;
-
-            string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            string expectedVal = "\"" + exePath + "\" \"%1\"";
-            if (regVal == expectedVal)
+            // Start the install checkbox as checked if it's already installed(and has the correct paths)
+            if (IsContextMenuInstalled())
             {
                 // We need to temporarily unsubscribe it from the Checked event, because simply changing
                 // IsChecked will trigger it otherwise.
@@ -45,6 +49,30 @@ namespace JustTag.Pages
             }
         }
         
+        /// <summary>
+        /// Checks to see if the "Open with JustTag" option has been installed in
+        /// Windows Explorer.  It is installed if all the required registry entries
+        /// are present and set to the correct value.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsContextMenuInstalled()
+        {
+            string expectedVal = "\"" + exePath + "\" \"%1\"";
+
+            // Return false if any of the paths don't match
+            foreach (string path in registryPaths)
+            {
+                string fullPath = "HKEY_CLASSES_ROOT\\" + path + "\\command";
+                string regVal = Registry.GetValue(fullPath, "", null) as string;
+
+                if (regVal != expectedVal)
+                    return false;
+            }
+
+            // They all exist and match, so return true
+            return true;
+        }
+
 
         // Event handlers
 
@@ -52,34 +80,22 @@ namespace JustTag.Pages
         {
             // Set the proper entries in the registry to make this program show up in the
             // context menu
-            string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            foreach (string path in registryPaths)
+            {
+                string fullPath = "HKEY_CLASSES_ROOT\\" + path;
 
-            Registry.SetValue
-            (
-                @"HKEY_CLASSES_ROOT\*\shell\JustTag",
-                "",
-                "Open w&ith JustTag"
-            );
+                Registry.SetValue(fullPath, "", "Open w&ith JustTag");  // Set the text on the context menu button
+                Registry.SetValue(fullPath, "Icon", exePath);           // Set the icon to match the executable's icon
+                Registry.SetValue(fullPath + "\\command", "", "\"" + exePath + "\" \"%V\"");    // Set this program as the command to run
+            }
 
-            Registry.SetValue
-            (
-                @"HKEY_CLASSES_ROOT\*\shell\JustTag",
-                "Icon",
-                exePath
-            );
-
-            Registry.SetValue
-            (
-                @"HKEY_CLASSES_ROOT\*\shell\JustTag\command",
-                "",
-                "\"" + exePath + "\" \"%1\""
-            );
         }
 
         private void installContextMenuCheckbox_Unchecked(object sender, RoutedEventArgs e)
         {
             // Delete the keys added by install
-            Registry.ClassesRoot.DeleteSubKeyTree(@"*\shell\JustTag", false);
+            foreach (string path in registryPaths)
+                Registry.ClassesRoot.DeleteSubKeyTree(path, false);
         }
     }
 }
