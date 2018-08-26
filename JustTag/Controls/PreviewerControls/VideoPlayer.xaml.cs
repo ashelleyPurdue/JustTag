@@ -20,15 +20,6 @@ namespace JustTag.Controls.PreviewerControls
     /// </summary>
     public partial class VideoPlayer : UserControl, IPreviewerControl
     {
-        public bool IsVideo
-        {
-            get
-            {
-                // It's a video if it has more than one frame.
-                return GetCurrentVideoDuration() > videoPlayer.VideoFrameLength;
-            }
-        }
-
         private FileInfo currentFile;
 
         private double cachedGifDuration = 0;       // FFME does't properly return the length of animated gifs, so we need
@@ -132,15 +123,8 @@ namespace JustTag.Controls.PreviewerControls
             // Only show the controls if the mouse is over
             videoControls.Visibility = IsMouseOver ? Visibility.Visible : Visibility.Hidden;
 
-            // Hide all video-specific controls(play button, slider, etc) if it's not a video
-            Visibility v = IsVideo ? Visibility.Visible : Visibility.Hidden;
-            playButton.Visibility = v;
-            videoTimeSlider.Visibility = v;
-            volumeControls.Visibility = v;
-
             // Update the play button
             playButton.Content = videoPlayer.IsPlaying ? "Pause" : "Play";
-            playButton.Visibility = IsVideo ? Visibility.Visible : Visibility.Hidden;
 
             // Update the volume controls
             videoPlayer.IsMuted = shouldBeMuted;
@@ -196,7 +180,6 @@ namespace JustTag.Controls.PreviewerControls
 
             // Update the slider to match the video time
             double percent = videoPlayer.Position.TotalSeconds / GetCurrentVideoDuration();
-
             videoTimeSlider.Value = percent * videoTimeSlider.Maximum;
         }
 
@@ -233,11 +216,8 @@ namespace JustTag.Controls.PreviewerControls
         private async void videoPlayer_MediaEnded(object sender, RoutedEventArgs e)
         {
             // If it's a video, loop it.
-            if (IsVideo)
-            {
-                await videoPlayer.Stop();
-                await PlayOrPause(true);
-            }
+            await videoPlayer.Stop();
+            await PlayOrPause(true);
         }
     }
 }
