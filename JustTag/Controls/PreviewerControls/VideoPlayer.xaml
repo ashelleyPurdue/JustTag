@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JustTag.Controls.PreviewerControls"
-             xmlns:paz="clr-namespace:Wpf.Controls.PanAndZoom;assembly=Wpf.Controls.PanAndZoom"
              xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
              mc:Ignorable="d" 
              d:DesignHeight="300"
@@ -12,7 +11,7 @@
              MouseEnter="UserControl_MouseEnterOrLeave"
              MouseLeave="UserControl_MouseEnterOrLeave"
 >
-    <Grid>
+    <Grid Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
