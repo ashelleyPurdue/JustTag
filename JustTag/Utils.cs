@@ -107,7 +107,6 @@ namespace JustTag
                 ".bmp",
                 ".png",
                 ".tiff",
-                ".gif"
             };
 
             string ex = AlphaFS.Path.GetExtension(filePath).ToLower();
