@@ -55,8 +55,7 @@ namespace JustTag.Pages
             deleteTextbox.Background = valid ? Brushes.White : Brushes.Red;
 
             // Disable the button if it's invalid
-            if (!valid)
-                goButton.IsEnabled = false;
+            goButton.IsEnabled = valid;
         }
     }
 }
