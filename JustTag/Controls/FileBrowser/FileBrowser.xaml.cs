@@ -76,8 +76,6 @@ namespace JustTag.Controls.FileBrowser
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
             // Get all the files and folders that match the filter
-            SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
-
             var matchingFiles = TagUtils.GetMatchingFiles
             (
                 pathHistory.Current,
