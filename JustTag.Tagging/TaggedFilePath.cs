@@ -19,7 +19,7 @@ namespace JustTag.Tagging
 
         public string Name => beforeTags + GetTagArea() + afterTags;// The filename, including the tags and the extension
         public string ParentFolder { get; private set; }            // The full path to the parent folder
-        public string Extension { get; private set; }               // The file extension(eg: .txt).  Includes the dot.
+        public string Extension => Path.GetExtension(Name);         // The file extension(eg: .txt).  Includes the dot.
                                                                     // If there is no extension, then it will be the empty string.
         public bool IsFolder { get; private set; }                  // Whether or not this is a file or a folder.
         public string FullPath => Path.Combine(ParentFolder, Name);
@@ -59,8 +59,7 @@ namespace JustTag.Tagging
             else
                 parsed = new FileInfo(filePath);
 
-            // Extract all the parts from the filesystem info
-            Extension = parsed.Extension;
+            // Get the parent folder
             ParentFolder = parsed.GetParent().FullName;
 
             // Search for the tag area so we can extract the tags
@@ -112,7 +111,6 @@ namespace JustTag.Tagging
                 hasTagArea = newTags.Length == 0 ? false : true,
                 tags = newTags,
                 ParentFolder = ParentFolder,
-                Extension = Extension,
                 IsFolder = IsFolder
             };
 
