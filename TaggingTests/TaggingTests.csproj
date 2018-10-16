@@ -56,6 +56,7 @@
     <Compile Include="ChangeTagsOnFilesystemTests.cs" />
     <Compile Include="DeleteAndRenameTests.cs" />
     <Compile Include="GetMatchingFilesTests.cs" />
+    <Compile Include="NormalizeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetTagsTests.cs" />
     <Compile Include="ParseTaggedFilePathTests.cs" />
