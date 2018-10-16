@@ -14,10 +14,8 @@ namespace TaggingTests
     {
         private static void Check(string origName, string expectedName)
         {
-            var orig = new TaggedFilePath(origName, false);
-            var normalized = orig.Normalize();
-
-            Assert.AreEqual<string>(expectedName, normalized.Name);
+            string normalized = new TaggedFilePath(origName, false).GetNormalizedName();
+            Assert.AreEqual<string>(expectedName, normalized);
         }
 
         [TestMethod]

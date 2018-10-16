@@ -128,13 +128,13 @@ namespace JustTag.Tagging
         }
 
         /// <summary>
-        /// Creates a duplicate, but with the following changes:
+        /// Returns the file name, except altered to meet the following criteria:
         ///     * The tag area is always at the end of the file name, but before the extension.
         ///     * The tags are always sorted in alphabetical order
         ///     * Duplicate tags are removed
         /// </summary>
         /// <returns></returns>
-        public TaggedFilePath Normalize()
+        public string GetNormalizedName()
         {
             // Alphabetize and de-dupe the tags
             string[] normalizedTags = tags
@@ -146,7 +146,8 @@ namespace JustTag.Tagging
             // Removing the old tags first ensures that the new tags are put in the correct spot
             return this
                 .SetTags(new string[] { })
-                .SetTags(normalizedTags);
+                .SetTags(normalizedTags)
+                .Name;
         }
 
         /// <summary>

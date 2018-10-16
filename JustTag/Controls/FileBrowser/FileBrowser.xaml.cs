@@ -189,12 +189,12 @@ namespace JustTag.Controls.FileBrowser
                 return;
 
             // Normalize the tags of the selected file
-            TaggedFilePath normalized = SelectedItem.Normalize();
+            string normalized = Path.Combine(SelectedItem.ParentFolder, SelectedItem.GetNormalizedName());
 
             if (SelectedItem.IsFolder)
-                Directory.Move(SelectedItem.FullPath, normalized.FullPath);
+                Directory.Move(SelectedItem.FullPath, normalized);
             else
-                File.Move(SelectedItem.FullPath, normalized.FullPath);
+                File.Move(SelectedItem.FullPath, normalized);
 
             // Refresh the UI
             RefreshCurrentDirectory();
