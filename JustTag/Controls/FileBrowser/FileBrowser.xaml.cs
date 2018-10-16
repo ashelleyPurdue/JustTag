@@ -181,5 +181,23 @@ namespace JustTag.Controls.FileBrowser
             // Copy it to the clipboard
             Clipboard.SetText(SelectedItem.FullPath);
         }
+
+        private void normalizeTags_Click(object sender, RoutedEventArgs e)
+        {
+            // Don't do anything if nothing is selected
+            if (SelectedItem == null)
+                return;
+
+            // Normalize the tags of the selected file
+            TaggedFilePath normalized = SelectedItem.Normalize();
+
+            if (SelectedItem.IsFolder)
+                Directory.Move(SelectedItem.FullPath, normalized.FullPath);
+            else
+                File.Move(SelectedItem.FullPath, normalized.FullPath);
+
+            // Refresh the UI
+            RefreshCurrentDirectory();
+        }
     }
 }

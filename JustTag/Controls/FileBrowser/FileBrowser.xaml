@@ -79,6 +79,7 @@
             <UserControl.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Copy path to clipboard" Click="copyPathToClipboard_Click"/>
+                    <MenuItem Header="Normalize tags" Click="normalizeTags_Click"/>
                 </ContextMenu>
             </UserControl.ContextMenu>
         </local:FileList>
