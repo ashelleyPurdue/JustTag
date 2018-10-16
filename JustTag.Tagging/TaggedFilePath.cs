@@ -120,8 +120,8 @@ namespace JustTag.Tagging
             // one before the extension.
             if (!hasTagArea && Extension != "")
             {
-                int lengthWithoutExt = beforeTags.Length - Extension.Length;
-                output.beforeTags = beforeTags.Substring(0, lengthWithoutExt);
+                int lengthWithoutExt = Name.Length - Extension.Length;
+                output.beforeTags = Name.Substring(0, lengthWithoutExt);
                 output.afterTags = Extension;
             }
 
