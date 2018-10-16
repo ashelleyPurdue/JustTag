@@ -88,11 +88,6 @@ namespace JustTag.Tagging
             tags = withoutBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        [Obsolete("This is supposed to only be used for migrating.  If you're seeing this, you still have some migrating to do!")]
-        public TaggedFilePath(System.IO.FileSystemInfo fsInfo)
-            : this(fsInfo.FullName, fsInfo is System.IO.DirectoryInfo)
-        { }
-
         /// <summary>
         /// So we can use object intializer syntax
         /// </summary>
@@ -134,7 +129,28 @@ namespace JustTag.Tagging
             return output;
         }
 
-        [Obsolete("If you're seeing this warning, the migration isn't done yet.")]
+        /// <summary>
+        /// Creates a duplicate, but with the following changes:
+        ///     * The tag area is always at the end of the file name, but before the extension.
+        ///     * The tags are always sorted in alphabetical order
+        ///     * Duplicate tags are removed
+        /// </summary>
+        /// <returns></returns>
+        public TaggedFilePath Normalize()
+        {
+            // Alphabetize and de-dupe the tags
+            string[] normalizedTags = tags
+                .Distinct()
+                .OrderBy(tag => tag)
+                .ToArray();
+
+            // Remove the old tags, then add the new ones.
+            // Removing the old tags first ensures that the new tags are put in the correct spot
+            return this
+                .SetTags(new string[] { })
+                .SetTags(normalizedTags);
+        }
+
         /// <summary>
         /// Converts it to a FileSystemInfo.
         /// This is to help migrate the project to TaggedFilePath.
