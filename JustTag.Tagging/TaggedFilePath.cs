@@ -19,7 +19,7 @@ namespace JustTag.Tagging
 
         public string Name => beforeTags + GetTagArea() + afterTags;// The filename, including the tags and the extension
         public string ParentFolder { get; private set; }            // The full path to the parent folder
-        public string Extension { get; private set; }               // The file extension(eg: .txt).  Includes the dot.
+        public string Extension => Path.GetExtension(Name);         // The file extension(eg: .txt).  Includes the dot.
                                                                     // If there is no extension, then it will be the empty string.
         public bool IsFolder { get; private set; }                  // Whether or not this is a file or a folder.
         public string FullPath => Path.Combine(ParentFolder, Name);
@@ -59,8 +59,7 @@ namespace JustTag.Tagging
             else
                 parsed = new FileInfo(filePath);
 
-            // Extract all the parts from the filesystem info
-            Extension = parsed.Extension;
+            // Get the parent folder
             ParentFolder = parsed.GetParent().FullName;
 
             // Search for the tag area so we can extract the tags
@@ -88,11 +87,6 @@ namespace JustTag.Tagging
             tags = withoutBrackets.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        [Obsolete("This is supposed to only be used for migrating.  If you're seeing this, you still have some migrating to do!")]
-        public TaggedFilePath(System.IO.FileSystemInfo fsInfo)
-            : this(fsInfo.FullName, fsInfo is System.IO.DirectoryInfo)
-        { }
-
         /// <summary>
         /// So we can use object intializer syntax
         /// </summary>
@@ -117,7 +111,6 @@ namespace JustTag.Tagging
                 hasTagArea = newTags.Length == 0 ? false : true,
                 tags = newTags,
                 ParentFolder = ParentFolder,
-                Extension = Extension,
                 IsFolder = IsFolder
             };
 
@@ -125,8 +118,8 @@ namespace JustTag.Tagging
             // one before the extension.
             if (!hasTagArea && Extension != "")
             {
-                int lengthWithoutExt = beforeTags.Length - Extension.Length;
-                output.beforeTags = beforeTags.Substring(0, lengthWithoutExt);
+                int lengthWithoutExt = Name.Length - Extension.Length;
+                output.beforeTags = Name.Substring(0, lengthWithoutExt);
                 output.afterTags = Extension;
             }
 
@@ -134,7 +127,32 @@ namespace JustTag.Tagging
             return output;
         }
 
-        [Obsolete("If you're seeing this warning, the migration isn't done yet.")]
+        /// <summary>
+        /// Returns the file name, except altered to meet the following criteria:
+        ///     * The tag area is always at the end of the file name, but before the extension.
+        ///     * The tags are always sorted in alphabetical order
+        ///     * Duplicate tags are removed
+        /// </summary>
+        /// <returns></returns>
+        public string GetNormalizedName()
+        {
+            // Alphabetize and de-dupe the tags
+            string[] normalizedTags = tags
+                .Distinct()
+                .OrderBy(tag => tag)
+                .ToArray();
+
+            // Build the tag area
+            string tagArea = TagListToString(normalizedTags);
+
+            // Insert the tag area right before the extension
+            string withoutTags = beforeTags + afterTags;
+            string extension = Path.GetExtension(withoutTags);
+            string beforeExtension = withoutTags.Substring(0, withoutTags.Length - extension.Length);
+
+            return beforeExtension + tagArea + extension;
+        }
+
         /// <summary>
         /// Converts it to a FileSystemInfo.
         /// This is to help migrate the project to TaggedFilePath.
@@ -156,6 +174,11 @@ namespace JustTag.Tagging
             if (!hasTagArea)
                 return "";
 
+            return TagListToString(tags);
+        }
+
+        private string TagListToString(string[] tags)
+        {
             var builder = new StringBuilder();
 
             // Start with the opening bracket

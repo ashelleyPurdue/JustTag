@@ -76,8 +76,6 @@ namespace JustTag.Controls.FileBrowser
             upButton.IsEnabled = Directory.GetParent(pathHistory.Current) != null;
 
             // Get all the files and folders that match the filter
-            SortMethod sortMethod = (SortMethod)sortByBox.SelectedValue;
-
             var matchingFiles = TagUtils.GetMatchingFiles
             (
                 pathHistory.Current,
@@ -172,16 +170,6 @@ namespace JustTag.Controls.FileBrowser
 
             // The selected item is a file, so open that file.
             System.Diagnostics.Process.Start(selectedItem.FullPath);
-        }
-
-        private void copyPathToClipboard_Click(object sender, RoutedEventArgs e)
-        {
-            // Don't do anything if nothing is selected
-            if (SelectedItem == null)
-                return;
-
-            // Copy it to the clipboard
-            Clipboard.SetText(SelectedItem.FullPath);
         }
     }
 }

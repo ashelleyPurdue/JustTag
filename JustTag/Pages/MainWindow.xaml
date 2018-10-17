@@ -70,7 +70,14 @@
             Grid.RowSpan="2"
             Margin="5,5,5,10"
             SelectedFileChanged="fileBrowser_SelectedFileChanged"
-        />
+        >
+            <UserControl.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy path to clipboard" Click="copyPathToClipboard_Click"/>
+                    <MenuItem Header="Normalize tags" Click="normalizeTags_Click"/>
+                </ContextMenu>
+            </UserControl.ContextMenu>
+        </filebrowser:FileBrowser>
 
         <GroupBox Header="This file's tags"
             Grid.Row="2"
