@@ -228,7 +228,7 @@ namespace JustTag.Pages
             Clipboard.SetText(fileBrowser.SelectedItem.FullPath);
         }
 
-        private void normalizeTags_Click(object sender, RoutedEventArgs e)
+        private async void normalizeTags_Click(object sender, RoutedEventArgs e)
         {
             TaggedFilePath selectedItem = fileBrowser.SelectedItem;
 
@@ -236,9 +236,17 @@ namespace JustTag.Pages
             if (selectedItem == null)
                 return;
 
-            // Normalize the tags of the selected file
+            // Compute the new file name
             string normalized = Path.Combine(selectedItem.ParentFolder, selectedItem.GetNormalizedName());
 
+            // Don't do anything if the name is the same
+            if (normalized == selectedItem.FullPath)
+                return;
+
+            // Close the file before changing it.
+            await filePreviewer.ClosePreview();
+
+            // Move it on the file system
             if (selectedItem.IsFolder)
                 Directory.Move(selectedItem.FullPath, normalized);
             else
