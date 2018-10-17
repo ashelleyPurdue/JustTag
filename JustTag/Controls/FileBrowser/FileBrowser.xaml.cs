@@ -171,33 +171,5 @@ namespace JustTag.Controls.FileBrowser
             // The selected item is a file, so open that file.
             System.Diagnostics.Process.Start(selectedItem.FullPath);
         }
-
-        private void copyPathToClipboard_Click(object sender, RoutedEventArgs e)
-        {
-            // Don't do anything if nothing is selected
-            if (SelectedItem == null)
-                return;
-
-            // Copy it to the clipboard
-            Clipboard.SetText(SelectedItem.FullPath);
-        }
-
-        private void normalizeTags_Click(object sender, RoutedEventArgs e)
-        {
-            // Don't do anything if nothing is selected
-            if (SelectedItem == null)
-                return;
-
-            // Normalize the tags of the selected file
-            string normalized = Path.Combine(SelectedItem.ParentFolder, SelectedItem.GetNormalizedName());
-
-            if (SelectedItem.IsFolder)
-                Directory.Move(SelectedItem.FullPath, normalized);
-            else
-                File.Move(SelectedItem.FullPath, normalized);
-
-            // Refresh the UI
-            RefreshCurrentDirectory();
-        }
     }
 }

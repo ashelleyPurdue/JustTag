@@ -218,6 +218,34 @@ namespace JustTag.Pages
             tagsBox.Text += tag;
         }
 
+        private void copyPathToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            // Don't do anything if nothing is selected
+            if (fileBrowser.SelectedItem == null)
+                return;
 
+            // Copy it to the clipboard
+            Clipboard.SetText(fileBrowser.SelectedItem.FullPath);
+        }
+
+        private void normalizeTags_Click(object sender, RoutedEventArgs e)
+        {
+            TaggedFilePath selectedItem = fileBrowser.SelectedItem;
+
+            // Don't do anything if nothing is selected
+            if (selectedItem == null)
+                return;
+
+            // Normalize the tags of the selected file
+            string normalized = Path.Combine(selectedItem.ParentFolder, selectedItem.GetNormalizedName());
+
+            if (selectedItem.IsFolder)
+                Directory.Move(selectedItem.FullPath, normalized);
+            else
+                File.Move(selectedItem.FullPath, normalized);
+
+            // Refresh the UI
+            fileBrowser.RefreshCurrentDirectory();
+        }
     }
 }
