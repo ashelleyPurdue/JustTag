@@ -142,12 +142,15 @@ namespace JustTag.Tagging
                 .OrderBy(tag => tag)
                 .ToArray();
 
-            // Remove the old tags, then add the new ones.
-            // Removing the old tags first ensures that the new tags are put in the correct spot
-            return this
-                .SetTags(new string[] { })
-                .SetTags(normalizedTags)
-                .Name;
+            // Build the tag area
+            string tagArea = TagListToString(normalizedTags);
+
+            // Insert the tag area right before the extension
+            string withoutTags = beforeTags + afterTags;
+            string extension = Path.GetExtension(withoutTags);
+            string beforeExtension = withoutTags.Substring(0, withoutTags.Length - extension.Length);
+
+            return beforeExtension + tagArea + extension;
         }
 
         /// <summary>
@@ -171,6 +174,11 @@ namespace JustTag.Tagging
             if (!hasTagArea)
                 return "";
 
+            return TagListToString(tags);
+        }
+
+        private string TagListToString(string[] tags)
+        {
             var builder = new StringBuilder();
 
             // Start with the opening bracket
